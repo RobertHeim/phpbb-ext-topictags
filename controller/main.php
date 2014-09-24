@@ -63,10 +63,15 @@ class main
 			$view_topic_url_params = 'f=' . $topic['forum_id'] . '&amp;t=' . $topic['topic_id'];
 			$view_topic_url = append_sid("{$phpbb_root_path}viewtopic.$phpEx", $view_topic_url_params);
 
+			$view_profile_url_params = 'mode=viewprofile&amp;u=' . $topic['topic_poster'];
+			$view_profile_url = append_sid("{$phpbb_root_path}memberlist.$phpEx", $view_profile_url_params);
+
+			
 			$this->template->assign_block_vars('topics', array(
-				'TITLE'		=> $topic['topic_title'],
-				'POSTER'	=> $topic['topic_poster'],
-				'LINK'		=> $view_topic_url,
+				'TITLE'				=> $topic['topic_title'],
+				'LINK'				=> $view_topic_url,
+				'FIRST_POSTER_NAME'	=> $topic['topic_first_poster_name'],
+				'FIRST_POSTER_LINK'	=> $view_profile_url,
 			));
 		
 		}
