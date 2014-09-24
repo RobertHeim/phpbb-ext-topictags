@@ -3,6 +3,7 @@ services:
         class: robertheim\topictags\event\main_listener
         arguments:
             - @robertheim.topictags.tags_manager
+            - @controller.helper
         tags:
             - { name: event.listener }
     robertheim.topictags.controller:

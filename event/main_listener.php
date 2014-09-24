@@ -32,14 +32,18 @@ class main_listener implements EventSubscriberInterface
 
 	protected $tags_manager;
 
+	protected $helper;
+
 	/**
 	 * Constructor
 	 */
 	public function __construct(
-							\robertheim\topictags\service\tags_manager $tags_manager
+							\robertheim\topictags\service\tags_manager $tags_manager,
+							\phpbb\controller\helper $helper
 	)
 	{
 		$this->tags_manager = $tags_manager;
+		$this->helper = $helper;
 	}
 
     public function load_language_on_setup($event)
@@ -152,7 +156,9 @@ class main_listener implements EventSubscriberInterface
 			foreach ($tags as $tag) {
 		        $template->assign_block_vars('rh_topic_tags', array(
 					'NAME' => $tag,
-					'LINK' => "TODO",
+					'LINK' => $this->helper->route('robertheim_topictags_show_tag_controller', array(
+						'tag'	=> $tag
+					)),
 				));
 			}
 			$template->assign_var('RH_TOPICTAGS_SHOW', $show_tags);
