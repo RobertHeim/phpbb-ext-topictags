@@ -52,19 +52,6 @@ class main_listener implements EventSubscriberInterface
         $event['lang_set_ext'] = $lang_set_ext;
     }
 
-	public function prepare_tag($tag) {
-		$tag = trim($tag);
-		// max 30 length
-		$tag = substr($tag, 0,30);
-
-		//might have a space at the end now, so trim again
-		$tag = trim($tag);
-
-		// lowercase
-		$tag = mb_strtolower($tag, 'UTF-8');
-		return $tag;
-	}
-
 	private function get_clean_tags_from_post_request() {
 		global $request;
         $post = $request->get_super_global(\phpbb\request\request::POST);
@@ -74,7 +61,7 @@ class main_listener implements EventSubscriberInterface
 
 		$clean_tags = array();
 		for ($i = 0; $i < sizeof($tags); $i++) {
-			$tag = $this->prepare_tag($tags[$i]);
+			$tag = $this->tags_manager->clean_tag($tags[$i]);
 			if (!empty($tag))
 			{
 				$clean_tags[] = $tag;

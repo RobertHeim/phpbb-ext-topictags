@@ -212,4 +212,67 @@ class tags_manager
 		}
 		return $ids;
 	}
+
+	/**
+	 * Gets the topics which are tagged with $clean_tag
+	 *
+	 * @param $tag the tag to find the topics for
+	 * @param $is_clean if true the tag is not cleaned again
+	 * @return array of topics, each containing all fields from TOPIC_TABLE
+	 */
+	public function get_topics_by_tag($tag, $is_clean = false)
+	{
+		if (!$is_clean)
+		{
+			$tag=$this->clean_tag($tag);
+		}
+
+		if (empty($tag))
+		{
+			return array();
+		}
+
+		$sql_array = array(
+			'SELECT'	=> 'topics.*',
+			'FROM'		=> array(
+				TOPICS_TABLE							=> 'topics',
+				$this->table_prefix . TABLES::TOPICTAGS	=> 'tt',
+				$this->table_prefix . TABLES::TAGS		=> 't',
+			),
+			'WHERE'		=> "topics.topic_id = tt.topic_id
+				AND t.tag = '" . $this->db->sql_escape($tag) . "'
+				AND t.id = tt.tag_id",
+		);
+		$sql = $this->db->sql_build_query('SELECT_DISTINCT', $sql_array);
+
+		$result = $this->db->sql_query($sql);
+		$topics = array();
+        while ($row = $this->db->sql_fetchrow($result))
+		{
+			$topics[] = $row;
+		}
+		return $topics;
+	}
+
+	/**
+	 * trims and shortens the given tag to 30 characters, trims it again and makes it lowercase.
+	 *
+	 * TODO remove unallowed characters before trim
+	 *
+	 * @param $tag the tag to clean
+	 * @return the clean tag
+	 */
+	public function clean_tag($tag)
+	{
+		$tag = trim($tag);
+		// max 30 length
+		$tag = substr($tag, 0,30);
+
+		//might have a space at the end now, so trim again
+		$tag = trim($tag);
+
+		// lowercase
+		$tag = mb_strtolower($tag, 'UTF-8');
+		return $tag;
+	}
 }
