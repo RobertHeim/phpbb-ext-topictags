@@ -1,0 +1,4 @@
+robertheim_topictags_controller:
+    pattern: /tags
+    defaults: { _controller: robertheim.topictags.controller:show }
+

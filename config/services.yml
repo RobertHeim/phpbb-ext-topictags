@@ -1,0 +1,18 @@
+services:
+    robertheim.topictags.listener:
+        class: robertheim\topictags\event\main_listener
+        arguments:
+            - @robertheim.topictags.tags_manager
+        tags:
+            - { name: event.listener }
+    robertheim.topictags.controller:
+        class: robertheim\topictags\controller\main
+        arguments:
+            - @template
+            - @controller.helper
+            - @robertheim.topictags.tags_manager
+    robertheim.topictags.tags_manager:
+        class: robertheim\topictags\service\tags_manager
+        arguments:
+            - @dbal.conn.driver
+            - %core.table_prefix%
