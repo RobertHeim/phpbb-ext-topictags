@@ -10,9 +10,9 @@
 namespace robertheim\topictags\migrations;
 use robertheim\topictags\PREFIXES;
 
-class release_0_0_2 extends \phpbb\db\migration\migration
+class release_0_0_3 extends \phpbb\db\migration\migration
 {
-	protected $version = "0.0.2-DEV";
+	protected $version = "0.0.3-DEV";
 
 	public function effectively_installed()
 	{
@@ -22,7 +22,7 @@ class release_0_0_2 extends \phpbb\db\migration\migration
 	static public function depends_on()
 	{
 		return array(
-			'\robertheim\topictags\migrations\release_0_0_1',
+			'\robertheim\topictags\migrations\release_0_0_2',
 		);
 	}
 
