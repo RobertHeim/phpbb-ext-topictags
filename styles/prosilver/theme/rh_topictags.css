@@ -1,0 +1,50 @@
+
+.rh_topictags_tagcloud{
+    width:85%;
+    margin:0 auto;
+}
+
+.rh_topictags_tagcloud ul{
+    margin:0;
+    padding:0;
+}
+.rh_topictags_tagcloud li{
+	list-style-type: none;
+	display: inline-block;
+    width:25%;
+	  height: 50px;
+	  line-height: 50px;
+	  text-align: center;
+    background-color: #cadceb;
+    margin: 5px;
+	border-radius: 10px;
+	font-weight: bold;
+}
+
+.rh_topictags_tagcloud li:hover{
+    background-color: #105289;
+}
+
+.rh_topictags_tagcloud a {
+	display:block;
+	font-size: 2em;
+}
+
+.rh_topictags_tagcloud a:hover {
+	color: #cadceb;
+}
+
+.rh_topictags_tagcloud div{
+    max-width:100%;
+}
+
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen 
+and (min-width : 320px) 
+and (max-width : 480px) {
+/* Styles */
+    .rh_topictags_tagcloud li{
+	display:block;
+    width:100%;
+}
+}

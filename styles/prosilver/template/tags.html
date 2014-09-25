@@ -1,13 +1,19 @@
+<!-- INCLUDECSS @robertheim_topictags/../theme/rh_topictags.css -->
 <!-- INCLUDE overall_header.html -->
+
 <h2>Tags</h2>
 
-<div class="panel bg1" id="faqlinks">
-	<div class="inner">
+<div class="panel bg1" id="tags">
+	<div class="inner rh_topictags_tagcloud">
 		<ul>
 		<!-- BEGIN tags -->
-		<li><a href="{tags.LINK}">{tags.NAME}</a></li>
+		<li>
+			<div class="tag inner"><a href="{tags.LINK}">{tags.NAME}</a></div>
+		</li>
 		<!-- END tags -->
-		</ul>
+
+</ul>
 	</div>
 </div>
+
 <!-- INCLUDE overall_footer.html -->
