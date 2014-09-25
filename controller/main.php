@@ -86,6 +86,16 @@ class main
 		else
 		{
 			global $phpbb_root_path, $phpEx, $phpbb_container, $auth, $phpbb_dispatcher, $template, $config;
+			$this->template->assign_vars(array(
+				'NEWEST_POST_IMG'			=> $user->img('icon_topic_newest', 'VIEW_NEWEST_POST'),
+				'LAST_POST_IMG'				=> $user->img('icon_topic_latest', 'VIEW_LATEST_POST'),
+				'REPORTED_IMG'				=> $user->img('icon_topic_reported', 'TOPIC_REPORTED'),
+				'UNAPPROVED_IMG'			=> $user->img('icon_topic_unapproved', 'TOPIC_UNAPPROVED'),
+				'DELETED_IMG'				=> $user->img('icon_topic_deleted', 'TOPIC_DELETED'),
+				'POLL_IMG'					=> $user->img('icon_topic_poll', 'TOPIC_POLL'),
+				'S_TOPIC_ICONS'				=> true,
+			));
+
 			$phpbb_content_visibility = $phpbb_container->get('content.visibility');
 			$pagination = $phpbb_container->get('pagination');
 			include_once($phpbb_root_path . 'includes/functions_display.' . $phpEx);
@@ -180,7 +190,6 @@ class main
 					'U_LAST_POST_AUTHOR'	=> get_username_string('profile', $row['topic_last_poster_id'], $row['topic_last_poster_name'], $row['topic_last_poster_colour']),
 					'U_TOPIC_AUTHOR'		=> get_username_string('profile', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']),
 					'U_VIEW_TOPIC'			=> $view_topic_url,
-					'U_VIEW_FORUM'			=> append_sid("{$phpbb_root_path}viewforum.$phpEx", 'f=' . $row['forum_id']),
 					'U_MCP_REPORT'			=> append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=reports&amp;mode=reports&amp;f=' . $row['forum_id'] . '&amp;t=' . $topic_id, true, $user->session_id),
 					'U_MCP_QUEUE'			=> $u_mcp_queue,
 		
