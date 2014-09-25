@@ -2,9 +2,7 @@
 <!-- INCLUDE overall_header.html -->
 <h2 class="forum-title">{RH_TOPICTAGS_SEARCH_HEADER}</h2>
 
-
 <!-- BEGIN topicrow -->
-{FORUM_NAME}
 	<!-- IF not topicrow.S_TOPIC_TYPE_SWITCH and not topicrow.S_FIRST_ROW -->
 		</ul>
 		</div>
@@ -86,19 +84,11 @@
 	<!-- ENDIF -->
 
 <!-- BEGINELSE -->
-	<!-- IF S_IS_POSTABLE -->
-	<div class="panel">
-		<div class="inner">
-		<strong>{L_NO_TOPICS}</strong>
-		</div>
-	</div>
-	<!-- ENDIF -->
-<!-- END topicrow -->
-
 	<div class="panel">
 		<div class="inner">
 		<strong>{NO_TOPICS_FOR_TAG}</strong>
 		</div>
 	</div>
+<!-- END topicrow -->
 
 <!-- INCLUDE overall_footer.html -->
