@@ -214,37 +214,60 @@ class tags_manager
 	}
 
 	/**
-	 * Gets the topics which are tagged with $clean_tag
+	 * Gets the topics which are tagged with any or all of the given $tags
 	 *
-	 * @param $tag the tag to find the topics for
+	 * @param $tags the tag to find the topics for
 	 * @param $is_clean if true the tag is not cleaned again
+	 * @param $mode AND=all tags must be assigned, OR=at least one tag needs to be assigned
 	 * @return array of topics, each containing all fields from TOPIC_TABLE
 	 */
-	public function get_topics_by_tag($tag, $is_clean = false)
+	public function get_topics_by_tags($tags, $is_clean = false, $mode = 'AND')
 	{
 		if (!$is_clean)
 		{
-			$tag=$this->clean_tag($tag);
+			$tags = $this->clean_tags($tags);
 		}
 
-		if (empty($tag))
+		if (empty($tags))
 		{
 			return array();
 		}
 
-		$sql_array = array(
-			'SELECT'	=> 'topics.*',
-			'FROM'		=> array(
-				TOPICS_TABLE							=> 'topics',
-				$this->table_prefix . TABLES::TOPICTAGS	=> 'tt',
-				$this->table_prefix . TABLES::TAGS		=> 't',
-			),
-			'WHERE'		=> "topics.topic_id = tt.topic_id
-				AND t.tag = '" . $this->db->sql_escape($tag) . "'
-				AND t.id = tt.tag_id",
-		);
-		$sql = $this->db->sql_build_query('SELECT_DISTINCT', $sql_array);
+		// validate mode
+		$mode = $mode == 'OR' ? 'OR' : 'AND';
 
+		$escaped_tags = array();
+		foreach ($tags as $tag)
+		{
+			$escaped_tags[] = "'" . $this->db->sql_escape($tag) . "'";
+		}
+
+		$sql = '';
+		if ('AND' == $mode) {
+			// http://stackoverflow.com/questions/26038114/sql-select-distinct-where-exist-row-for-each-id-in-other-table
+			$tag_count = sizeof($tags);
+			$sql = 'SELECT topics.*
+				FROM '.TOPICS_TABLE.' topics
+					JOIN ' . $this->table_prefix . TABLES::TOPICTAGS	. ' tt ON tt.topic_id = topics.topic_id
+					JOIN ' . $this->table_prefix . TABLES::TAGS			. ' t  ON tt.tag_id = t.id
+				WHERE t.tag IN ('.join(",", $escaped_tags).')
+				GROUP BY topics.topic_id
+				HAVING count(t.id) = '.$tag_count ;
+				$where_sql = '';
+		} else {
+			// OR mode, we produce: AND t.tag IN ('tag1', 'tag2', ...)
+			$sql_array = array(
+				'SELECT'	=> 'topics.*',
+				'FROM'		=> array(
+					TOPICS_TABLE							=> 'topics',
+					$this->table_prefix . TABLES::TOPICTAGS	=> 'tt',
+					$this->table_prefix . TABLES::TAGS		=> 't',
+				),
+				'WHERE'		=> 'topics.topic_id = tt.topic_id
+					AND t.id = tt.tag_id
+					AND t.tag IN (' . join(",", $escaped_tags) . ')');
+			$sql = $this->db->sql_build_query('SELECT_DISTINCT', $sql_array);
+		}
 		$result = $this->db->sql_query($sql);
 		$topics = array();
         while ($row = $this->db->sql_fetchrow($result))
@@ -252,6 +275,25 @@ class tags_manager
 			$topics[] = $row;
 		}
 		return $topics;
+	}
+
+	/**
+	 * Cleans the given tags, see $this->clean_tag($tag) for details.
+	 *
+	 * @param $tags array of tags to clean
+	 * @return array containing the cleaned tags
+	 */
+	public function clean_tags(array $tags)
+	{
+		$clean_tags_ary = array();
+		foreach ($tags as $tag) {
+			$tag = $this->clean_tag($tag);
+			if (!empty($tag))
+			{
+				$clean_tags_ary[] = $tag;
+			} 
+		}
+		return $clean_tags_ary;
 	}
 
 	/**

@@ -23,6 +23,7 @@ class acp_listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
+			'core.acp_manage_forums_initialise_data'		=> 'acp_manage_forums_initialise_data',
             'core.acp_manage_forums_display_form'			=> 'acp_manage_forums_display_form',
             'core.acp_manage_forums_validate_data'			=> 'acp_manage_forums_validate_data',
 		);
@@ -38,15 +39,24 @@ class acp_listener implements EventSubscriberInterface
         $this->request	= $request;
 	}
 
+    public function acp_manage_forums_initialise_data($event)
+	{
+		global $user;
+		$user->add_lang_ext('robertheim/topictags', 'topictags_acp');
+	}
 
-    public function acp_manage_forums_display_form($event) {
+    public function acp_manage_forums_display_form($event)
+	{
 		$data = $event->get_data();
+
 		$status = $data['forum_data']['rh_topictags_enabled'];
 		$data['template_data']['S_RH_TOPICTAGS_ENABLED'] = $status;
+
 		$event->set_data($data);
     }
 
-    public function acp_manage_forums_validate_data($event) {
+    public function acp_manage_forums_validate_data($event)
+	{
 		global $request;
 		$data = $event->get_data();
 

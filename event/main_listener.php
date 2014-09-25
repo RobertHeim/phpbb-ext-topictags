@@ -63,16 +63,7 @@ class main_listener implements EventSubscriberInterface
 		$tags_string = $post['rh_topictags'];
 		$tags = explode(',', $tags_string);
 
-		$clean_tags = array();
-		for ($i = 0; $i < sizeof($tags); $i++) {
-			$tag = $this->tags_manager->clean_tag($tags[$i]);
-			if (!empty($tag))
-			{
-				$clean_tags[] = $tag;
-			} 
-		}
-
-		return $clean_tags;
+		return $this->tags_manager->clean_tags($tags);
 	}
 
 	public function submit_post_end($event) {
@@ -157,7 +148,7 @@ class main_listener implements EventSubscriberInterface
 		        $template->assign_block_vars('rh_topic_tags', array(
 					'NAME' => $tag,
 					'LINK' => $this->helper->route('robertheim_topictags_show_tag_controller', array(
-						'tag'	=> $tag
+						'tags'	=> $tag
 					)),
 				));
 			}

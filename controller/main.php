@@ -52,12 +52,25 @@ class main
 		return $this->helper->render('tags.html');
 	}
 
-	public function show_tag($tag)
+	/**
+	 * shows a list of topics that have the given $tags assigned
+	 *
+	 * @param $tags tags seperated by comma (",")
+	 * @param $mode the mode indicates whether all tags (AND) or any tag (OR) should be assigned to the resulting topics
+	 */
+	public function show_tag($tags, $mode)
 	{
 		global $phpbb_root_path, $phpEx;
-		$tag = $this->tags_manager->clean_tag($tag);
-		$this->template->assign_var('TAG', $tag);
-		$topics = $this->tags_manager->get_topics_by_tag($tag, true);
+
+		$tags = explode(",", $tags);
+		$tags = $this->tags_manager->clean_tags($tags);
+		$this->template->assign_var('TAG', join(',', $tags));
+
+		// validate mode
+		// default == AND
+		$mode = $mode == 'OR' ? 'OR' : 'AND';
+
+		$topics = $this->tags_manager->get_topics_by_tags($tags, true, $mode);
 		foreach ($topics as $topic)
 		{
 			$view_topic_url_params = 'f=' . $topic['forum_id'] . '&amp;t=' . $topic['topic_id'];
