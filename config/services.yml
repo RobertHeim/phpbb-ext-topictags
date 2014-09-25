@@ -6,6 +6,12 @@ services:
             - @controller.helper
         tags:
             - { name: event.listener }
+    robertheim.topictags.acp_listener:
+        class: robertheim\topictags\event\acp_listener
+        arguments:
+            - @request
+        tags:
+            - { name: event.listener }
     robertheim.topictags.controller:
         class: robertheim\topictags\controller\main
         arguments:
