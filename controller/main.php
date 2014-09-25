@@ -45,7 +45,7 @@ class main
 			$this->template->assign_block_vars('tags', array(
 				'NAME'	=> $tag['tag'],
 				'LINK'	=> $this->helper->route('robertheim_topictags_show_tag_controller', array(
-					'tag'	=> $tag['tag']
+					'tags'	=> $tag['tag']
 					)),
 			));
 		}
