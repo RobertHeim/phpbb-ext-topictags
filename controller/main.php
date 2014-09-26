@@ -49,7 +49,7 @@ class main
 					)),
 			));
 		}
-		return $this->helper->render('tags.html');
+		return $this->helper->render('tags.html', 'Tags');
 	}
 
 	/**
@@ -221,7 +221,7 @@ class main
 				//TODO unset($rowset[$topic_id]);
 			} // foreach
 		} // else
-		return $this->helper->render('show_tag.html');
+		return $this->helper->render('show_tag.html', 'Tag-'.$user->lang('SEARCH'));
 	}
 
 }
