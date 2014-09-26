@@ -30,6 +30,20 @@ class release_0_0_4 extends \phpbb\db\migration\migration
 	{
 		return array(
 			array('config.update', array(PREFIXES::CONFIG.'_version', $this->version)),
+
+			array('module.add', array(
+				'acp',
+				'ACP_CAT_DOT_MODS',
+				'ACP_TOPICTAGS_TITLE'
+			)),
+
+			array('module.add', array(
+				'acp', 'ACP_TOPICTAGS_TITLE', array(
+					'module_basename'	=> '\robertheim\topictags\acp\topictags_module',
+					'auth'				=> 'ext_robertheim/topictags && acl_a_board',
+					'modes'				=> array('settings'),
+				),
+			)),
 		);
 	}
 }

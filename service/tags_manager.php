@@ -45,20 +45,62 @@ class tags_manager
 
 	/**
 	 * Removes all tags that are not assigned to at least one topic (garbage collection).
+	 *
+	 * @return count of deleted tags
 	 */
 	public function delete_unused_tags()
 	{
-		// too bad we are not allowed to use subqueries, because some DBALS supported by phpBB do not support them.
+		// TODO maybe we are not allowed to use subqueries, because some DBALS supported by phpBB do not support them.
 		// https://www.phpbb.com/community/viewtopic.php?f=461&t=2263646
-		// so we need 2 queries
+		// so we would need 2 queries, but this is slow... so we use subqueries and hope - yeah! :D
 
-		// get all used tag-ids
-		$used_ids = $this->get_used_tag_ids();
-		
-		// delete all tags that are not used
-		$sql = 'DELETE FROM ' . $this->table_prefix . TABLES::TAGS . '
-				WHERE id NOT IN ('.join(",", $used_ids).')';
+		$sql = 'DELETE t FROM ' . $this->table_prefix . TABLES::TAGS . ' t
+				WHERE NOT EXISTS (
+					SELECT 1
+					FROM ' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
+					WHERE tt.tag_id = t.id
+				)';
+
 		$this->db->sql_query($sql);
+		return $this->db->sql_affectedrows();
+	}
+
+	/**
+	 * Removes all topic-tag-assignments where the topic does not exist anymore.
+	 *
+	 * @return count of deleted assignments
+	 */
+	public function delete_assignments_where_topic_does_not_exist()
+	{
+		// delete all tag-assignments where the topic does not exist anymore
+		$sql = 'DELETE tt FROM ' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
+				WHERE NOT EXISTS (
+					SELECT 1 FROM ' . TOPICS_TABLE . ' topics
+					WHERE topics.topic_id = tt.topic_id
+				)';
+		$this->db->sql_query($sql);
+		return $this->db->sql_affectedrows();
+	}
+
+	/**
+	 * Deletes all topic-tag-assignments where the topic resides in a forum with tagging disabled.
+	 *
+	 * @return count of deleted assignments
+	 */
+	public function delete_tags_from_tagdisabled_forums()
+	{
+		// Deletes all topic-assignments to topics that reside in a forum with tagging disabled.
+		$sql = 'DELETE tt FROM ' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
+				WHERE EXISTS (
+					SELECT 1
+					FROM ' . TOPICS_TABLE . ' topics,
+						' . FORUMS_TABLE . ' f
+					WHERE topics.topic_id = tt.topic_id
+						AND f.forum_id = topics.forum_id
+						AND f.rh_topictags_enabled = 0
+				)';
+		$this->db->sql_query($sql);
+		return $this->db->sql_affectedrows();
 	}
 
 
@@ -317,4 +359,5 @@ class tags_manager
 		$tag = mb_strtolower($tag, 'UTF-8');
 		return $tag;
 	}
+
 }

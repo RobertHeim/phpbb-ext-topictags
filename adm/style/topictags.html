@@ -1,0 +1,28 @@
+<!-- INCLUDE overall_header.html -->
+
+<a id="maincontent"></a>
+
+<h1>{L_TOPICTAGS_TITLE}</h1>
+<p>{TOPICTAGS_VERSION}</p>
+
+<form id="acp_board" method="post" action="{U_ACTION}">
+	<fieldset>
+		<legend>{L_TOPICTAGS_MAINTENANCE}</legend>
+		<dl>
+			<dt><label for="robertheim_topictags_prune">{L_TOPICTAGS_PRUNE}:</label><br /><span>{L_TOPICTAGS_PRUNE_EXP}</span></dt>
+			<dd><input type="radio" class="radio" name="robertheim_topictags_prune" value="1" onclick="alert('{L_TOPICTAGS_PRUNE_CONFIRM}');" /> {L_YES} &nbsp; 
+				<input type="radio" class="radio" name="robertheim_topictags_prune" value="0" checked="checked" /> {L_NO}</dd>
+		</dl>
+		<dl>
+			<dt><label for="robertheim_topictags_prune">{L_TOPICTAGS_PRUNE_FORUMS}:</label><br /><span>{L_TOPICTAGS_PRUNE_FORUMS_EXP}</span></dt>
+			<dd><input type="radio" class="radio" name="robertheim_topictags_prune_forums" value="1" onclick="alert('{L_TOPICTAGS_PRUNE_FORUMS_CONFIRM}');" /> {L_YES} &nbsp; 
+				<input type="radio" class="radio" name="robertheim_topictags_prune_forums" value="0" checked="checked" /> {L_NO}</dd>
+		</dl>
+	</fieldset>
+	<p class="submit-buttons">
+		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+	</p>
+{S_FORM_TOKEN}
+</form>
+<!-- INCLUDE overall_footer.html -->
