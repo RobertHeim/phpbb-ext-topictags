@@ -26,6 +26,8 @@ $lang = array_merge($lang, array(
 	'ACP_FORUM_SETTINGS_RH_TOPICTAGS_PRUNE_CONFIRM'			=> 'Esta opción ELIMINARÁ todas las asignaciones de las etiquetas de los temas de este foro, hay que desactivar el etiquetado de este foro para realizar esta acción.',
 	'ACP_RH_TOPICTAGS_PRUNING_REQUIRES_TAGGING_DISABLED'	=> 'Para evitar el borrado accidental de las etiquetas, es necesario deshabilitar el etiquetado de este foro para eliminar las asignaciones de etiqueta.',
 
+	// config
+//TODO	'TOPICTAGS_INSTALLED'				=> 'Installed Version: v%s',
 	'TOPICTAGS_MAINTENANCE'				=> 'Mantenimiento',
 	'TOPICTAGS_TITLE'					=> 'Etiquetas de temas',
 	'TOPICTAGS_SETTINGS_SAVED'			=> 'Configuración actualizada correctamente.',

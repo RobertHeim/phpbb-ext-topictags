@@ -19,19 +19,21 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	// forum settings page
-	'ACP_RH_TOPICTAGS_ENABLE'								=> 'Enable Topic Tags',
+	'ACP_RH_TOPICTAGS_ENABLE'								=> 'Enable RH Topic Tags',
 	'ACP_RH_TOPICTAGS_ENABLE_EXP'							=> 'Whether or not to enable tagging of topics in this forum. (When disabling tagging, the tags are NOT REMOVED from the topics in this forum - so when you enable it again, they are still there; If you really want to delete the tags, then use the "Delete tags from this forums" option.)',
 	'ACP_FORUM_SETTINGS_RH_TOPICTAGS_PRUNE'					=> 'Delete tags from this forum',
 	'ACP_FORUM_SETTINGS_RH_TOPICTAGS_PRUNE_EXP'				=> 'This will DELETE all assignments of tags to the topics of this forum. NOTE: To prevent accidental deletion of tags, you need to disabled tagging for this forum.',
 	'ACP_FORUM_SETTINGS_RH_TOPICTAGS_PRUNE_CONFIRM'			=> 'This option will DELETE all assignments of tags to the topics of this forum and you need to disable tagging for this forum, to perform this action.',
 	'ACP_RH_TOPICTAGS_PRUNING_REQUIRES_TAGGING_DISABLED'	=> 'To prevent accidental deletion of tags, you need to disable tagging for this forum to delete the tag assignments.',
 
-	'ACP_RH_TOPICTAGS_REGEX_EMPTY'							=> 'The regular expression cannot be left empty.',
-	'ACP_RH_TOPICTAGS_EXP_FOR_USERS_EMPTY'					=> 'The explanation of which tags are allowed cannot be left empty.',
+	// config
+	'TOPICTAGS_INSTALLED'					=> 'Installed Version: v%s',
+	'ACP_RH_TOPICTAGS_REGEX_EMPTY'			=> 'The regular expression cannot be left empty.',
+	'ACP_RH_TOPICTAGS_EXP_FOR_USERS_EMPTY'	=> 'The explanation of which tags are allowed cannot be left empty.',
 
 	'TOPICTAGS_CONFIG'					=> 'Configuration',
 	'TOPICTAGS_MAINTENANCE'				=> 'Maintenance',
-	'TOPICTAGS_TITLE'					=> 'Topic Tags',
+	'TOPICTAGS_TITLE'					=> 'RH Topic Tags',
 	'TOPICTAGS_SETTINGS_SAVED'			=> 'Configuration updated successfully.',
 	'TOPICTAGS_PRUNE'					=> 'Prune tags',
 	'TOPICTAGS_PRUNE_EXP'				=> 'This will delete all tags, which are not used by any topic',
