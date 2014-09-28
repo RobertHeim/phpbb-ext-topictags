@@ -1,6 +1,11 @@
-<dl>
-	<dt><label for="">{L_ACP_RH_TOPICTAGS_ENABLE}{L_COLON}</label><br /><span>{L_ACP_RH_TOPICTAGS_ENABLE_EXP}</span></dt>
-	<dd><label><input type="radio" name="rh_topictags_enabled" value="1" <!-- IF S_RH_TOPICTAGS_ENABLED -->checked="checked"<!-- ENDIF --> />{L_YES}</label>
-		<label><input type="radio" name="rh_topictags_enabled" value="0" <!-- IF not S_RH_TOPICTAGS_ENABLED -->checked="checked"<!-- ENDIF --> />{L_NO}</label>
-</dl>
+	<dl>
+		<dt><label for="">{L_ACP_RH_TOPICTAGS_ENABLE}{L_COLON}</label><br /><span>{L_ACP_RH_TOPICTAGS_ENABLE_EXP}</span></dt>
+		<dd><label><input type="radio" name="rh_topictags_enabled" value="1" <!-- IF S_RH_TOPICTAGS_ENABLED -->checked="checked"<!-- ENDIF --> />{L_YES}</label>
+			<label><input type="radio" name="rh_topictags_enabled" value="0" <!-- IF not S_RH_TOPICTAGS_ENABLED -->checked="checked"<!-- ENDIF --> />{L_NO}</label>
+	</dl>
+	<dl>
+		<dt><label for="">{L_ACP_FORUM_SETTINGS_RH_TOPICTAGS_PRUNE}{L_COLON}</label><br /><span>{L_ACP_FORUM_SETTINGS_RH_TOPICTAGS_PRUNE_EXP}</span></dt>
+		<dd><label><input type="radio" name="rh_topictags_prune" value="1"  onclick="alert('{L_ACP_FORUM_SETTINGS_RH_TOPICTAGS_PRUNE_CONFIRM}');" <!-- IF S_RH_TOPICTAGS_PRUNE -->checked="checked"<!-- ENDIF --> />{L_YES}</label>
+			<label><input type="radio" name="rh_topictags_prune" value="0" <!-- IF not S_RH_TOPICTAGS_PRUNE -->checked="checked"<!-- ENDIF --> />{L_NO}</label>
+	</dl>
 

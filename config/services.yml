@@ -10,6 +10,7 @@ services:
         class: robertheim\topictags\event\acp_listener
         arguments:
             - @request
+            - @robertheim.topictags.tags_manager
         tags:
             - { name: event.listener }
     robertheim.topictags.controller:

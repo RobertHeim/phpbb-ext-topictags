@@ -85,10 +85,28 @@ class tags_manager
 	/**
 	 * Deletes all topic-tag-assignments where the topic resides in a forum with tagging disabled.
 	 *
+	 * @param $forum_ids array of forum-ids that should be checked (if null, all are checked).
 	 * @return count of deleted assignments
 	 */
-	public function delete_tags_from_tagdisabled_forums()
+	public function delete_tags_from_tagdisabled_forums($forum_ids = null)
 	{
+		$forums_sql_where = '';
+
+		if (is_array($forum_ids))
+		{
+			if (empty($forum_ids))
+			{
+				// performance improvement because we already know the result of querying the db.
+				return 0;
+			}
+			// ensure forum_ids are ints before using them in sql
+			$int_ids = array();
+			foreach ($forum_ids as $id)
+			{
+				$int_ids[] = (int)$id;
+			}
+			$forums_sql_where = ' AND f.forum_id IN (' . join(',', $int_ids) . ')';
+		}
 		// Deletes all topic-assignments to topics that reside in a forum with tagging disabled.
 		$sql = 'DELETE tt FROM ' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
 				WHERE EXISTS (
@@ -98,6 +116,7 @@ class tags_manager
 					WHERE topics.topic_id = tt.topic_id
 						AND f.forum_id = topics.forum_id
 						AND f.rh_topictags_enabled = 0
+						' . $forums_sql_where . '
 				)';
 		$this->db->sql_query($sql);
 		return $this->db->sql_affectedrows();
