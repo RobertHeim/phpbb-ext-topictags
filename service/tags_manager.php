@@ -261,7 +261,7 @@ class tags_manager
 	}
 
 	/**
-	 * Gets the topics which are tagged with any or all of the given $tags
+	 * Gets the topics which are tagged with any or all of the given $tags from all forums, where tagging is enabled
 	 *
 	 * @param $tags the tag to find the topics for
 	 * @param $is_clean if true the tag is not cleaned again
@@ -294,10 +294,12 @@ class tags_manager
 			// http://stackoverflow.com/questions/26038114/sql-select-distinct-where-exist-row-for-each-id-in-other-table
 			$tag_count = sizeof($tags);
 			$sql = 'SELECT topics.*
-				FROM '.TOPICS_TABLE.' topics
+				FROM 	' . TOPICS_TABLE								. ' topics
 					JOIN ' . $this->table_prefix . TABLES::TOPICTAGS	. ' tt ON tt.topic_id = topics.topic_id
 					JOIN ' . $this->table_prefix . TABLES::TAGS			. ' t  ON tt.tag_id = t.id
+					JOIN ' . FORUMS_TABLE								. ' f  ON f.forum_id = topics.forum_id
 				WHERE t.tag IN ('.join(",", $escaped_tags).')
+					AND f.rh_topictags_enabled = 1
 				GROUP BY topics.topic_id
 				HAVING count(t.id) = '.$tag_count ;
 				$where_sql = '';
@@ -309,8 +311,11 @@ class tags_manager
 					TOPICS_TABLE							=> 'topics',
 					$this->table_prefix . TABLES::TOPICTAGS	=> 'tt',
 					$this->table_prefix . TABLES::TAGS		=> 't',
+					FORUMS_TABLE							=> 'f',
 				),
 				'WHERE'		=> 'topics.topic_id = tt.topic_id
+					AND f.rh_topictags_enabled = 1
+					AND f.forum_id = topics.forum_id
 					AND t.id = tt.tag_id
 					AND t.tag IN (' . join(",", $escaped_tags) . ')');
 			$sql = $this->db->sql_build_query('SELECT_DISTINCT', $sql_array);
