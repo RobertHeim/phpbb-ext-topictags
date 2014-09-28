@@ -5,6 +5,13 @@
 <h1>{L_TOPICTAGS_TITLE}</h1>
 <p>{TOPICTAGS_VERSION}</p>
 
+<!-- IF S_ERROR -->
+	<div class="errorbox">
+		<h3>{L_WARNING}</h3>
+		<p>{ERROR_MSG}</p>
+	</div>
+<!-- ENDIF -->
+
 <form id="acp_board" method="post" action="{U_ACTION}">
 	<fieldset>
 		<legend>{L_TOPICTAGS_MAINTENANCE}</legend>
@@ -17,6 +24,17 @@
 			<dt><label for="robertheim_topictags_prune">{L_TOPICTAGS_PRUNE_FORUMS}:</label><br /><span>{L_TOPICTAGS_PRUNE_FORUMS_EXP}</span></dt>
 			<dd><input type="radio" class="radio" name="robertheim_topictags_prune_forums" value="1" onclick="alert('{L_TOPICTAGS_PRUNE_FORUMS_CONFIRM}');" /> {L_YES} &nbsp; 
 				<input type="radio" class="radio" name="robertheim_topictags_prune_forums" value="0" checked="checked" /> {L_NO}</dd>
+		</dl>
+	</fieldset>
+	<fieldset>
+		<legend>{L_TOPICTAGS_CONFIG}</legend>
+		<dl>
+			<dt><label for="robertheim_topictags_prune">{L_TOPICTAGS_ALLOWED_TAGS_REGEX}:</label><br /><span>{L_TOPICTAGS_ALLOWED_TAGS_REGEX_EXP}</span></dt>
+			<dd><input type="text" name="robertheim_topictags_allowed_tags_regex" size="20" value="{TOPICTAGS_ALLOWED_TAGS_REGEX}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="robertheim_topictags_prune">{L_TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS}:</label><br /><span>{L_TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS_EXP}</span></dt>
+			<dd><textarea name="robertheim_topictags_allowed_tags_exp_for_users" rows="3">{TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS}</textarea></dd>
 		</dl>
 	</fieldset>
 	<p class="submit-buttons">

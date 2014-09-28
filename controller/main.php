@@ -57,12 +57,14 @@ class main
 	 *
 	 * @param $tags tags seperated by comma (",")
 	 * @param $mode the mode indicates whether all tags (AND, default) or any tag (OR) should be assigned to the resulting topics
+	 * @param casesensitive wether to search case-sensitive (true) or -insensitive (false, default)
 	 */
-	public function show_tag($tags, $mode)
+	public function show_tag($tags, $mode, $casesensitive)
 	{
 		global $user;
 		$tags = explode(",", $tags);
-		$tags = $this->tags_manager->clean_tags($tags);
+		$all_tags = $this->tags_manager->split_valid_tags($tags);
+		$tags = $all_tags['valid'];
 		$tags_string = join(', ', $tags);
 
 		// validate mode
@@ -70,12 +72,14 @@ class main
 		$mode = $mode == 'OR' ? 'OR' : 'AND';
 
 		$this->template->assign_vars(array(
-			'RH_TOPICTAGS_SEARCH_HEADER' => $user->lang('RH_TOPICTAGS_SEARCH_HEADER_'.$mode, 
+			'RH_TOPICTAGS_SEARCH_HEADER' => $user->lang('RH_TOPICTAGS_SEARCH_HEADER_' . $mode, 
 				$tags_string
 			),
+			'RH_TOPICTAGS_SEARCH_IGNORED_TAGS' => $user->lang('RH_TOPICTAGS_SEARCH_IGNORED_TAGS',
+				join(", ", $all_tags['invalid'])
+			),
 		));
-
-		$topics = $this->tags_manager->get_topics_by_tags($tags, true, $mode);
+		$topics = $this->tags_manager->get_topics_by_tags($tags, $mode, $casesensitive);
 		if (sizeof($topics)<=0) {
 			$this->template->assign_var('NO_TOPICS_FOR_TAG', $user->lang('RH_TOPICTAGS_NO_TOPICS_FOR_TAG_'.$mode,
 				$tags_string));
@@ -192,30 +196,10 @@ class main
 		
 					'S_TOPIC_TYPE_SWITCH'	=> ($s_type_switch == $s_type_switch_test) ? -1 : $s_type_switch_test,
 				);
-		
-				/**
-				* Modify the topic data before it is assigned to the template
-				*
-				* @event core.viewforum_modify_topicrow
-				* @var	array	row			Array with topic data
-				* @var	array	topic_row	Template array with topic data
-				* @since 3.1.0-a1
-				*/
-				$vars = array('row', 'topic_row');
-				extract($phpbb_dispatcher->trigger_event('core.viewforum_modify_topicrow', compact($vars)));
-		
+
 				$template->assign_block_vars('topicrow', $topic_row);
 		
 				$pagination->generate_template_pagination($view_topic_url, 'topicrow.pagination', 'start', $replies + 1, $config['posts_per_page'], 1, true, true);
-		
-				$s_type_switch = ($row['topic_type'] == POST_ANNOUNCE || $row['topic_type'] == POST_GLOBAL) ? 1 : 0;
-		
-				if ($unread_topic)
-				{
-					$mark_forum_read = false;
-				}
-		
-				//TODO unset($rowset[$topic_id]);
 			} // foreach
 		} // else
 		return $this->helper->render('show_tag.html', 'Tag-'.$user->lang('SEARCH'));

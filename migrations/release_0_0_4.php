@@ -29,6 +29,8 @@ class release_0_0_4 extends \phpbb\db\migration\migration
 	public function update_data()
 	{
 		return array(
+			array('config.add', array(PREFIXES::CONFIG.'_allowed_tags_regex', "/^[a-z0-9]{3,30}$/i")),
+			array('config.add', array(PREFIXES::CONFIG.'_allowed_tags_exp_for_users', "0-9, a-z, A-Z, min: 3, max: 30")),
 			array('config.update', array(PREFIXES::CONFIG.'_version', $this->version)),
 
 			array('module.add', array(

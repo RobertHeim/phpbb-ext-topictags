@@ -40,6 +40,8 @@ class topictags_module
 		$form_name = 'topictags';
 		add_form_key($form_name);
 
+		$errors = array();
+
 		if ($request->is_set_post('submit'))
 		{
 			if (!check_form_key($form_name))
@@ -47,52 +49,74 @@ class topictags_module
 				trigger_error('FORM_INVALID');
 			}
 
-//			$config->set($conf_prefix.'_disp_new_topics', $request->variable($conf_prefix.'_disp_new_topics', 0));
-//			$config->set($conf_prefix.'_disp_time_format', $request->variable($conf_prefix.'_disp_time_format', 'H:i'));
-	//		$config->set($conf_prefix.'_mode', $request->variable($conf_prefix.'_mode', MODES::TODAY));
+			$submit = true;
 
-			$msg = array();
-			$deleted_assignments_count = 0;
-			$delete_unused_tags = false;
-
-			if ($request->variable($conf_prefix.'_prune', 0) > 0)
+			$regex = $request->variable($conf_prefix.'_allowed_tags_regex', '/^[a-z0-9]{3,30}$/i');
+			if (empty($regex))
 			{
-				global $phpbb_container;
-				$tags_manager = $phpbb_container->get('robertheim.topictags.tags_manager');
-				$deleted_assignments_count += $tags_manager->delete_assignments_where_topic_does_not_exist();
-				$delete_unused_tags = true;
+					$submit = false;
+					$errors[] = $user->lang('ACP_RH_TOPICTAGS_REGEX_EMPTY');
 			}
 
-			if ($request->variable($conf_prefix.'_prune_forums', 0) > 0)
+			$exp_for_users = $request->variable($conf_prefix.'_allowed_tags_exp_for_users', '0-9, a-z, A-Z, min: 3, max: 30');
+			if (empty($exp_for_users))
 			{
-				global $phpbb_container;
-				$tags_manager = $phpbb_container->get('robertheim.topictags.tags_manager');
-				$deleted_assignments_count += $tags_manager->delete_tags_from_tagdisabled_forums();
-				$delete_unused_tags = true;
+					$submit = false;
+					$errors[] = $user->lang('ACP_RH_TOPICTAGS_EXP_FOR_USERS_EMPTY');
 			}
 
-			if ($delete_unused_tags)
+			if ($submit)
 			{
-				$deleted_tags_count = $tags_manager->delete_unused_tags();
-				$msg[] = $user->lang('TOPICTAGS_PRUNE_TAGS_DONE', $deleted_tags_count);
-			}
+				$config->set($conf_prefix.'_allowed_tags_regex', $regex);
+				$config->set($conf_prefix.'_allowed_tags_exp_for_users', $exp_for_users);
 
-			if ($deleted_assignments_count > 0)
-			{
-				$msg[] = $user->lang('TOPICTAGS_PRUNE_ASSIGNMENTS_DONE', $deleted_assignments_count);
-			}
+				$msg = array();
+				$deleted_assignments_count = 0;
+				$delete_unused_tags = false;
+	
+				if ($request->variable($conf_prefix.'_prune', 0) > 0)
+				{
+					global $phpbb_container;
+					$tags_manager = $phpbb_container->get('robertheim.topictags.tags_manager');
+					$deleted_assignments_count += $tags_manager->delete_assignments_where_topic_does_not_exist();
+					$delete_unused_tags = true;
+				}
+	
+				if ($request->variable($conf_prefix.'_prune_forums', 0) > 0)
+				{
+					global $phpbb_container;
+					$tags_manager = $phpbb_container->get('robertheim.topictags.tags_manager');
+					$deleted_assignments_count += $tags_manager->delete_tags_from_tagdisabled_forums();
+					$delete_unused_tags = true;
+				}
+	
+				if ($delete_unused_tags)
+				{
+					$deleted_tags_count = $tags_manager->delete_unused_tags();
+					$msg[] = $user->lang('TOPICTAGS_PRUNE_TAGS_DONE', $deleted_tags_count);
+				}
+	
+				if ($deleted_assignments_count > 0)
+				{
+					$msg[] = $user->lang('TOPICTAGS_PRUNE_ASSIGNMENTS_DONE', $deleted_assignments_count);
+				}
+	
+				if (empty($msg))
+				{
+					$msg[] = $user->lang('TOPICTAGS_SETTINGS_SAVED');
+				}
 
-			if (empty($msg))
-			{
-				$msg[] = $user->lang('TOPICTAGS_SETTINGS_SAVED');
+				trigger_error(join("<br/>", $msg) . adm_back_link($this->u_action));
 			}
-			trigger_error(join("<br/>", $msg) . adm_back_link($this->u_action));
 		}
 
 		$template->assign_vars(array(
-			'TOPICTAGS_VERSION'		=> $user->lang('TOPICTAGS_INSTALLED', $config[$conf_prefix.'_version']),
-//			'ACTIVITY_STATS_DISP_NEW_TOPICS'	=> $config[$conf_prefix.'_disp_new_topics'],
-			'U_ACTION'							=> $this->u_action,
+			'TOPICTAGS_VERSION'						=> $user->lang('TOPICTAGS_INSTALLED', $config[$conf_prefix.'_version']),
+			'TOPICTAGS_ALLOWED_TAGS_REGEX'			=> $config[$conf_prefix.'_allowed_tags_regex'],
+			'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS'	=> $config[$conf_prefix.'_allowed_tags_exp_for_users'],
+			'S_ERROR'								=> (sizeof($errors)) ? true : false,
+			'ERROR_MSG'								=> implode('<br />', $errors),
+			'U_ACTION'								=> $this->u_action,
 		));
 
 	}

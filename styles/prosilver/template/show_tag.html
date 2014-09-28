@@ -2,6 +2,10 @@
 <!-- INCLUDE overall_header.html -->
 <h2 class="forum-title">{RH_TOPICTAGS_SEARCH_HEADER}</h2>
 
+<!-- IF RH_TOPICTAGS_SEARCH_IGNORED_TAGS -->
+	<p>{RH_TOPICTAGS_SEARCH_IGNORED_TAGS}</p>
+<!-- ENDIF -->
+
 <!-- BEGIN topicrow -->
 	<!-- IF not topicrow.S_TOPIC_TYPE_SWITCH and not topicrow.S_FIRST_ROW -->
 		</ul>

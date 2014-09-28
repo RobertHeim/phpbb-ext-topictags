@@ -13,16 +13,22 @@ namespace robertheim\topictags\service;
  * @ignore
  */
 use robertheim\topictags\TABLES;
+use robertheim\topictags\PREFIXES;
 
 class tags_manager
 {
 
 	private $db;
+	private $config;
 	private $table_prefix;
 
-	public function __construct(\phpbb\db\driver\driver $db, $table_prefix)
+	public function __construct(
+					\phpbb\db\driver\driver $db,
+					\phpbb\config\config $config,
+					$table_prefix)
 	{
 		$this->db			= $db;
+		$this->config		= $config;
 		$this->table_prefix	= $table_prefix;
 	}
 
@@ -145,20 +151,21 @@ class tags_manager
 	}
 
     /**
-     * Assigns the topic exactly the given tags (all other tags are removed from the topic and if a tag does not exist yet, it will be created).
+     * Assigns exactly the given valid tags to the topic (all other tags are removed from the topic and if a tag does not exist yet, it will be created).
 	 *
 	 * @param $topic_id
-	 * @param $tags			array containing tag-names
+	 * @param $valid_tags			array containing valid tag-names
+	 * @see is_valid_tag(string)
 	 */
-	public function assign_tags_to_topic($topic_id, $tags)
+	public function assign_tags_to_topic($topic_id, $valid_tags)
 	{
 		$topic_id = (int) $topic_id;
 
 		$this->remove_all_tags_from_topic($topic_id, false);
-		$this->create_missing_tags($tags);
+		$this->create_missing_tags($valid_tags);
 
 		// get ids of tags
-		$ids = $this->get_existing_tags($tags, true);
+		$ids = $this->get_existing_tags($valid_tags, true);
 		
 		// create topic_id <->tag_id link in TOPICTAGS_TABLE
 		foreach ($ids as $id)
@@ -283,17 +290,12 @@ class tags_manager
 	 * Gets the topics which are tagged with any or all of the given $tags from all forums, where tagging is enabled and only those which the user is allowed to read.
 	 *
 	 * @param $tags the tag to find the topics for
-	 * @param $is_clean if true the tag is not cleaned again
 	 * @param $mode AND=all tags must be assigned, OR=at least one tag needs to be assigned
 	 * @return array of topics, each containing all fields from TOPIC_TABLE
 	 */
-	public function get_topics_by_tags($tags, $is_clean = false, $mode = 'AND')
+	public function get_topics_by_tags($tags, $mode = "AND", $casesensitive = false)
 	{
 		global $auth;
-		if (!$is_clean)
-		{
-			$tags = $this->clean_tags($tags);
-		}
 
 		if (empty($tags))
 		{
@@ -301,14 +303,17 @@ class tags_manager
 		}
 
 		// validate mode
-		$mode = $mode == 'OR' ? 'OR' : 'AND';
+		$mode = ($mode == 'OR' ? 'OR' : 'AND');
 
 		$escaped_tags = array();
 		foreach ($tags as $tag)
-		{
+ 		{
+			if (!$casesensitive)
+			{
+				$tag = mb_strtolower($tag);
+			}
 			$escaped_tags[] = "'" . $this->db->sql_escape($tag) . "'";
 		}
-
 		
 		// Get forums that the user is allowed to read
 		$forum_ary = array();
@@ -328,6 +333,9 @@ class tags_manager
 		$sql_where_topic_access = $this->db->sql_in_set('topics.forum_id', $forum_ary, false, true);
 		$sql_where_topic_access .= ' AND topics.topic_visibility = 1';
 
+		$sql_where_tag_in = $casesensitive ? ' t.tag' : 'LOWER(t.tag)';
+		$sql_where_tag_in .= ' IN (' . join(',', $escaped_tags) . ')';
+
 		$sql = '';
 		if ('AND' == $mode) {
 			// http://stackoverflow.com/questions/26038114/sql-select-distinct-where-exist-row-for-each-id-in-other-table
@@ -337,7 +345,8 @@ class tags_manager
 					JOIN ' . $this->table_prefix . TABLES::TOPICTAGS	. ' tt ON tt.topic_id = topics.topic_id
 					JOIN ' . $this->table_prefix . TABLES::TAGS			. ' t  ON tt.tag_id = t.id
 					JOIN ' . FORUMS_TABLE								. ' f  ON f.forum_id = topics.forum_id
-				WHERE t.tag IN ('.join(",", $escaped_tags).')
+				WHERE
+					' . $sql_where_tag_in . '
 					AND f.rh_topictags_enabled = 1
 					AND ' . $sql_where_topic_access . '
 				GROUP BY topics.topic_id
@@ -353,14 +362,17 @@ class tags_manager
 					$this->table_prefix . TABLES::TAGS		=> 't',
 					FORUMS_TABLE							=> 'f',
 				),
-				'WHERE'		=> 'topics.topic_id = tt.topic_id
+				'WHERE'		=> '
+					' . $sql_where_tag_in . '
+					AND topics.topic_id = tt.topic_id
 					AND f.rh_topictags_enabled = 1
 					AND f.forum_id = topics.forum_id
 					AND ' . $sql_where_topic_access . '
 					AND t.id = tt.tag_id
-					AND t.tag IN (' . join(",", $escaped_tags) . ')');
+					');
 			$sql = $this->db->sql_build_query('SELECT_DISTINCT', $sql_array);
 		}
+
 		$result = $this->db->sql_query($sql);
 		$topics = array();
         while ($row = $this->db->sql_fetchrow($result))
@@ -371,44 +383,42 @@ class tags_manager
 	}
 
 	/**
-	 * Cleans the given tags, see $this->clean_tag($tag) for details.
+	 * Checks if the given tag matches the configured regex for valid tags, Note that the tag is trimmed to 30 characters before the check!
 	 *
-	 * @param $tags array of tags to clean
-	 * @return array containing the cleaned tags
+	 * @param $tag the tag to check
+	 * @return true if the tag matches, false otherwise
 	 */
-	public function clean_tags(array $tags)
-	{
-		$clean_tags_ary = array();
-		foreach ($tags as $tag) {
-			$tag = $this->clean_tag($tag);
-			if (!empty($tag))
-			{
-				$clean_tags_ary[] = $tag;
-			} 
-		}
-		return $clean_tags_ary;
-	}
-
-	/**
-	 * trims and shortens the given tag to 30 characters, trims it again and makes it lowercase.
-	 *
-	 * TODO remove unallowed characters before trim
-	 *
-	 * @param $tag the tag to clean
-	 * @return the clean tag
-	 */
-	public function clean_tag($tag)
+	public function is_valid_tag($tag)
 	{
 		$tag = trim($tag);
-		// max 30 length
-		$tag = substr($tag, 0,30);
+
+		// db-field is max 30 characters!
+		$tag = substr($tag, 0, 30);
 
 		//might have a space at the end now, so trim again
 		$tag = trim($tag);
 
-		// lowercase
-		$tag = mb_strtolower($tag, 'UTF-8');
-		return $tag;
+		$pattern = $this->config[PREFIXES::CONFIG.'_allowed_tags_regex'];
+		return preg_match($pattern, $tag);
+	}
+
+	/**
+	 * Splits the given tags into valid and invalid ones.
+	 *
+	 * @param $tags an array of potential tags
+	 * @return array('valid'=> array(), 'invalid' => array())
+	 */
+	public function split_valid_tags($tags)
+	{
+		$re = array(
+			'valid' => array(),
+			'invalid' => array()
+		);
+		foreach ($tags as $tag) {
+			$type = $this->is_valid_tag($tag) ? 'valid' : 'invalid';
+			$re[$type][] = $tag;
+		}
+		return $re;
 	}
 
 	/**

@@ -2,8 +2,12 @@ services:
     robertheim.topictags.listener:
         class: robertheim\topictags\event\main_listener
         arguments:
+            - @config
             - @robertheim.topictags.tags_manager
             - @controller.helper
+            - @request
+            - @user
+            - @template
         tags:
             - { name: event.listener }
     robertheim.topictags.acp_listener:
@@ -23,4 +27,5 @@ services:
         class: robertheim\topictags\service\tags_manager
         arguments:
             - @dbal.conn.driver
+            - @config
             - %core.table_prefix%

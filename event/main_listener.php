@@ -13,6 +13,7 @@ namespace robertheim\topictags\event;
 * @ignore
 */
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use robertheim\topictags\PREFIXES;
 
 /**
 * Event listener
@@ -24,28 +25,65 @@ class main_listener implements EventSubscriberInterface
 	{
 		return array(
 			'core.user_setup'								=> 'load_language_on_setup',
+			'core.modify_posting_parameters'				=> 'modify_posting_parameters',
 			'core.posting_modify_template_vars'				=> 'posting_modify_template_vars',
 			'core.viewtopic_assign_template_vars_before'	=> 'viewtopic_assign_template_vars_before',
 			'core.submit_post_end'							=> 'submit_post_end',
 		);
 	}
 
+	protected $config;
+
 	protected $tags_manager;
 
 	protected $helper;
+
+	protected $request;
+
+	protected $user;
+
+	protected $template;
 
 	/**
 	 * Constructor
 	 */
 	public function __construct(
+							\phpbb\config\config $config,
 							\robertheim\topictags\service\tags_manager $tags_manager,
-							\phpbb\controller\helper $helper
+							\phpbb\controller\helper $helper,
+							\phpbb\request\request $request, 
+							\phpbb\user $user, 
+							\phpbb\template\template $template
 	)
 	{
+		$this->config = $config;
 		$this->tags_manager = $tags_manager;
 		$this->helper = $helper;
+		$this->request = $request;
+		$this->user = $user;
+		$this->template = $template;
 	}
 
+	/**
+	 * Reads all tags in POST[rh_topictags] and splits them by the separator (default: comma (',')).
+	 * NOTE: These tags might be dirty!
+	 * 
+	 * @return array of dirty tags
+	 */
+	private function get_tags_from_post_request() {
+        $post = $this->request->get_super_global(\phpbb\request\request::POST);
+
+		if (!isset($post['rh_topictags'])) {
+			return array();
+		}
+
+		$tags_string = $post['rh_topictags'];
+		return explode(',', $tags_string);
+	}
+
+	/**
+     * Event: core.load_language_on_setup
+	 */
     public function load_language_on_setup($event)
     {
         $lang_set_ext = $event['lang_set_ext'];
@@ -56,27 +94,42 @@ class main_listener implements EventSubscriberInterface
         $event['lang_set_ext'] = $lang_set_ext;
     }
 
-	private function get_clean_tags_from_post_request() {
-		global $request;
-        $post = $request->get_super_global(\phpbb\request\request::POST);
+	/**
+     * Event: core.modify_posting_parameters
+     * 
+	 * Validate the tags and create an error if any tag is invalid.
+	 */
+	public function modify_posting_parameters($event)
+	{
+		$data = $event->get_data();
+		$tags = $this->get_tags_from_post_request();
 
-		if (!isset($post['rh_topictags'])) {
-			return array();
+		$all_tags = $this->tags_manager->split_valid_tags($tags);
+		$invalid_tags = $all_tags['invalid'];
+	
+		if (sizeof($invalid_tags))
+		{
+			$this->user->add_lang_ext('robertheim/topictags', 'topictags');
+			$data['error'][] = $this->user->lang('RH_TOPICTAGS_TAGS_INVALID', join(", ", $invalid_tags));
 		}
 
-		$tags_string = $post['rh_topictags'];
-		$tags = explode(',', $tags_string);
-
-		return $this->tags_manager->clean_tags($tags);
+		$event->set_data($data);
 	}
 
+	/**
+     * Event: core.postingsubmit_post_end
+     * 
+	 * After a posting we assign the tags to the topic
+	 */
 	public function submit_post_end($event) {
         $event_data = $event->get_data();
         $data = $event_data['data'];
 
-		$tags = $this->get_clean_tags_from_post_request();
+		$tags = $this->get_tags_from_post_request();
+
 		if (!empty($tags))
 		{
+			// note that the tags have been validated in event core.modify_posting_parameters
 			$this->tags_manager->assign_tags_to_topic($data['topic_id'], $tags);
 	        $event->set_data($event_data);
 		}
@@ -85,7 +138,7 @@ class main_listener implements EventSubscriberInterface
     /**
      * Event: core.posting_modify_template_vars
      *
-     * Send the tags on edits or preview
+     * Send the tags on edits or preview to the template
      *
      * @param $event
      */
@@ -124,20 +177,22 @@ class main_listener implements EventSubscriberInterface
 		$is_new_topic = $mode == 'post';
 		$is_edit_first_post = $mode == 'edit' && $topic_id && $post_id && $post_id == $topic_first_post_id;
 		if ($is_new_topic || $is_edit_first_post) {
-			global $request;
-	        $_post = $request->get_super_global(\phpbb\request\request::POST);
+
+            $data['page_data']['RH_TOPICTAGS_SHOW_FIELD'] = true;
+
+	        $_post = $this->request->get_super_global(\phpbb\request\request::POST);
 			// do we got some preview-data?
 			$tags = array();
 			if (isset($_post['rh_topictags'])) {
 				// use data from post-request
-				$tags = $this->get_clean_tags_from_post_request();
+				$tags = $this->get_tags_from_post_request();
 			} elseif ($is_edit_first_post) {
 				// use data from db
 				$tags = $this->tags_manager->get_assigned_tags($topic_id);
 			}
 			$data['page_data']['RH_TOPICTAGS'] = join(", ", $tags);
-			// display tags
-            $data['page_data']['RH_TOPICTAGS_SHOW_FIELD'] = true;
+
+			$data['page_data']['RH_TOPICTAGS_ALLOWED_TAGS_EXP'] = $this->config[PREFIXES::CONFIG.'_allowed_tags_exp_for_users'];
 			$event->set_data($data);
 		}
     }
@@ -151,7 +206,6 @@ class main_listener implements EventSubscriberInterface
 	 */
 	public function viewtopic_assign_template_vars_before($event)
 	{
-        global $template;
         $data = $event->get_data();
 		$topic_id = $data['topic_id'];
 		$forum_id = $data['forum_id'];
@@ -161,14 +215,14 @@ class main_listener implements EventSubscriberInterface
 		if ($show_tags) {
 			$tpl_tags = array();
 			foreach ($tags as $tag) {
-		        $template->assign_block_vars('rh_topic_tags', array(
+		        $this->template->assign_block_vars('rh_topic_tags', array(
 					'NAME' => $tag,
 					'LINK' => $this->helper->route('robertheim_topictags_show_tag_controller', array(
 						'tags'	=> $tag
 					)),
 				));
 			}
-			$template->assign_var('RH_TOPICTAGS_SHOW', $show_tags);
+			$this->template->assign_var('RH_TOPICTAGS_SHOW', $show_tags);
 		}
 	}
 }
