@@ -60,6 +60,10 @@ class main_listener implements EventSubscriberInterface
 		global $request;
         $post = $request->get_super_global(\phpbb\request\request::POST);
 
+		if (!isset($post['rh_topictags'])) {
+			return array();
+		}
+
 		$tags_string = $post['rh_topictags'];
 		$tags = explode(',', $tags_string);
 
@@ -69,9 +73,13 @@ class main_listener implements EventSubscriberInterface
 	public function submit_post_end($event) {
         $event_data = $event->get_data();
         $data = $event_data['data'];
+
 		$tags = $this->get_clean_tags_from_post_request();
-		$this->tags_manager->assign_tags_to_topic($data['topic_id'], $tags);
-        $event->set_data($event_data);
+		if (!empty($tags))
+		{
+			$this->tags_manager->assign_tags_to_topic($data['topic_id'], $tags);
+	        $event->set_data($event_data);
+		}
     }
 
     /**
@@ -82,9 +90,16 @@ class main_listener implements EventSubscriberInterface
      * @param $event
      */
     public function posting_modify_template_vars($event) {
-        $mode = $enable_trader = $topic_id = $post_id = $topic_first_post_id = false;
 
         $data = $event->get_data();
+		$forum_id = $data['forum_id'];
+
+		if (!$this->tags_manager->is_tagging_enabled_in_forum($forum_id))
+		{
+			return;
+		}
+
+        $mode = $enable_trader = $topic_id = $post_id = $topic_first_post_id = false;
 
         if (!empty($data['mode'])) {
             $mode = $data['mode'];
@@ -130,7 +145,7 @@ class main_listener implements EventSubscriberInterface
 	/**
 	 * Event: core.viewtopic_assign_template_vars_before
 	 *
-	 * Send the tags on edits or preview
+	 * assign tags to topic-template
 	 *
 	 * @param $event
 	 */
@@ -139,9 +154,10 @@ class main_listener implements EventSubscriberInterface
         global $template;
         $data = $event->get_data();
 		$topic_id = $data['topic_id'];
+		$forum_id = $data['forum_id'];
 
 		$tags = $this->tags_manager->get_assigned_tags($topic_id);
-		$show_tags = !empty($tags);
+		$show_tags = $this->tags_manager->is_tagging_enabled_in_forum($forum_id) && !empty($tags);
 		if ($show_tags) {
 			$tpl_tags = array();
 			foreach ($tags as $tag) {

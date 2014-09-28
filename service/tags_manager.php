@@ -184,7 +184,6 @@ class tags_manager
 	/**
 	 * Recursive in_array to check if the given (eventually multidimensional) array $haystack contains $needle.
 	 */
-	// TODO test if in_array_r is working
 	private function in_array_r($needle, $haystack, $strict = false)
 	{
 		foreach ($haystack as $item)
@@ -208,6 +207,12 @@ class tags_manager
 		$where = "";
 		if ($tags)
 		{
+			if (empty($tags))
+			{
+				// ensure that empty input array results in empty output array.
+				// note that this case is different from $tags == null where we want to get ALL existing tags.
+				return array();
+			}
 			// prepare tags for sql-where-in ('tag1', 'tag2', ...)
 			$sql_tags = array();
 			foreach ($tags as $tag) {
@@ -358,6 +363,22 @@ class tags_manager
 		// lowercase
 		$tag = mb_strtolower($tag, 'UTF-8');
 		return $tag;
+	}
+
+	/**
+	 * Checks if tagging is enabled in the given forum.
+	 *
+	 * @param $forum_id the id of the forum
+	 * @return true if tagging is enabled in the given forum, false if not
+	 */
+	public function is_tagging_enabled_in_forum($forum_id)
+	{
+		$field = 'rh_topictags_enabled';
+		$sql = "SELECT $field
+				FROM " . FORUMS_TABLE . '
+				WHERE ' . $this->db->sql_build_array('SELECT', array('forum_id' => (int)$forum_id));
+		$result = $this->db->sql_query($sql);
+		return (int) $this->db->sql_fetchfield($field);	
 	}
 
 }
