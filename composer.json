@@ -3,8 +3,8 @@
 	"type": "phpbb-extension",
 	"description": "Enables tagging of topics",
 	"homepage": "https://github.com/RobertHeim/phpbb-ext-topictags",
-	"version": "0.0.4-DEV",
-	"time": "2014-09-24",
+	"version": "0.0.5-DEV",
+	"time": "2014-09-29",
 	"keywords": ["phpbb", "extension", "topic tags", "tag", "tagging"],
 	"license": "GPL-2.0",
 	"authors": [
