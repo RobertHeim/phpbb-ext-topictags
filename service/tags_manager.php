@@ -313,11 +313,51 @@ class tags_manager
 	/**
 	 * Gets the topics which are tagged with any or all of the given $tags from all forums, where tagging is enabled and only those which the user is allowed to read.
 	 *
+	 * @param $start start for sql query
+	 * @param $limit limit for sql query
 	 * @param $tags the tag to find the topics for
 	 * @param $mode AND=all tags must be assigned, OR=at least one tag needs to be assigned
 	 * @return array of topics, each containing all fields from TOPIC_TABLE
 	 */
-	public function get_topics_by_tags($tags, $mode = "AND", $casesensitive = false)
+	public function get_topics_by_tags($tags, $start, $limit, $mode = "AND", $casesensitive = false)
+	{
+		$sql = $this->build_query($tags, $mode, $casesensitive);
+
+		$order_by = ' ORDER BY topics.topic_last_post_time DESC';
+		$sql .= $order_by;
+
+		$result = $this->db->sql_query_limit($sql, $limit, $start);
+
+		$topics = array();
+        while ($row = $this->db->sql_fetchrow($result))
+		{
+			$topics[] = $row;
+		}
+		$this->db->sql_freeresult($result);
+		return $topics;
+	}
+
+	/**
+	 * Gets the topics which are tagged with any or all of the given $tags from all forums, where tagging is enabled and only those which the user is allowed to read.
+	 *
+	 * @param $start start for sql query
+	 * @param $limit limit for sql query
+	 * @param $tags the tag to find the topics for
+	 * @param $mode AND=all tags must be assigned, OR=at least one tag needs to be assigned
+	 * @return array of topics, each containing all fields from TOPIC_TABLE
+	 */
+	public function count_topics_by_tags($tags, $mode = "AND", $casesensitive = false)
+	{
+		$sql = $this->build_query($tags, $mode, $casesensitive);
+
+		$sql = "SELECT COUNT(*) as total_results FROM ($sql) a";
+		$result = $this->db->sql_query($sql);
+		$count = (int) $this->db->sql_fetchfield('total_results');
+		$this->db->sql_freeresult($result);
+		return $count;
+	}
+
+	private function build_query($tags, $mode = "AND", $casesensitive = false)
 	{
 		global $auth;
 
@@ -361,7 +401,8 @@ class tags_manager
 		$sql_where_tag_in .= ' IN (' . join(',', $escaped_tags) . ')';
 
 		$sql = '';
-		if ('AND' == $mode) {
+		if ('AND' == $mode)
+		{
 			// http://stackoverflow.com/questions/26038114/sql-select-distinct-where-exist-row-for-each-id-in-other-table
 			$tag_count = sizeof($tags);
 			$sql = 'SELECT topics.*
@@ -374,9 +415,10 @@ class tags_manager
 					AND f.rh_topictags_enabled = 1
 					AND ' . $sql_where_topic_access . '
 				GROUP BY topics.topic_id
-				HAVING count(t.id) = '.$tag_count ;
-				$where_sql = '';
-		} else {
+				HAVING count(t.id) = ' . $tag_count;
+		}
+		else
+		{
 			// OR mode, we produce: AND t.tag IN ('tag1', 'tag2', ...)
 			$sql_array = array(
 				'SELECT'	=> 'topics.*',
@@ -396,14 +438,7 @@ class tags_manager
 					');
 			$sql = $this->db->sql_build_query('SELECT_DISTINCT', $sql_array);
 		}
-
-		$result = $this->db->sql_query($sql);
-		$topics = array();
-        while ($row = $this->db->sql_fetchrow($result))
-		{
-			$topics[] = $row;
-		}
-		return $topics;
+		return $sql;
 	}
 
 	/**

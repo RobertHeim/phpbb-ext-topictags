@@ -61,7 +61,8 @@ class main
 	 */
 	public function show_tag($tags, $mode, $casesensitive)
 	{
-		global $user;
+		global $user, $phpbb_container, $config, $phpbb_root_path, $request;
+		
 		$tags = explode(",", $tags);
 		$all_tags = $this->tags_manager->split_valid_tags($tags);
 		$tags = $all_tags['valid'];
@@ -79,20 +80,40 @@ class main
 			);
 		}
 
+		$pagination		= $phpbb_container->get('pagination');
+
+		$start			= $request->variable('start', 0);
+		$limit			= $config['topics_per_page'];
+
+		$topics_count	= $this->tags_manager->count_topics_by_tags($tags, $start, $limit, $mode, $casesensitive);
+		$start			= $pagination->validate_start($start, $config['topics_per_page'], $topics_count);
+
+		$topics			= $this->tags_manager->get_topics_by_tags($tags, $start, $limit, $mode, $casesensitive);
+
+		$base_url		= $this->helper->route('robertheim_topictags_show_tag_controller', array(
+								'tags'	=> $tags_string,
+							));
+		$base_url		= append_sid($base_url);
+
+		$pagination->generate_template_pagination($base_url, 'pagination', 'start', $topics_count, $config['topics_per_page'], $start);
+
+		$user->add_lang('viewforum');
 		$this->template->assign_vars(array(
-			'RH_TOPICTAGS_SEARCH_HEADER' => $user->lang('RH_TOPICTAGS_SEARCH_HEADER_' . $mode, 
+			'RH_TOPICTAGS_SEARCH_HEADER'		=> $user->lang('RH_TOPICTAGS_SEARCH_HEADER_' . $mode, 
 				$tags_string
 			),
-			'RH_TOPICTAGS_SEARCH_IGNORED_TAGS' => $ignored_tags_str,
+			'RH_TOPICTAGS_SEARCH_IGNORED_TAGS'	=> $ignored_tags_str,
+			'TOTAL_TOPICS'						=> $user->lang('VIEW_FORUM_TOPICS', $topics_count),
 		));
-		$topics = $this->tags_manager->get_topics_by_tags($tags, $mode, $casesensitive);
-		if (sizeof($topics)<=0) {
+
+		if (sizeof($topics) <= 0)
+		{
 			$this->template->assign_var('NO_TOPICS_FOR_TAG', $user->lang('RH_TOPICTAGS_NO_TOPICS_FOR_TAG_'.$mode,
 				$tags_string));
 		}
 		else
 		{
-			global $phpbb_root_path, $phpEx, $phpbb_container, $auth, $phpbb_dispatcher, $template, $config;
+			global $phpEx, $auth, $phpbb_dispatcher, $template;
 			$this->template->assign_vars(array(
 				'NEWEST_POST_IMG'			=> $user->img('icon_topic_newest', 'VIEW_NEWEST_POST'),
 				'LAST_POST_IMG'				=> $user->img('icon_topic_latest', 'VIEW_LATEST_POST'),
@@ -104,7 +125,6 @@ class main
 			));
 
 			$phpbb_content_visibility = $phpbb_container->get('content.visibility');
-			$pagination = $phpbb_container->get('pagination');
 			include_once($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 
 			foreach ($topics as $topic)
@@ -205,6 +225,7 @@ class main
 
 				$template->assign_block_vars('topicrow', $topic_row);
 		
+				// mini pagination of posts in topic-rowss
 				$pagination->generate_template_pagination($view_topic_url, 'topicrow.pagination', 'start', $replies + 1, $config['posts_per_page'], 1, true, true);
 			} // foreach
 		} // else
