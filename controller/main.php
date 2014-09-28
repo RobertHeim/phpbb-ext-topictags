@@ -71,13 +71,19 @@ class main
 		// default == AND
 		$mode = $mode == 'OR' ? 'OR' : 'AND';
 
+		$ignored_tags_str = false;
+		if (sizeof($all_tags['invalid']) > 0)
+		{
+			$ignored_tags_str = $user->lang('RH_TOPICTAGS_SEARCH_IGNORED_TAGS',
+				join(", ", $all_tags['invalid']) 
+			);
+		}
+
 		$this->template->assign_vars(array(
 			'RH_TOPICTAGS_SEARCH_HEADER' => $user->lang('RH_TOPICTAGS_SEARCH_HEADER_' . $mode, 
 				$tags_string
 			),
-			'RH_TOPICTAGS_SEARCH_IGNORED_TAGS' => $user->lang('RH_TOPICTAGS_SEARCH_IGNORED_TAGS',
-				join(", ", $all_tags['invalid'])
-			),
+			'RH_TOPICTAGS_SEARCH_IGNORED_TAGS' => $ignored_tags_str,
 		));
 		$topics = $this->tags_manager->get_topics_by_tags($tags, $mode, $casesensitive);
 		if (sizeof($topics)<=0) {
