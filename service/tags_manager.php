@@ -180,7 +180,6 @@ class tags_manager
 	 *
 	 * @param $topic_id
 	 * @param $valid_tags			array containing valid tag-names
-	 * @see is_valid_tag(string)
 	 */
 	public function assign_tags_to_topic($topic_id, $valid_tags)
 	{
@@ -411,18 +410,15 @@ class tags_manager
 	 * Checks if the given tag matches the configured regex for valid tags, Note that the tag is trimmed to 30 characters before the check!
 	 *
 	 * @param $tag the tag to check
+	 * @param $is_clean wether the tag has already been cleaned or not.
 	 * @return true if the tag matches, false otherwise
 	 */
-	public function is_valid_tag($tag)
+	public function is_valid_tag($tag, $is_clean = false)
 	{
-		$tag = trim($tag);
-
-		// db-field is max 30 characters!
-		$tag = substr($tag, 0, 30);
-
-		//might have a space at the end now, so trim again
-		$tag = trim($tag);
-
+		if (!$is_clean)
+		{
+			$tag = $this->clean_tag($tag);
+		}
 		$pattern = $this->config[PREFIXES::CONFIG.'_allowed_tags_regex'];
 		return preg_match($pattern, $tag);
 	}
@@ -440,10 +436,30 @@ class tags_manager
 			'invalid' => array()
 		);
 		foreach ($tags as $tag) {
-			$type = $this->is_valid_tag($tag) ? 'valid' : 'invalid';
+			$tag = $this->clean_tag($tag);
+			$type = $this->is_valid_tag($tag, true) ? 'valid' : 'invalid';
 			$re[$type][] = $tag;
 		}
 		return $re;
+	}
+
+	/**
+	 * Trims the tag to 30 characters.
+	 *
+	 * @param the tag to clean
+	 * @return cleaned tag
+	 */
+	public function clean_tag($tag)
+	{
+		$tag = trim($tag);
+
+		// db-field is max 30 characters!
+		$tag = substr($tag, 0, 30);
+
+		//might have a space at the end now, so trim again
+		$tag = trim($tag);
+
+		return $tag;
 	}
 
 	/**

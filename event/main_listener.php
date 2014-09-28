@@ -126,11 +126,12 @@ class main_listener implements EventSubscriberInterface
         $data = $event_data['data'];
 
 		$tags = $this->get_tags_from_post_request();
+		$all_tags = $this->tags_manager->split_valid_tags($tags);
+		$valid_tags = $all_tags['valid'];
 
-		if (!empty($tags))
+		if (!empty($valid_tags))
 		{
-			// note that the tags have been validated in event core.modify_posting_parameters
-			$this->tags_manager->assign_tags_to_topic($data['topic_id'], $tags);
+			$this->tags_manager->assign_tags_to_topic($data['topic_id'], $valid_tags);
 	        $event->set_data($event_data);
 		}
     }
@@ -200,7 +201,7 @@ class main_listener implements EventSubscriberInterface
 	/**
 	 * Event: core.viewtopic_assign_template_vars_before
 	 *
-	 * assign tags to topic-template
+	 * assign tags to topic-template and header-meta
 	 *
 	 * @param $event
 	 */
@@ -210,19 +211,25 @@ class main_listener implements EventSubscriberInterface
 		$topic_id = $data['topic_id'];
 		$forum_id = $data['forum_id'];
 
-		$tags = $this->tags_manager->get_assigned_tags($topic_id);
-		$show_tags = $this->tags_manager->is_tagging_enabled_in_forum($forum_id) && !empty($tags);
-		if ($show_tags) {
-			$tpl_tags = array();
-			foreach ($tags as $tag) {
-		        $this->template->assign_block_vars('rh_topic_tags', array(
-					'NAME' => $tag,
-					'LINK' => $this->helper->route('robertheim_topictags_show_tag_controller', array(
-						'tags'	=> $tag
-					)),
+		if ($this->tags_manager->is_tagging_enabled_in_forum($forum_id))
+		{
+			$tags = $this->tags_manager->get_assigned_tags($topic_id);
+			if (!empty($tags))
+			{
+				foreach ($tags as $tag) {
+			        $this->template->assign_block_vars('rh_topic_tags', array(
+						'NAME' => $tag,
+						'LINK' => $this->helper->route('robertheim_topictags_show_tag_controller', array(
+							'tags'	=> $tag
+						)),
+					));
+				}
+	
+				$this->template->assign_vars(array(
+					'RH_TOPICTAGS_SHOW'	=> true,
+					'META'				=> '<meta name="keywords" content="' . join(', ', $tags) . '">',
 				));
 			}
-			$this->template->assign_var('RH_TOPICTAGS_SHOW', $show_tags);
 		}
 	}
 }
