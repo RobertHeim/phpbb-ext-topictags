@@ -81,12 +81,20 @@ class topictags_module
 					$deleted_assignments_count += $tags_manager->delete_assignments_where_topic_does_not_exist();
 					$delete_unused_tags = true;
 				}
-	
+
 				if ($request->variable($conf_prefix.'_prune_forums', 0) > 0)
 				{
 					global $phpbb_container;
 					$tags_manager = $phpbb_container->get('robertheim.topictags.tags_manager');
 					$deleted_assignments_count += $tags_manager->delete_tags_from_tagdisabled_forums();
+					$delete_unused_tags = true;
+				}
+
+				if ($request->variable($conf_prefix.'_prune_invalid_tags', 0) > 0)
+				{
+					global $phpbb_container;
+					$tags_manager = $phpbb_container->get('robertheim.topictags.tags_manager');
+					$deleted_assignments_count += $tags_manager->delete_assignments_of_invalid_tags();
 					$delete_unused_tags = true;
 				}
 	

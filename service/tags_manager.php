@@ -72,6 +72,31 @@ class tags_manager
 	}
 
 	/**
+	 * Deletes all assignments of tags, that are no longer valid
+	 *
+	 * @return count of removed assignments
+	 */
+	public function delete_assignments_of_invalid_tags()
+	{
+		// get all tags to check them
+		$tags =  $this->get_existing_tags(null);
+
+		$ids_of_invalid_tags_ = array();
+		foreach ($tags as $tag)
+		{
+			if (!$this->is_valid_tag($tag['tag']))
+			{
+				$ids_of_invalid_tags[] = (int) $tag['id'];
+			}
+		}
+		// delete all tag-assignments where the tag is not valid
+		$sql = 'DELETE tt FROM ' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
+				WHERE tt.tag_id IN (' . join(',', $ids_of_invalid_tags) . ')';
+		$this->db->sql_query($sql);
+		return $this->db->sql_affectedrows();
+	}
+
+	/**
 	 * Removes all topic-tag-assignments where the topic does not exist anymore.
 	 *
 	 * @return count of deleted assignments

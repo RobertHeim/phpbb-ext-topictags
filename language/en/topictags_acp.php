@@ -51,8 +51,12 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_PRUNE_FORUMS_EXP'		=> 'This will DELETE all assignments of tags to those topics that reside in a forum with tagging disabled.',
 	'TOPICTAGS_PRUNE_FORUMS_CONFIRM'	=> 'This will REMOVE all tags from all those threads which reside in a forum with tagging disabled.',
 
+	'TOPICTAGS_PRUNE_INVALID_TAGS'			=> 'Prune invalid tags',
+	'TOPICTAGS_PRUNE_INVALID_TAGS_EXP'			=> 'This will DELETE all tags (and their assignments) that are not valid anymore. This is only required if you changed the regex and want to get rid of the invalid tags. Note that invalid tags are not searchable, but are still displayed in the topics.',
+	'TOPICTAGS_PRUNE_INVALID_TAGS_CONFIRM'	=> 'This will REMOVE all tags that are not conform with the configured regex and can delete a lot of your stuff, if you are not careful!',
+
 	'TOPICTAGS_ALLOWED_TAGS_REGEX'				=> 'Regular Expression for allowed tags',
-	'TOPICTAGS_ALLOWED_TAGS_REGEX_EXP'			=> 'WARNING: Do not change this, if you don\'t know what you are doing. <strong>Tags can be 30 characters at maximum</strong>, please take this into account during regex design.<br/>default: /^[a-z0-9]{3,30}$/i',
+	'TOPICTAGS_ALLOWED_TAGS_REGEX_EXP'			=> 'WARNING: Do not change this, if you don\'t know what you are doing. <strong>Tags can be 30 characters at maximum</strong>, please consider this during regex design.<br/>Furthermore, you should manually prune the tags (see maintenance-section) after changing the regex, if you want to delete all invalid tags.<br/>default: /^[a-z0-9]{3,30}$/i',
 	'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS'		=> 'Explanation for Users',
 	'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS_EXP'	=> 'This text is shown to the users and should explain which tags are allowed and which not.<br/>default: 0-9, a-z, A-Z, min: 3, max: 30',
 
