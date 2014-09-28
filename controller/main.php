@@ -64,6 +64,8 @@ class main
 		global $user, $phpbb_container, $config, $phpbb_root_path, $request;
 		
 		$tags = explode(",", $tags);
+		// remove possible duplicates
+		$tags = array_unique($tags);
 		$all_tags = $this->tags_manager->split_valid_tags($tags);
 		$tags = $all_tags['valid'];
 		$tags_string = join(', ', $tags);
