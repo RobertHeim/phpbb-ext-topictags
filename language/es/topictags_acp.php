@@ -47,4 +47,13 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_PRUNE_FORUMS_EXP'		=> 'Esto ELIMINARÁ todas las asignaciones de las etiquetas de los temas que residen en un foro con etiquetado deshabilitado.',
 	'TOPICTAGS_PRUNE_FORUMS_CONFIRM'	=> 'Esto ELIMINARÁ todas las etiquetas de todos los hilos que residen en un foro con etiquetado deshabilitado.',
 
+	'TOPICTAGS_PRUNE_INVALID_TAGS'			=> 'Limpiar etiquetas no válidas',
+	'TOPICTAGS_PRUNE_INVALID_TAGS_EXP'			=> 'Esto ELIMINARÁ todas las etiquetas (y sus asignaciones) que no son válidas. Esto sólo es necesario si ha cambiado la expresión regular y quiere deshacerse de las etiquetas no válidas. Tenga en cuenta que las etiquetas no válidas no se pueden buscar, pero todavía se muestran en los temas.',
+	'TOPICTAGS_PRUNE_INVALID_TAGS_CONFIRM'	=> '¡Esto ELIMINARÁ todas las etiquetas que no están conformes con la configuración de expresión regular y puede eliminar una gran cantidad de su material si no tienes cuidado!',
+
+	'TOPICTAGS_ALLOWED_TAGS_REGEX'				=> 'Expresión regular para etiquetas permitidas',
+	'TOPICTAGS_ALLOWED_TAGS_REGEX_EXP'			=> 'ADVERTENCIA: No cambie esto, si usted no sabe lo que está haciendo. <strong>Las etiquetas pueden ser de 30 caracteres como máximo</strong>, por favor considere esto durante el diseño de expresiones regulares.<br/>Además, usted debe purgar/limpiar manualmente las etiquetas (ver sección de mantenimiento) después de cambiar la expresión regular, si quiere eliminar todas las etiquetas no válidas.<br/>por defecto: /^[a-z0-9]{3,30}$/i',
+	'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS'		=> 'Explicación para los usuarios',
+	'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS_EXP'	=> 'Este texto se muestra a los usuarios y debe explicar qué etiquetas se permiten y cuáles no.<br/>por defecto: 0-9, a-z, A-Z, min: 3, max: 30',
+
 ));
