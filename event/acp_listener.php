@@ -77,7 +77,7 @@ class acp_listener implements EventSubscriberInterface
 
 		$status = isset($post['rh_topictags_enabled']) ? $post['rh_topictags_enabled'] : 0;
 		// ensure 0 or 1
-		$status !=0 ? 1 : 0;
+		$status = ($status ? 1 : 0);
 		$data['forum_data']['rh_topictags_enabled'] = $status;
 
 		// pruning requires the tagging to be disabled for this forum to prevent accidental deletion of tags

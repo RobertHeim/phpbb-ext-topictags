@@ -42,7 +42,7 @@ class tags_manager
 	{
 		// remove tags from topic
 		$sql = 'DELETE FROM ' . $this->table_prefix . TABLES::TOPICTAGS. '
-				WHERE topic_id = '.$topic_id;
+				WHERE topic_id = ' . (int) $topic_id;
 		$this->db->sql_query($sql);
 		if ($delete_unused_tags) {
 			$this->delete_unused_tags();
@@ -109,7 +109,7 @@ class tags_manager
 			$int_ids = array();
 			foreach ($forum_ids as $id)
 			{
-				$int_ids[] = (int)$id;
+				$int_ids[] = (int) $id;
 			}
 			$forums_sql_where = ' AND f.forum_id IN (' . join(',', $int_ids) . ')';
 		}
@@ -140,7 +140,7 @@ class tags_manager
 		$result = $this->db->sql_query('SELECT t.tag FROM
 				' . $this->table_prefix . TABLES::TAGS . ' AS t, 
 				' . $this->table_prefix . TABLES::TOPICTAGS . ' AS tt
-			WHERE tt.topic_id = '.$topic_id.'
+			WHERE tt.topic_id = ' . (int) $topic_id.'
 				AND t.id = tt.tag_id');
 		$tags = array();
         while ($row = $this->db->sql_fetchrow($result))
@@ -188,7 +188,7 @@ class tags_manager
 	{
 		// we will get all existing tags of $tags
 		// and then substract these from $tags
-		// result contains th tags that needs to be created
+		// result contains the tags that needs to be created
 		// to_create = $tags - exting
 
 		$existing_tags = $this->get_existing_tags($tags);
@@ -242,7 +242,7 @@ class tags_manager
 			// prepare tags for sql-where-in ('tag1', 'tag2', ...)
 			$sql_tags = array();
 			foreach ($tags as $tag) {
-				$sql_tags[] = "'".$this->db->sql_escape($tag)."'";
+				$sql_tags[] = "'" . $this->db->sql_escape($tag) . "'";
 			}
 			$sql_tags = join(",", $sql_tags);
 			$where = ' WHERE tag IN (' . $sql_tags . ')';
@@ -432,7 +432,7 @@ class tags_manager
 		$field = 'rh_topictags_enabled';
 		$sql = "SELECT $field
 				FROM " . FORUMS_TABLE . '
-				WHERE ' . $this->db->sql_build_array('SELECT', array('forum_id' => (int)$forum_id));
+				WHERE ' . $this->db->sql_build_array('SELECT', array('forum_id' => (int) $forum_id));
 		$result = $this->db->sql_query($sql);
 		return (int) $this->db->sql_fetchfield($field);	
 	}
