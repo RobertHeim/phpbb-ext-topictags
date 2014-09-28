@@ -24,7 +24,7 @@ $lang = array_merge($lang, array(
 	'ACP_FORUM_SETTINGS_RH_TOPICTAGS_PRUNE'					=> 'Delete tags from this forum',
 	'ACP_FORUM_SETTINGS_RH_TOPICTAGS_PRUNE_EXP'				=> 'This will DELETE all assignments of tags to the topics of this forum. NOTE: To prevent accidental deletion of tags, you need to disabled tagging for this forum.',
 	'ACP_FORUM_SETTINGS_RH_TOPICTAGS_PRUNE_CONFIRM'			=> 'This option will DELETE all assignments of tags to the topics of this forum and you need to disable tagging for this forum, to perform this action.',
-	'ACP_RH_TOPICTAGS_PRUNING_REQUIRES_TAGGING_DISABLED'	=> 'To prevent accidental deletion of tags, you need to diable tagging for this forum to delete the tag assignments.',
+	'ACP_RH_TOPICTAGS_PRUNING_REQUIRES_TAGGING_DISABLED'	=> 'To prevent accidental deletion of tags, you need to disable tagging for this forum to delete the tag assignments.',
 
 
 
