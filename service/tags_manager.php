@@ -280,7 +280,7 @@ class tags_manager
 	}
 
 	/**
-	 * Gets the topics which are tagged with any or all of the given $tags from all forums, where tagging is enabled
+	 * Gets the topics which are tagged with any or all of the given $tags from all forums, where tagging is enabled and only those which the user is allowed to read.
 	 *
 	 * @param $tags the tag to find the topics for
 	 * @param $is_clean if true the tag is not cleaned again
@@ -289,6 +289,7 @@ class tags_manager
 	 */
 	public function get_topics_by_tags($tags, $is_clean = false, $mode = 'AND')
 	{
+		global $auth;
 		if (!$is_clean)
 		{
 			$tags = $this->clean_tags($tags);
@@ -308,6 +309,25 @@ class tags_manager
 			$escaped_tags[] = "'" . $this->db->sql_escape($tag) . "'";
 		}
 
+		
+		// Get forums that the user is allowed to read
+		$forum_ary = array();
+		$forum_read_ary = $auth->acl_getf('f_read');
+		foreach ($forum_read_ary as $forum_id => $allowed)
+		{
+			if ($allowed['f_read'])
+			{
+				$forum_ary[] = (int) $forum_id;
+			}
+		}
+		
+		// Remove double entries
+		$forum_ary = array_unique($forum_ary);
+		
+		// Get sql-source for the topics that reside in forums that the user can read and which are approved.
+		$sql_where_topic_access = $this->db->sql_in_set('topics.forum_id', $forum_ary, false, true);
+		$sql_where_topic_access .= ' AND topics.topic_visibility = 1';
+
 		$sql = '';
 		if ('AND' == $mode) {
 			// http://stackoverflow.com/questions/26038114/sql-select-distinct-where-exist-row-for-each-id-in-other-table
@@ -319,6 +339,7 @@ class tags_manager
 					JOIN ' . FORUMS_TABLE								. ' f  ON f.forum_id = topics.forum_id
 				WHERE t.tag IN ('.join(",", $escaped_tags).')
 					AND f.rh_topictags_enabled = 1
+					AND ' . $sql_where_topic_access . '
 				GROUP BY topics.topic_id
 				HAVING count(t.id) = '.$tag_count ;
 				$where_sql = '';
@@ -335,6 +356,7 @@ class tags_manager
 				'WHERE'		=> 'topics.topic_id = tt.topic_id
 					AND f.rh_topictags_enabled = 1
 					AND f.forum_id = topics.forum_id
+					AND ' . $sql_where_topic_access . '
 					AND t.id = tt.tag_id
 					AND t.tag IN (' . join(",", $escaped_tags) . ')');
 			$sql = $this->db->sql_build_query('SELECT_DISTINCT', $sql_array);
