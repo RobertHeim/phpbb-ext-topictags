@@ -16,7 +16,7 @@ phpBB 3.1 extension, that adds the ability to tag topics with key words.
   * */tag/tag1,tag2 lists* topics that are tagged with [tag1 AND (tag2 OR tAG2)] (mode=default=AND, casesensitive=default=false)
   * */tag/tag1,tAG2/AND/true* lists topics that are tagged with (tag1 AND tAG2)
 * configure a regex to decide which tags are valid and which are not
-* maintenance functions in ACP -> Extensions -> Topic Tags
+* maintenance functions in ACP -> Extensions -> RH Topic Tags
 * tags are added to meta-content keywords in viewtopic
 
 ## Installation
@@ -33,6 +33,8 @@ git clone https://github.com/RobertHeim/phpbb-ext-topictags.git ext/robertheim/t
 Go to admin panel -> tab customise -> Manage extensions -> enable RH Topic Tags
 
 ### 3. configure
+
+Goto ACP -> Extensions -> RH Topic Tags
 
 ## Support
 
