@@ -68,19 +68,16 @@ class main
 		// validate mode
 		// default == AND
 		$mode = $mode == 'OR' ? 'OR' : 'AND';
-		$mode_connection_lang = $user->lang('RH_TOPICTAGS_'.($mode=='OR'?'ANY':'ALL'));
 
 		$this->template->assign_vars(array(
-			'RH_TOPICTAGS_SEARCH_HEADER' => $user->lang('RH_TOPICTAGS_SEARCH_HEADER', 
-				$mode_connection_lang,
+			'RH_TOPICTAGS_SEARCH_HEADER' => $user->lang('RH_TOPICTAGS_SEARCH_HEADER_'.$mode, 
 				$tags_string
 			),
 		));
 
 		$topics = $this->tags_manager->get_topics_by_tags($tags, true, $mode);
 		if (sizeof($topics)<=0) {
-			$this->template->assign_var('NO_TOPICS_FOR_TAG', $user->lang('RH_TOPICTAGS_NO_TOPICS_FOR_TAG',
-				$mode_connection_lang,
+			$this->template->assign_var('NO_TOPICS_FOR_TAG', $user->lang('RH_TOPICTAGS_NO_TOPICS_FOR_TAG_'.$mode,
 				$tags_string));
 		}
 		else

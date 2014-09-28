@@ -20,11 +20,13 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'RH_TOPICTAGS'						=> 'Tags',
 	'RH_TOPICTAGS_EXP'					=> 'Tags separated by comma (",")',
-	'RH_TOPICTAGS_ANY'					=> 'any',
-	'RH_TOPICTAGS_ALL'					=> 'all',
-	'RH_TOPICTAGS_EXP'					=> 'Tags separated by comma (",")',
-	'RH_TOPICTAGS_SEARCH_HEADER'		=> 'Search for topics with %s of these tags: %s', // %s=any||all, %s=tags,
-	'RH_TOPICTAGS_NO_TOPICS_FOR_TAG'	=> 'There are no topics tagged with %s of these tags: %s', // %s=any||all, %s=tags,
+
+	'RH_TOPICTAGS_SEARCH_HEADER_OR'		=> 'Search for topics with any of these tags: %s',
+	'RH_TOPICTAGS_SEARCH_HEADER_AND'	=> 'Search for topics with all of these tags: %s',
+
+	'RH_TOPICTAGS_NO_TOPICS_FOR_TAG_OR'		=> 'There are no topics tagged with any of these tags: %s',
+	'RH_TOPICTAGS_NO_TOPICS_FOR_TAG_AND'	=> 'There are no topics tagged with all of these tags: %s',
+
 	'RH_TOPICTAGS_NO_TAGS'				=> 'There are no tags, yet.',
 
 ));
