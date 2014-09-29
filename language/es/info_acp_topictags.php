@@ -39,6 +39,6 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	// ACP Module
-	'ACP_TOPICTAGS_TITLE'			=> 'Etiquetas de temas',
+	'ACP_TOPICTAGS_TITLE'			=> 'RH Etiquetas de temas',
 	'ACP_TOPICTAGS_SETTINGS'		=> 'Ajustes',
 ));
