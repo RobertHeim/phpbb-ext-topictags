@@ -27,6 +27,7 @@ class main_listener implements EventSubscriberInterface
 			'core.user_setup'								=> 'load_language_on_setup',
 			'core.modify_posting_parameters'				=> 'modify_posting_parameters',
 			'core.posting_modify_template_vars'				=> 'posting_modify_template_vars',
+			'core.viewforum_modify_topicrow'				=> 'viewforum_modify_topicrow',
 			'core.viewtopic_assign_template_vars_before'	=> 'viewtopic_assign_template_vars_before',
 			'core.submit_post_end'							=> 'submit_post_end',
 		);
@@ -199,6 +200,49 @@ class main_listener implements EventSubscriberInterface
     }
 
 	/**
+	 * Event: core.viewforum_modify_topicrow
+	 *
+	 * Get and assign tags to topic-row-template -> RH_TOPICTAGS_TAGS.
+	 *
+	 * Note that we assign a string which includes the a-href-links already,
+	 * because we cannot assign sub-blocks before the outer-block with
+	 * assign_block_vars(...) and the event is before the actual assignment.
+	 *
+	 * @param $event
+	 */
+	public function viewforum_modify_topicrow($event)
+	{
+		if ($this->config[PREFIXES::CONFIG.'_display_tags_in_viewforum'])
+		{
+	        $data = $event->get_data();
+			$topic_id = (int) $data['row']['topic_id'];
+			$forum_id = (int) $data['row']['forum_id'];
+
+			if ($this->tags_manager->is_tagging_enabled_in_forum($forum_id))
+			{
+				$tags = $this->tags_manager->get_assigned_tags($topic_id);
+				if (!empty($tags))
+				{
+					// we cannot use assign_block_vars('topicrow.tags', ...) here, because the topicrow is not yet assigned
+					// add links
+					$tpl_tags = array();
+					foreach ($tags as $tag)
+					{
+						$tpl_tags[] = '<a href="'.$this->helper->route('robertheim_topictags_show_tag_controller', array(
+										'tags'	=> $tag
+									)) . '">'.$tag.'</a>';
+					}
+			
+					// assign the template data
+					$data['topic_row']['RH_TOPICTAGS_TAGS'] = join(', ', $tpl_tags);
+			
+					$event->set_data($data);
+				}
+			}
+		}
+	}
+
+	/**
 	 * Event: core.viewtopic_assign_template_vars_before
 	 *
 	 * assign tags to topic-template and header-meta
@@ -208,8 +252,8 @@ class main_listener implements EventSubscriberInterface
 	public function viewtopic_assign_template_vars_before($event)
 	{
         $data = $event->get_data();
-		$topic_id = $data['topic_id'];
-		$forum_id = $data['forum_id'];
+		$topic_id = (int) $data['topic_id'];
+		$forum_id = (int) $data['forum_id'];
 
 		if ($this->tags_manager->is_tagging_enabled_in_forum($forum_id))
 		{

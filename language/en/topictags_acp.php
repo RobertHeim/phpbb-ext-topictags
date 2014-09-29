@@ -35,6 +35,10 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_MAINTENANCE'				=> 'Maintenance',
 	'TOPICTAGS_TITLE'					=> 'RH Topic Tags',
 	'TOPICTAGS_SETTINGS_SAVED'			=> 'Configuration updated successfully.',
+
+	'TOPICTAGS_DISPLAY_TAGS_IN_VIEWFORUM'		=> 'Display tags in viewforum',
+	'TOPICTAGS_DISPLAY_TAGS_IN_VIEWFORUM_EXP'	=> 'If set to yes, the assigned tags for each topic are shown in topic-lists.',
+
 	'TOPICTAGS_PRUNE'					=> 'Prune tags',
 	'TOPICTAGS_PRUNE_EXP'				=> 'This will delete all tags, which are not used by any topic',
 	'TOPICTAGS_PRUNE_CONFIRM'			=> 'This will DELETE all unused tags.',

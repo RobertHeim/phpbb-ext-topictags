@@ -29,6 +29,7 @@ class release_0_0_5 extends \phpbb\db\migration\migration
 	public function update_data()
 	{
 		return array(
+			array('config.add', array(PREFIXES::CONFIG.'_display_tags_in_viewforum', 1)),
 			array('config.update', array(PREFIXES::CONFIG.'_version', $this->version)),
 		);
 	}

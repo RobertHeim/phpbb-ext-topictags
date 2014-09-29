@@ -67,6 +67,7 @@ class topictags_module
 
 			if ($submit)
 			{
+				$config->set($conf_prefix.'_display_tags_in_viewforum', $request->variable($conf_prefix.'_display_tags_in_viewforum', 1));
 				$config->set($conf_prefix.'_allowed_tags_regex', $regex);
 				$config->set($conf_prefix.'_allowed_tags_exp_for_users', $exp_for_users);
 
@@ -120,6 +121,7 @@ class topictags_module
 
 		$template->assign_vars(array(
 			'TOPICTAGS_VERSION'						=> $user->lang('TOPICTAGS_INSTALLED', $config[$conf_prefix.'_version']),
+			'TOPICTAGS_DISPLAY_TAGS_IN_VIEWFORUM'	=> $config[$conf_prefix.'_display_tags_in_viewforum'],
 			'TOPICTAGS_ALLOWED_TAGS_REGEX'			=> $config[$conf_prefix.'_allowed_tags_regex'],
 			'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS'	=> $config[$conf_prefix.'_allowed_tags_exp_for_users'],
 			'S_ERROR'								=> (sizeof($errors)) ? true : false,
