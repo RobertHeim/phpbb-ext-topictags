@@ -18,6 +18,7 @@ phpBB 3.1 extension, that adds the ability to tag topics with key words.
 * configure a regex to decide which tags are valid and which are not
 * maintenance functions in ACP -> Extensions -> RH Topic Tags
 * tags are added to meta-content keywords in viewtopic
+* tags are shown in viewforum (can be disabled in acp)
 
 ## Installation
 
