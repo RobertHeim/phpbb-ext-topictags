@@ -19,16 +19,26 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	// forum settings page
-	'ACP_RH_TOPICTAGS_ENABLE'								=> 'Habilitar Etiquetas de temas',
+	'ACP_RH_TOPICTAGS_ENABLE'								=> 'Habilitar RH Etiquetas de temas',
 	'ACP_RH_TOPICTAGS_ENABLE_EXP'							=> 'Sea o no habilitado el etiquetado de los temas en este foro. (Al desactivar el etiquetado, las etiquetas no serán eliminadas de los temas en este foro, por lo que cuando se habilite de nuevo, todavía estarán allí, si realmente desea eliminar las etiquetas, utilice la opción "Eliminar las etiquetas de este foro".)',
 	'ACP_FORUM_SETTINGS_RH_TOPICTAGS_PRUNE'					=> 'Eliminar las etiquetas de este foro',
 	'ACP_FORUM_SETTINGS_RH_TOPICTAGS_PRUNE_EXP'				=> 'Esto ELIMINARÁ todas las asignaciones de las etiquetas de los temas de este foro. NOTA: Para evitar el borrado accidental de las etiquetas, es necesario deshabilitar el etiquetado para este foro.',
 	'ACP_FORUM_SETTINGS_RH_TOPICTAGS_PRUNE_CONFIRM'			=> 'Esta opción ELIMINARÁ todas las asignaciones de las etiquetas de los temas de este foro, hay que desactivar el etiquetado de este foro para realizar esta acción.',
 	'ACP_RH_TOPICTAGS_PRUNING_REQUIRES_TAGGING_DISABLED'	=> 'Para evitar el borrado accidental de las etiquetas, es necesario deshabilitar el etiquetado de este foro para eliminar las asignaciones de etiqueta.',
 
+	// config
+	'TOPICTAGS_INSTALLED'					=> 'Versión instalada: v%s',
+	'ACP_RH_TOPICTAGS_REGEX_EMPTY'			=> 'La expresión regular no se puede dejar vacía.',
+	'ACP_RH_TOPICTAGS_EXP_FOR_USERS_EMPTY'	=> 'La explicación de las etiquetas que están permitidas no se puede dejar vacía.',
+	
+	'TOPICTAGS_CONFIG'					=> 'Configuración',
 	'TOPICTAGS_MAINTENANCE'				=> 'Mantenimiento',
-	'TOPICTAGS_TITLE'					=> 'Etiquetas de temas',
+	'TOPICTAGS_TITLE'					=> 'RH Etiquetas de temas',
 	'TOPICTAGS_SETTINGS_SAVED'			=> 'Configuración actualizada correctamente.',
+
+	'TOPICTAGS_DISPLAY_TAGS_IN_VIEWFORUM'		=> 'Mostrar etiquetas viendo un foro',
+	'TOPICTAGS_DISPLAY_TAGS_IN_VIEWFORUM_EXP'	=> 'Si se establece en sí, las etiquetas asignadas para cada tema se muestran en la lista de tema.',
+
 	'TOPICTAGS_PRUNE'					=> 'Limpiar etiquetas',
 	'TOPICTAGS_PRUNE_EXP'				=> 'Esto ELIMINARÁ todas las etiquetas, que no son utilizadas en ningún tema',
 	'TOPICTAGS_PRUNE_CONFIRM'			=> 'Esto ELIMINARÁ todas las etiquetas no utilizadas.',
