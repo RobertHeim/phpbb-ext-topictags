@@ -71,7 +71,8 @@ class main_listener implements EventSubscriberInterface
 	 * 
 	 * @return array of dirty tags
 	 */
-	private function get_tags_from_post_request() {
+	private function get_tags_from_post_request()
+	{
         $post = $this->request->get_super_global(\phpbb\request\request::POST);
 
 		if (!isset($post['rh_topictags'])) {
@@ -122,7 +123,8 @@ class main_listener implements EventSubscriberInterface
      * 
 	 * After a posting we assign the tags to the topic
 	 */
-	public function submit_post_end($event) {
+	public function submit_post_end($event)
+	{
         $event_data = $event->get_data();
         $data = $event_data['data'];
 
@@ -144,8 +146,8 @@ class main_listener implements EventSubscriberInterface
      *
      * @param $event
      */
-    public function posting_modify_template_vars($event) {
-
+    public function posting_modify_template_vars($event)
+	{
         $data = $event->get_data();
 		$forum_id = $data['forum_id'];
 
@@ -223,18 +225,29 @@ class main_listener implements EventSubscriberInterface
 				$tags = $this->tags_manager->get_assigned_tags($topic_id);
 				if (!empty($tags))
 				{
-					// we cannot use assign_block_vars('topicrow.tags', ...) here, because the topicrow is not yet assigned
+					// we cannot use assign_block_vars('topicrow.tags', ...) here, because the block 'topicrow' is not yet assigned
 					// add links
 					$tpl_tags = array();
 					foreach ($tags as $tag)
 					{
-						$tpl_tags[] = '<a href="'.$this->helper->route('robertheim_topictags_show_tag_controller', array(
-										'tags'	=> $tag
-									)) . '">'.$tag.'</a>';
+						$this->template->assign_block_vars('rh_tags_tmp', array (
+							'NAME'	=> $tag,
+							'LINK'	=> $this->helper->route('robertheim_topictags_show_tag_controller', array(
+											'tags'	=> $tag,
+										)),
+						));
 					}
-			
+
+					// small_tag.html might want to use our extension's css.
+					$this->template->assign_var('S_RH_TOPICTAGS_INCLUDE_CSS', true);
+					$rendered_tags = $this->template->assign_display('small_tag.html');
+					// remove temporary data
+					$this->template->destroy_block_vars('rh_tags_tmp');
+
 					// assign the template data
-					$data['topic_row']['RH_TOPICTAGS_TAGS'] = join(', ', $tpl_tags);
+					$data['topic_row']['RH_TOPICTAGS_TAGS'] = $rendered_tags;
+
+
 			
 					$event->set_data($data);
 				}

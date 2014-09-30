@@ -8,29 +8,42 @@
     margin:0;
     padding:0;
 }
-.rh_topictags_tagcloud li{
+.rh_topictags_tagcloud li, .rh_tag {
 	list-style-type: none;
 	display: inline-block;
     width:30%;
-	  height: 50px;
-	  line-height: 50px;
-	  text-align: center;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
     background-color: #cadceb;
     margin: 5px;
 	border-radius: 10px;
 	font-weight: bold;
 }
 
-.rh_topictags_tagcloud li:hover{
+.rh_tag {
+    width:auto;
+	padding: 0 8px;
+	height: 15px;
+	line-height: 15px;
+    margin: 3px 2px 2px 2px;
+	font-weight: normal;
+}
+
+.rh_topictags_tagcloud li:hover, .rh_tag:hover{
     background-color: #105289;
 }
 
-.rh_topictags_tagcloud a {
+.rh_topictags_tagcloud a, .rh_tag a {
 	display:block;
 	font-size: 2em;
 }
 
-.rh_topictags_tagcloud a:hover {
+.rh_tag a {
+	font-size:1em;
+}
+
+.rh_topictags_tagcloud a:hover , .rh_tag a:hover{
 	color: #cadceb;
 }
 
