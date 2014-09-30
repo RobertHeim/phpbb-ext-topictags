@@ -240,7 +240,9 @@ class main_listener implements EventSubscriberInterface
 
 					// small_tag.html might want to use our extension's css.
 					$this->template->assign_var('S_RH_TOPICTAGS_INCLUDE_CSS', true);
-					$rendered_tags = $this->template->assign_display('small_tag.html');
+					// we cannot just use 'small_tag.html' because in viewforum.php twig only searches in phpbb_root/styles/prosilver/template,
+					// but we need a template from our extension.
+					$rendered_tags = $this->template->assign_display('./../../../ext/robertheim/topictags/styles/all/template/small_tag.html');
 					// remove temporary data
 					$this->template->destroy_block_vars('rh_tags_tmp');
 
@@ -286,6 +288,8 @@ class main_listener implements EventSubscriberInterface
 					'RH_TOPICTAGS_SHOW'	=> true,
 					'META'				=> '<meta name="keywords" content="' . join(', ', $tags) . '">',
 				));
+				// tags might want to use our extension's css.
+				$this->template->assign_var('S_RH_TOPICTAGS_INCLUDE_CSS', true);
 			}
 		}
 	}

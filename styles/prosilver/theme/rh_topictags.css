@@ -43,7 +43,7 @@
 	font-size:1em;
 }
 
-.rh_topictags_tagcloud a:hover , .rh_tag a:hover{
+.rh_topictags_tagcloud a:hover , .rh_tag a:hover, .rh_tag:hover a{
 	color: #cadceb;
 }
 
