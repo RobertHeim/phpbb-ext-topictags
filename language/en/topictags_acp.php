@@ -39,6 +39,24 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_DISPLAY_TAGS_IN_VIEWFORUM'		=> 'Display tags in viewforum',
 	'TOPICTAGS_DISPLAY_TAGS_IN_VIEWFORUM_EXP'	=> 'If set to yes, the assigned tags for each topic are shown in topic-lists.',
 
+	'TOPICTAGS_ENABLE_IN_ALL_FORUMS_ALREADY'	=> 'Tagging is already enabled for all forums.',
+	'TOPICTAGS_ENABLE_IN_ALL_FORUMS'			=> 'Enable RH Topic Tags in all forums',
+	'TOPICTAGS_ENABLE_IN_ALL_FORUMS_EXP'		=> 'This will enable tagging in <em>all</em> forums. You can enable (or disable) it in a single forum in the settings of the forum.',
+	'TOPICTAGS_ENABLE_IN_ALL_FORUMS_DONE'	=> array(
+			0 => 'Tagging is already enabled for all forums.',
+			1 => 'Tagging has been enabled for %d forum.',
+			2 => 'Tagging has been enabled for %d forums.',
+	),
+
+	'TOPICTAGS_DISABLE_IN_ALL_FORUMS_ALREADY'	=> 'Tagging is already disabled for all forums.',
+	'TOPICTAGS_DISABLE_IN_ALL_FORUMS'			=> 'Disable RH Topic Tags in all forums',
+	'TOPICTAGS_DISABLE_IN_ALL_FORUMS_EXP'		=> 'This will disable tagging in <em>all</em> forums. You can enable (or disable) it in a single forum in the settings of the forum.',
+	'TOPICTAGS_DISABLE_IN_ALL_FORUMS_DONE'	=> array(
+			0 => 'Tagging is already disabled for all forums.',
+			1 => 'Tagging has been disabled for %d forum.',
+			2 => 'Tagging has been disabled for %d forums.',
+	),
+
 	'TOPICTAGS_PRUNE'					=> 'Prune tags',
 	'TOPICTAGS_PRUNE_EXP'				=> 'This will delete all tags, which are not used by any topic',
 	'TOPICTAGS_PRUNE_CONFIRM'			=> 'This will DELETE all unused tags.',

@@ -513,4 +513,80 @@ class tags_manager
 		return (int) $this->db->sql_fetchfield($field);	
 	}
 
+	/**
+	 * Enables tagging engine in all forums (not categories and links).
+	 *
+	 * @return number of affected forums (should be the count of all forums (type FORUM_POST ))
+	 */
+	public function enable_tags_in_all_forums()
+	{
+		$sql = 'UPDATE ' . FORUMS_TABLE . '
+			SET ' . $this->db->sql_build_array('UPDATE', array(
+				'rh_topictags_enabled'	=> 1
+				)) . '
+			WHERE forum_type = ' . FORUM_POST . '
+				AND rh_topictags_enabled = 0';
+		$this->db->sql_query($sql);
+		return $this->db->sql_affectedrows();
+	}
+
+	/**
+	 * Disables tagging engine in all forums (not categories and links).
+	 *
+	 * @return number of affected forums (should be the count of all forums (type FORUM_POST ))
+	 */
+	public function disable_tags_in_all_forums()
+	{
+		$sql = 'UPDATE ' . FORUMS_TABLE . '
+			SET ' . $this->db->sql_build_array('UPDATE', array(
+				'rh_topictags_enabled'	=> 0
+				)) . '
+			WHERE forum_type = ' . FORUM_POST . '
+				AND rh_topictags_enabled = 1';
+		$this->db->sql_query($sql);
+		return $this->db->sql_affectedrows();
+	}
+
+	/**
+	 * Checks if tagging is enabled or for all forums (not categories and links).
+	 *
+	 * @return true if for all forums tagging is enabled (type FORUM_POST ))
+	 */
+	public function is_enabled_in_all_forums()
+	{
+		// there exist any which are disabled => is_enabled_in_all_forums == false
+		$sql_array = array(
+			'SELECT'	=> 'COUNT(*) as all_enabled',
+			'FROM'      => array(
+				FORUMS_TABLE => 'f',
+			),
+			'WHERE'		=> 'f.rh_topictags_enabled = 0
+				AND forum_type = ' . FORUM_POST,
+		);
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+		$this->db->sql_query($sql);
+		return ((int) $this->db->sql_fetchfield('all_enabled')) == 0;
+	}
+
+	/**
+	 * Checks if tagging is disabled or for all forums (not categories and links).
+	 *
+	 * @return true if for all forums tagging is disabled (type FORUM_POST ))
+	 */
+	public function is_disabled_in_all_forums()
+	{
+		// there exist any which are enabled => is_disabled_in_all_forums == false
+		$sql_array = array(
+			'SELECT'	=> 'COUNT(*) as all_disabled',
+			'FROM'      => array(
+				FORUMS_TABLE => 'f',
+			),
+			'WHERE'		=> 'f.rh_topictags_enabled = 1
+				AND forum_type = ' . FORUM_POST,
+		);
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+		$this->db->sql_query($sql);
+		return ((int) $this->db->sql_fetchfield('all_disabled')) == 0;
+	}
+
 }

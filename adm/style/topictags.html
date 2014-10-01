@@ -34,6 +34,24 @@
 	<fieldset>
 		<legend>{L_TOPICTAGS_CONFIG}</legend>
 		<dl>
+			<dt><label for="robertheim_topictags_enable_all_forums">{L_TOPICTAGS_ENABLE_IN_ALL_FORUMS}:</label><br /><span>{L_TOPICTAGS_ENABLE_IN_ALL_FORUMS_EXP}</span></dt>
+			<dd><!-- IF TOPICTAGS_IS_ENABLED_IN_ALL_FORUMS -->
+					{L_TOPICTAGS_ENABLE_IN_ALL_FORUMS_ALREADY}
+				<!-- ELSE -->
+					<input type="radio" class="radio" name="robertheim_topictags_enable_in_all_forums" value="1"/> {L_YES} &nbsp; 
+					<input type="radio" class="radio" name="robertheim_topictags_enable_in_all_forums" value="0" checked="checked"/> {L_NO}</dd>
+				<!-- ENDIF -->
+		</dl>
+		<dl>
+			<dt><label for="robertheim_topictags_disable_all_forums">{L_TOPICTAGS_DISABLE_IN_ALL_FORUMS}:</label><br /><span>{L_TOPICTAGS_DISABLE_IN_ALL_FORUMS_EXP}</span></dt>
+			<dd><!-- IF TOPICTAGS_IS_DISABLED_IN_ALL_FORUMS -->
+					{L_TOPICTAGS_DISABLE_IN_ALL_FORUMS_ALREADY}
+				<!-- ELSE -->
+					<input type="radio" class="radio" name="robertheim_topictags_disable_in_all_forums" value="1"/> {L_YES} &nbsp; 
+					<input type="radio" class="radio" name="robertheim_topictags_disable_in_all_forums" value="0" checked="checked"/> {L_NO}</dd>
+				<!-- ENDIF -->
+		</dl>
+		<dl>
 			<dt><label for="robertheim_topictags_display_tags_in_viewforum">{L_TOPICTAGS_DISPLAY_TAGS_IN_VIEWFORUM}:</label><br /><span>{L_TOPICTAGS_DISPLAY_TAGS_IN_VIEWFORUM_EXP}</span></dt>
 			<dd><input type="radio" class="radio" name="robertheim_topictags_display_tags_in_viewforum" value="1" <!-- IF TOPICTAGS_DISPLAY_TAGS_IN_VIEWFORUM -->checked="checked"<!-- ENDIF -->/> {L_YES} &nbsp; 
 				<input type="radio" class="radio" name="robertheim_topictags_display_tags_in_viewforum" value="0" <!-- IF not TOPICTAGS_DISPLAY_TAGS_IN_VIEWFORUM -->checked="checked"<!-- ENDIF -->/> {L_NO}</dd>

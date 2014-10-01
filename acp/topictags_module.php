@@ -23,7 +23,7 @@ class topictags_module
 
 	public function main($id, $mode)
 	{
-		global $config, $request, $template, $user, $cache;
+		global $config, $request, $template, $user, $cache, $phpbb_container;
 
 		// shortcut
 		$conf_prefix = PREFIXES::CONFIG;
@@ -39,6 +39,8 @@ class topictags_module
 		// Define the name of the form for use as a form key
 		$form_name = 'topictags';
 		add_form_key($form_name);
+
+		$tags_manager = $phpbb_container->get('robertheim.topictags.tags_manager');
 
 		$errors = array();
 
@@ -75,26 +77,32 @@ class topictags_module
 				$deleted_assignments_count = 0;
 				$delete_unused_tags = false;
 	
+				if ($request->variable($conf_prefix.'_enable_in_all_forums', 0) > 0)
+				{
+					$count_affected = $tags_manager->enable_tags_in_all_forums();
+					$msg[] = $user->lang('TOPICTAGS_ENABLE_IN_ALL_FORUMS_DONE', $count_affected);
+				}
+
+				if ($request->variable($conf_prefix.'_disable_in_all_forums', 0) > 0)
+				{
+					$count_affected = $tags_manager->disable_tags_in_all_forums();
+					$msg[] = $user->lang('TOPICTAGS_DISABLE_IN_ALL_FORUMS_DONE', $count_affected);
+				}
+
 				if ($request->variable($conf_prefix.'_prune', 0) > 0)
 				{
-					global $phpbb_container;
-					$tags_manager = $phpbb_container->get('robertheim.topictags.tags_manager');
 					$deleted_assignments_count += $tags_manager->delete_assignments_where_topic_does_not_exist();
 					$delete_unused_tags = true;
 				}
 
 				if ($request->variable($conf_prefix.'_prune_forums', 0) > 0)
 				{
-					global $phpbb_container;
-					$tags_manager = $phpbb_container->get('robertheim.topictags.tags_manager');
 					$deleted_assignments_count += $tags_manager->delete_tags_from_tagdisabled_forums();
 					$delete_unused_tags = true;
 				}
 
 				if ($request->variable($conf_prefix.'_prune_invalid_tags', 0) > 0)
 				{
-					global $phpbb_container;
-					$tags_manager = $phpbb_container->get('robertheim.topictags.tags_manager');
 					$deleted_assignments_count += $tags_manager->delete_assignments_of_invalid_tags();
 					$delete_unused_tags = true;
 				}
@@ -119,16 +127,20 @@ class topictags_module
 			}
 		}
 
+		$all_enabled = $tags_manager->is_enabled_in_all_forums();
+		$all_disabled = ($all_enabled ? false : $tags_manager->is_disabled_in_all_forums());
+
 		$template->assign_vars(array(
 			'TOPICTAGS_VERSION'						=> $user->lang('TOPICTAGS_INSTALLED', $config[$conf_prefix.'_version']),
 			'TOPICTAGS_DISPLAY_TAGS_IN_VIEWFORUM'	=> $config[$conf_prefix.'_display_tags_in_viewforum'],
 			'TOPICTAGS_ALLOWED_TAGS_REGEX'			=> $config[$conf_prefix.'_allowed_tags_regex'],
 			'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS'	=> $config[$conf_prefix.'_allowed_tags_exp_for_users'],
+			'TOPICTAGS_IS_ENABLED_IN_ALL_FORUMS'	=> $all_enabled,
+			'TOPICTAGS_IS_DISABLED_IN_ALL_FORUMS'	=> $all_disabled,
 			'S_ERROR'								=> (sizeof($errors)) ? true : false,
 			'ERROR_MSG'								=> implode('<br />', $errors),
 			'U_ACTION'								=> $this->u_action,
 		));
-
 	}
 
 }
