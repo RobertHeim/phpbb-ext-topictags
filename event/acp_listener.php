@@ -98,8 +98,9 @@ class acp_listener implements EventSubscriberInterface
 
 		$post = $this->request->get_super_global(\phpbb\request\request::POST);
 
+		$status = isset($post['rh_topictags_enabled']) ? $post['rh_topictags_enabled'] : 0;
 		$prune = isset($post['rh_topictags_prune']) ? $post['rh_topictags_prune'] : 0;
-		if ($prune)
+		if (!$status && $prune)
 		{
 			$data = $event->get_data();
 			$forum_id = (int) $data['forum_data']['forum_id'];
