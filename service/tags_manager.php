@@ -20,15 +20,18 @@ class tags_manager
 
 	private $db;
 	private $config;
+	private $auth;
 	private $table_prefix;
 
 	public function __construct(
-					\phpbb\db\driver\driver $db,
+					\phpbb\db\driver\driver_interface $db,
 					\phpbb\config\config $config,
+					\phpbb\auth\auth $auth,
 					$table_prefix)
 	{
 		$this->db			= $db;
 		$this->config		= $config;
+		$this->auth			= $auth;
 		$this->table_prefix	= $table_prefix;
 	}
 
@@ -359,8 +362,6 @@ class tags_manager
 
 	private function build_query($tags, $mode = "AND", $casesensitive = false)
 	{
-		global $auth;
-
 		if (empty($tags))
 		{
 			return array();
@@ -381,7 +382,7 @@ class tags_manager
 		
 		// Get forums that the user is allowed to read
 		$forum_ary = array();
-		$forum_read_ary = $auth->acl_getf('f_read');
+		$forum_read_ary = $this->auth->acl_getf('f_read');
 		foreach ($forum_read_ary as $forum_id => $allowed)
 		{
 			if ($allowed['f_read'])
@@ -589,4 +590,16 @@ class tags_manager
 		return ((int) $this->db->sql_fetchfield('all_disabled')) == 0;
 	}
 
+	/**
+	 * Count how often each tag is used and store it for each tag.
+	 */
+	public function calc_count_tags()
+	{
+		$sql = 'UPDATE ' . $this->table_prefix . TABLES::TAGS . ' t
+				SET t.count = (
+					SELECT COUNT(tt.id)
+					FROM ' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
+					WHERE tt.tag_id = t.id)';
+		$this->db->sql_query($sql);
+	}
 }

@@ -13,24 +13,7 @@
 <!-- ENDIF -->
 
 <form id="acp_board" method="post" action="{U_ACTION}">
-	<fieldset>
-		<legend>{L_TOPICTAGS_MAINTENANCE}</legend>
-		<dl>
-			<dt><label for="robertheim_topictags_prune">{L_TOPICTAGS_PRUNE}:</label><br /><span>{L_TOPICTAGS_PRUNE_EXP}</span></dt>
-			<dd><input type="radio" class="radio" name="robertheim_topictags_prune" value="1" onclick="alert('{L_TOPICTAGS_PRUNE_CONFIRM}');" /> {L_YES} &nbsp; 
-				<input type="radio" class="radio" name="robertheim_topictags_prune" value="0" checked="checked" /> {L_NO}</dd>
-		</dl>
-		<dl>
-			<dt><label for="robertheim_topictags_prune_forums">{L_TOPICTAGS_PRUNE_FORUMS}:</label><br /><span>{L_TOPICTAGS_PRUNE_FORUMS_EXP}</span></dt>
-			<dd><input type="radio" class="radio" name="robertheim_topictags_prune_forums" value="1" onclick="alert('{L_TOPICTAGS_PRUNE_FORUMS_CONFIRM}');" /> {L_YES} &nbsp; 
-				<input type="radio" class="radio" name="robertheim_topictags_prune_forums" value="0" checked="checked" /> {L_NO}</dd>
-		</dl>
-		<dl>
-			<dt><label for="robertheim_topictags_prune_invalid">{L_TOPICTAGS_PRUNE_INVALID_TAGS}:</label><br /><span>{L_TOPICTAGS_PRUNE_INVALID_TAGS_EXP}</span></dt>
-			<dd><input type="radio" class="radio" name="robertheim_topictags_prune_invalid_tags" value="1" onclick="alert('{L_TOPICTAGS_PRUNE_INVALID_TAGS_CONFIRM}');" /> {L_YES} &nbsp; 
-				<input type="radio" class="radio" name="robertheim_topictags_prune_invalid_tags" value="0" checked="checked" /> {L_NO}</dd>
-		</dl>
-	</fieldset>
+	
 	<fieldset>
 		<legend>{L_TOPICTAGS_CONFIG}</legend>
 		<dl>
@@ -56,6 +39,21 @@
 			<dd><input type="radio" class="radio" name="robertheim_topictags_display_tags_in_viewforum" value="1" <!-- IF TOPICTAGS_DISPLAY_TAGS_IN_VIEWFORUM -->checked="checked"<!-- ENDIF -->/> {L_YES} &nbsp; 
 				<input type="radio" class="radio" name="robertheim_topictags_display_tags_in_viewforum" value="0" <!-- IF not TOPICTAGS_DISPLAY_TAGS_IN_VIEWFORUM -->checked="checked"<!-- ENDIF -->/> {L_NO}</dd>
 		</dl>
+	</fieldset>
+	<fieldset>
+		<legend>{L_TOPICTAGS_CONFIG_TAGCLOUD}</legend>
+		<dl>
+			<dt><label for="robertheim_topictags_display_tagcloud_on_index">{L_TOPICTAGS_DISPLAY_TAGCLOUD_ON_INDEX}:</label><br /><span>{L_TOPICTAGS_DISPLAY_TAGCLOUD_ON_INDEX_EXP}</span></dt>
+			<dd><input type="radio" class="radio" name="robertheim_topictags_display_tagcloud_on_index" value="1" <!-- IF TOPICTAGS_DISPLAY_TAGCLOUD_ON_INDEX -->checked="checked"<!-- ENDIF -->/> {L_YES} &nbsp; 
+				<input type="radio" class="radio" name="robertheim_topictags_display_tagcloud_on_index" value="0" <!-- IF not TOPICTAGS_DISPLAY_TAGCLOUD_ON_INDEX -->checked="checked"<!-- ENDIF -->/> {L_NO}</dd>
+		</dl>
+		<dl>
+			<dt><label for="robertheim_topictags_max_tags_in_tagcloud">{L_TOPICTAGS_MAX_TAGS_IN_TAGCLOUD}:</label><br /><span>{L_TOPICTAGS_MAX_TAGS_IN_TAGCLOUD_EXP}</span></dt>
+			<dd><input type="number" name="robertheim_topictags_max_tags_in_tagcloud" min="1" value="{TOPICTAGS_MAX_TAGS_IN_TAGCLOUD}"/></dd>
+		</dl>
+	</fieldset>
+	<fieldset>
+		<legend>{L_TOPICTAGS_CONFIG_TAGS}</legend>
 		<dl>
 			<dt><label for="robertheim_topictags_prune">{L_TOPICTAGS_ALLOWED_TAGS_REGEX}:</label><br /><span>{L_TOPICTAGS_ALLOWED_TAGS_REGEX_EXP}</span></dt>
 			<dd><input type="text" name="robertheim_topictags_allowed_tags_regex" size="20" value="{TOPICTAGS_ALLOWED_TAGS_REGEX}" /></dd>
@@ -63,6 +61,29 @@
 		<dl>
 			<dt><label for="robertheim_topictags_prune">{L_TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS}:</label><br /><span>{L_TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS_EXP}</span></dt>
 			<dd><textarea name="robertheim_topictags_allowed_tags_exp_for_users" rows="3">{TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS}</textarea></dd>
+		</dl>
+	</fieldset>
+	<fieldset>
+		<legend>{L_TOPICTAGS_MAINTENANCE}</legend>
+		<dl>
+			<dt><label for="robertheim_topictags_prune">{L_TOPICTAGS_PRUNE}:</label><br /><span>{L_TOPICTAGS_PRUNE_EXP}</span></dt>
+			<dd><input type="radio" class="radio" name="robertheim_topictags_prune" value="1" onclick="alert('{L_TOPICTAGS_PRUNE_CONFIRM}');" /> {L_YES} &nbsp; 
+				<input type="radio" class="radio" name="robertheim_topictags_prune" value="0" checked="checked" /> {L_NO}</dd>
+		</dl>
+		<dl>
+			<dt><label for="robertheim_topictags_prune_forums">{L_TOPICTAGS_PRUNE_FORUMS}:</label><br /><span>{L_TOPICTAGS_PRUNE_FORUMS_EXP}</span></dt>
+			<dd><input type="radio" class="radio" name="robertheim_topictags_prune_forums" value="1" onclick="alert('{L_TOPICTAGS_PRUNE_FORUMS_CONFIRM}');" /> {L_YES} &nbsp; 
+				<input type="radio" class="radio" name="robertheim_topictags_prune_forums" value="0" checked="checked" /> {L_NO}</dd>
+		</dl>
+		<dl>
+			<dt><label for="robertheim_topictags_prune_invalid">{L_TOPICTAGS_PRUNE_INVALID_TAGS}:</label><br /><span>{L_TOPICTAGS_PRUNE_INVALID_TAGS_EXP}</span></dt>
+			<dd><input type="radio" class="radio" name="robertheim_topictags_prune_invalid_tags" value="1" onclick="alert('{L_TOPICTAGS_PRUNE_INVALID_TAGS_CONFIRM}');" /> {L_YES} &nbsp; 
+				<input type="radio" class="radio" name="robertheim_topictags_prune_invalid_tags" value="0" checked="checked" /> {L_NO}</dd>
+		</dl>
+		<dl>
+			<dt><label for="robertheim_topictags_calc_count_tags">{L_TOPICTAGS_CALC_COUNT_TAGS}:</label><br /><span>{L_TOPICTAGS_CALC_COUNT_TAGS_EXP}</span></dt>
+			<dd><input type="radio" class="radio" name="robertheim_topictags_calc_count_tags" value="1" /> {L_YES} &nbsp; 
+				<input type="radio" class="radio" name="robertheim_topictags_calc_count_tags" value="0" checked="checked" /> {L_NO}</dd>
 		</dl>
 	</fieldset>
 	<p class="submit-buttons">

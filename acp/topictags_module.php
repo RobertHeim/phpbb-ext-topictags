@@ -72,6 +72,8 @@ class topictags_module
 				$config->set($conf_prefix.'_display_tags_in_viewforum', $request->variable($conf_prefix.'_display_tags_in_viewforum', 1));
 				$config->set($conf_prefix.'_allowed_tags_regex', $regex);
 				$config->set($conf_prefix.'_allowed_tags_exp_for_users', $exp_for_users);
+				$config->set($conf_prefix.'_display_tagcloud_on_index', $request->variable($conf_prefix.'_display_tagcloud_on_index', 1));
+				$config->set($conf_prefix.'_max_tags_in_tagcloud', $request->variable($conf_prefix.'_max_tags_in_tagcloud', 20));
 
 				$msg = array();
 				$deleted_assignments_count = 0;
@@ -87,6 +89,12 @@ class topictags_module
 				{
 					$count_affected = $tags_manager->disable_tags_in_all_forums();
 					$msg[] = $user->lang('TOPICTAGS_DISABLE_IN_ALL_FORUMS_DONE', $count_affected);
+				}
+
+				if ($request->variable($conf_prefix.'_calc_count_tags', 0) > 0)
+				{
+					$tags_manager->calc_count_tags();
+					$msg[] = $user->lang('TOPICTAGS_CALC_COUNT_TAGS_DONE');
 				}
 
 				if ($request->variable($conf_prefix.'_prune', 0) > 0)
@@ -133,6 +141,8 @@ class topictags_module
 		$template->assign_vars(array(
 			'TOPICTAGS_VERSION'						=> $user->lang('TOPICTAGS_INSTALLED', $config[$conf_prefix.'_version']),
 			'TOPICTAGS_DISPLAY_TAGS_IN_VIEWFORUM'	=> $config[$conf_prefix.'_display_tags_in_viewforum'],
+			'TOPICTAGS_DISPLAY_TAGCLOUD_ON_INDEX'	=> $config[$conf_prefix.'_display_tagcloud_on_index'],
+			'TOPICTAGS_MAX_TAGS_IN_TAGCLOUD'		=> $config[$conf_prefix.'_max_tags_in_tagcloud'],
 			'TOPICTAGS_ALLOWED_TAGS_REGEX'			=> $config[$conf_prefix.'_allowed_tags_regex'],
 			'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS'	=> $config[$conf_prefix.'_allowed_tags_exp_for_users'],
 			'TOPICTAGS_IS_ENABLED_IN_ALL_FORUMS'	=> $all_enabled,

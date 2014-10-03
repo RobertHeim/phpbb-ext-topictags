@@ -32,9 +32,17 @@ $lang = array_merge($lang, array(
 	'ACP_RH_TOPICTAGS_EXP_FOR_USERS_EMPTY'	=> 'The explanation of which tags are allowed cannot be left empty.',
 
 	'TOPICTAGS_CONFIG'					=> 'Configuration',
+	'TOPICTAGS_CONFIG_TAGCLOUD'			=> 'Tagcloud settings',
+	'TOPICTAGS_CONFIG_TAGS'				=> 'Tag settings',
 	'TOPICTAGS_MAINTENANCE'				=> 'Maintenance',
 	'TOPICTAGS_TITLE'					=> 'RH Topic Tags',
 	'TOPICTAGS_SETTINGS_SAVED'			=> 'Configuration updated successfully.',
+
+	'TOPICTAGS_DISPLAY_TAGCLOUD_ON_INDEX'		=> 'Display tagcloud on index',
+	'TOPICTAGS_DISPLAY_TAGCLOUD_ON_INDEX_EXP'	=> 'When enabled a tagcloud is displayed on the bottom of the index page',
+
+	'TOPICTAGS_MAX_TAGS_IN_TAGCLOUD'			=> 'Max tags in tagcloud',
+	'TOPICTAGS_MAX_TAGS_IN_TAGCLOUD_EXP'		=> 'This limits the count of tags shown in the tagcloud to the configured value.',
 
 	'TOPICTAGS_DISPLAY_TAGS_IN_VIEWFORUM'		=> 'Display tags in viewforum',
 	'TOPICTAGS_DISPLAY_TAGS_IN_VIEWFORUM_EXP'	=> 'If set to yes, the assigned tags for each topic are shown in topic-lists.',
@@ -78,6 +86,10 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_PRUNE_INVALID_TAGS'			=> 'Prune invalid tags',
 	'TOPICTAGS_PRUNE_INVALID_TAGS_EXP'			=> 'This will DELETE all tags (and their assignments) that are not valid anymore. This is only required if you changed the regex and want to get rid of the invalid tags.',
 	'TOPICTAGS_PRUNE_INVALID_TAGS_CONFIRM'	=> 'This will REMOVE all tags that are not conform with the configured regex and can delete a lot of your stuff, if you are not careful!',
+
+	'TOPICTAGS_CALC_COUNT_TAGS'					=> 'Recalculate tag-counts',
+	'TOPICTAGS_CALC_COUNT_TAGS_EXP'				=> 'This will re-calculate how often each tag is used.',
+	'TOPICTAGS_CALC_COUNT_TAGS_DONE'			=> 'Tag-counts have been recalculated.',
 
 	'TOPICTAGS_ALLOWED_TAGS_REGEX'				=> 'Regular Expression for allowed tags',
 	'TOPICTAGS_ALLOWED_TAGS_REGEX_EXP'			=> 'WARNING: Do not change this, if you don\'t know what you are doing. <strong>Tags can be 30 characters at maximum</strong>, please consider this during regex design.<br/>Note that afterwards invalid tags are not searchable, but are still displayed in the topics.<br/>Consider pruning the invalid tags (see maintenance-section).<br/>default: /^[a-z0-9]{3,30}$/i',
