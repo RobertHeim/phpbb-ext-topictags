@@ -50,6 +50,7 @@ class tags_manager
 		if ($delete_unused_tags) {
 			$this->delete_unused_tags();
 		}
+		$this->calc_count_tags();
 	}
 
 	/**
@@ -96,7 +97,11 @@ class tags_manager
 		$sql = 'DELETE tt FROM ' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
 				WHERE tt.tag_id IN (' . join(',', $ids_of_invalid_tags) . ')';
 		$this->db->sql_query($sql);
-		return $this->db->sql_affectedrows();
+		$removed_count = $this->db->sql_affectedrows();
+
+		$this->calc_count_tags();
+
+		return $removed_count;
 	}
 
 	/**
@@ -113,7 +118,11 @@ class tags_manager
 					WHERE topics.topic_id = tt.topic_id
 				)';
 		$this->db->sql_query($sql);
-		return $this->db->sql_affectedrows();
+		$removed_count = $this->db->sql_affectedrows();
+
+		$this->calc_count_tags();
+
+		return $removed_count;
 	}
 
 	/**
@@ -153,7 +162,11 @@ class tags_manager
 						' . $forums_sql_where . '
 				)';
 		$this->db->sql_query($sql);
-		return $this->db->sql_affectedrows();
+		$removed_count = $this->db->sql_affectedrows();
+
+		$this->calc_count_tags();
+
+		return $removed_count;
 	}
 
 
@@ -206,6 +219,8 @@ class tags_manager
 
 		// garbage collection
 		$this->delete_unused_tags();
+
+		$this->calc_count_tags();
     }
 
 	/**

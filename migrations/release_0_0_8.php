@@ -18,10 +18,15 @@ class release_0_0_8 extends \phpbb\db\migration\migration
 
 	public function effectively_installed()
 	{
-//	/false;
 		return version_compare($this->config[PREFIXES::CONFIG.'_version'], $this->version, '>=');
 	}
 
+	static public function depends_on()
+	{
+		return array(
+			'\robertheim\topictags\migrations\release_0_0_7',
+		);
+	}
 
 	public function update_schema() {
 		return array(
