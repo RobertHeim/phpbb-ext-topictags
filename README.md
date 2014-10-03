@@ -12,7 +12,8 @@ phpBB 3.1 extension, that adds the ability to tag topics with key words.
 * SEO-optimization: tags are added to meta-content keywords in viewtopic
 * tags are shown in viewforum (can be disabled in acp)
 * enable tagging of topics on a per forum basis
-
+* Responsive layout
+* 
 ### Search
 * search topics by tag(s)
 * /tag/{tags}/{mode}/{casesensitive} shows topics tagged with all (mode=AND, default) or any (mode=OR) of the given tags, where tags are comma separated tags and casesensitive can be true to search case-sensitive or false (default), e.g.:
