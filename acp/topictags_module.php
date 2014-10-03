@@ -73,6 +73,7 @@ class topictags_module
 				$config->set($conf_prefix.'_allowed_tags_regex', $regex);
 				$config->set($conf_prefix.'_allowed_tags_exp_for_users', $exp_for_users);
 				$config->set($conf_prefix.'_display_tagcloud_on_index', $request->variable($conf_prefix.'_display_tagcloud_on_index', 1));
+				$config->set($conf_prefix.'_display_tagcount_in_tagcloud', $request->variable($conf_prefix.'_display_tagcount_in_tagcloud', 1));
 				$config->set($conf_prefix.'_max_tags_in_tagcloud', $request->variable($conf_prefix.'_max_tags_in_tagcloud', 20));
 
 				$msg = array();
@@ -139,17 +140,18 @@ class topictags_module
 		$all_disabled = ($all_enabled ? false : $tags_manager->is_disabled_in_all_forums());
 
 		$template->assign_vars(array(
-			'TOPICTAGS_VERSION'						=> $user->lang('TOPICTAGS_INSTALLED', $config[$conf_prefix.'_version']),
-			'TOPICTAGS_DISPLAY_TAGS_IN_VIEWFORUM'	=> $config[$conf_prefix.'_display_tags_in_viewforum'],
-			'TOPICTAGS_DISPLAY_TAGCLOUD_ON_INDEX'	=> $config[$conf_prefix.'_display_tagcloud_on_index'],
-			'TOPICTAGS_MAX_TAGS_IN_TAGCLOUD'		=> $config[$conf_prefix.'_max_tags_in_tagcloud'],
-			'TOPICTAGS_ALLOWED_TAGS_REGEX'			=> $config[$conf_prefix.'_allowed_tags_regex'],
-			'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS'	=> $config[$conf_prefix.'_allowed_tags_exp_for_users'],
-			'TOPICTAGS_IS_ENABLED_IN_ALL_FORUMS'	=> $all_enabled,
-			'TOPICTAGS_IS_DISABLED_IN_ALL_FORUMS'	=> $all_disabled,
-			'S_ERROR'								=> (sizeof($errors)) ? true : false,
-			'ERROR_MSG'								=> implode('<br />', $errors),
-			'U_ACTION'								=> $this->u_action,
+			'TOPICTAGS_VERSION'							=> $user->lang('TOPICTAGS_INSTALLED', $config[$conf_prefix.'_version']),
+			'TOPICTAGS_DISPLAY_TAGS_IN_VIEWFORUM'		=> $config[$conf_prefix.'_display_tags_in_viewforum'],
+			'TOPICTAGS_DISPLAY_TAGCLOUD_ON_INDEX'		=> $config[$conf_prefix.'_display_tagcloud_on_index'],
+			'TOPICTAGS_DISPLAY_TAGCOUNT_IN_TAGCLOUD'	=> $config[$conf_prefix.'_display_tagcount_in_tagcloud'],
+			'TOPICTAGS_MAX_TAGS_IN_TAGCLOUD'			=> $config[$conf_prefix.'_max_tags_in_tagcloud'],
+			'TOPICTAGS_ALLOWED_TAGS_REGEX'				=> $config[$conf_prefix.'_allowed_tags_regex'],
+			'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS'		=> $config[$conf_prefix.'_allowed_tags_exp_for_users'],
+			'TOPICTAGS_IS_ENABLED_IN_ALL_FORUMS'		=> $all_enabled,
+			'TOPICTAGS_IS_DISABLED_IN_ALL_FORUMS'		=> $all_disabled,
+			'S_ERROR'									=> (sizeof($errors)) ? true : false,
+			'ERROR_MSG'									=> implode('<br />', $errors),
+			'U_ACTION'									=> $this->u_action,
 		));
 	}
 

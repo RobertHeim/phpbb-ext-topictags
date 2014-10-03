@@ -50,6 +50,7 @@ class release_0_0_8 extends \phpbb\db\migration\migration
 			array('custom', array(array($this, 'calc_count_tags'))),
 			array('config.add', array(PREFIXES::CONFIG.'_display_tags_on_index', 1)),
 			array('config.add', array(PREFIXES::CONFIG.'_max_tags_in_tagcloud', 20)),
+			array('config.add', array(PREFIXES::CONFIG.'_display_tagcount_in_tagcloud', 1)),
 			array('config.update', array(PREFIXES::CONFIG.'_version', $this->version)),
 		);
 	}

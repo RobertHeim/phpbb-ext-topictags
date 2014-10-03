@@ -32,17 +32,20 @@ $lang = array_merge($lang, array(
 	'ACP_RH_TOPICTAGS_EXP_FOR_USERS_EMPTY'	=> 'The explanation of which tags are allowed cannot be left empty.',
 
 	'TOPICTAGS_CONFIG'					=> 'Configuration',
-	'TOPICTAGS_CONFIG_TAGCLOUD'			=> 'Tagcloud settings',
+	'TOPICTAGS_CONFIG_TAGCLOUD'			=> 'Tag cloud settings',
 	'TOPICTAGS_CONFIG_TAGS'				=> 'Tag settings',
 	'TOPICTAGS_MAINTENANCE'				=> 'Maintenance',
 	'TOPICTAGS_TITLE'					=> 'RH Topic Tags',
 	'TOPICTAGS_SETTINGS_SAVED'			=> 'Configuration updated successfully.',
 
-	'TOPICTAGS_DISPLAY_TAGCLOUD_ON_INDEX'		=> 'Display tagcloud on index',
-	'TOPICTAGS_DISPLAY_TAGCLOUD_ON_INDEX_EXP'	=> 'When enabled a tagcloud is displayed on the bottom of the index page',
+	'TOPICTAGS_DISPLAY_TAGCLOUD_ON_INDEX'		=> 'Display tag cloud on index',
+	'TOPICTAGS_DISPLAY_TAGCLOUD_ON_INDEX_EXP'	=> 'When enabled a tag cloud is displayed on the bottom of the index page',
 
-	'TOPICTAGS_MAX_TAGS_IN_TAGCLOUD'			=> 'Max tags in tagcloud',
-	'TOPICTAGS_MAX_TAGS_IN_TAGCLOUD_EXP'		=> 'This limits the count of tags shown in the tagcloud to the configured value.',
+	'TOPICTAGS_DISPLAY_TAGCOUNT_IN_TAGCLOUD'		=> 'Display usage-count of tags in tag cloud',
+	'TOPICTAGS_DISPLAY_TAGCOUNT_IN_TAGCLOUD_EXP'	=> 'When enabled the tag cloud displays how many topics are tagged with each tag',
+
+	'TOPICTAGS_MAX_TAGS_IN_TAGCLOUD'			=> 'Max tags in tag cloud',
+	'TOPICTAGS_MAX_TAGS_IN_TAGCLOUD_EXP'		=> 'This limits the count of tags shown in the tag cloud to the configured value.',
 
 	'TOPICTAGS_DISPLAY_TAGS_IN_VIEWFORUM'		=> 'Display tags in viewforum',
 	'TOPICTAGS_DISPLAY_TAGS_IN_VIEWFORUM_EXP'	=> 'If set to yes, the assigned tags for each topic are shown in topic-lists.',

@@ -8,6 +8,7 @@ services:
             - @request
             - @user
             - @template
+            - @robertheim.topictags.tagcloud_manager
         tags:
             - { name: event.listener }
     robertheim.topictags.acp_listener:
@@ -20,9 +21,11 @@ services:
     robertheim.topictags.controller:
         class: robertheim\topictags\controller\main
         arguments:
+            - @config
             - @template
             - @controller.helper
             - @robertheim.topictags.tags_manager
+            - @robertheim.topictags.tagcloud_manager
     robertheim.topictags.tags_manager:
         class: robertheim\topictags\service\tags_manager
         arguments:
@@ -30,3 +33,12 @@ services:
             - @config
             - @auth
             - %core.table_prefix%
+    robertheim.topictags.tagcloud_manager:
+        class: robertheim\topictags\service\tagcloud_manager
+        arguments:
+            - @dbal.conn.driver
+            - @config
+            - @template
+            - @controller.helper
+            - %core.table_prefix%
+

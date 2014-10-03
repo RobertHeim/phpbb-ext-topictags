@@ -1,63 +1,102 @@
+/*
+ *	.rh_tag is used in viewforum etc to show that an item is tagged with this tag.
+ *	For the tag cloud rh_topictags_smallest etc. are used to define the size of the tags.
+ */
 
-.rh_topictags_tagcloud{
-    width:85%;
-    margin:0 auto;
-}
-
-.rh_topictags_tagcloud ul{
-    margin:0;
-    padding:0;
-}
-.rh_topictags_tagcloud li, .rh_tag {
-	list-style-type: none;
-	display: inline-block;
-    width:30%;
-	height: 50px;
-	line-height: 50px;
-	text-align: center;
-    background-color: #cadceb;
-    margin: 5px;
-	border-radius: 10px;
-	font-weight: bold;
+.rh_topictags_tagcloud
+{
+	width:	85%;
+	margin:	0 auto;
 }
 
-.rh_tag {
-    width:auto;
-	padding: 0 8px;
-	height: 15px;
-	line-height: 15px;
-    margin: 3px 2px 2px 2px;
-	font-weight: normal;
+.rh_topictags_tagcloud ul
+{
+	margin:		0;
+	padding:	0;
 }
 
-.rh_topictags_tagcloud li:hover, .rh_tag:hover{
-    background-color: #105289;
+.rh_topictags_tagcloud li,
+.rh_tag
+{
+	list-style-type:	none;
+	display:			inline-block;
+	text-align:			center;
+	border-radius:		10px;
+	background-color:	#cadceb;
 }
 
-.rh_topictags_tagcloud a, .rh_tag a {
-	display:block;
-	font-size: 2em;
+.rh_topictags_tagcloud li
+{
+	padding:			5px 15px;
+	margin:				5px;
+	font-weight:		bold;
 }
 
-.rh_tag a {
-	font-size:1em;
+.rh_tag
+{
+	padding:		1px 8px;
+	margin:			3px 2px 2px 2px;
 }
 
-.rh_topictags_tagcloud a:hover , .rh_tag a:hover, .rh_tag:hover a{
-	color: #cadceb;
+
+
+.rh_topictags_tagcloud li:hover,
+.rh_tag:hover
+{
+	background-color:	#105289;
 }
 
-.rh_topictags_tagcloud div{
-    max-width:100%;
+.rh_topictags_tagcloud li:hover a,
+.rh_tag:hover a
+{
+	color:				#cadceb;
+	background-color:	#105289;
 }
+
+
+/* ----------- tag sizes for tag-cloud ----------- */
+.rh_topictags_count
+{
+	color: #555;
+	font-size: x-small;
+}
+
+
+.rh_topictags_smallest
+{
+	font-size:	x-small;
+}
+ 
+.rh_topictags_small
+{
+	font-size:	small;
+}
+ 
+.rh_topictags_medium
+{
+	font-size:	medium;
+}
+ 
+.rh_topictags_large
+{
+	font-size:	large;
+}
+ 
+.rh_topictags_largest
+{
+	font-size:	x-large;
+}
+/* --------- END tag sizes for tag-cloud --------- */
 
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen 
 and (min-width : 320px) 
-and (max-width : 480px) {
+and (max-width : 480px)
+{
 /* Styles */
-    .rh_topictags_tagcloud li{
-	display:block;
-    width:100%;
-}
+	.rh_topictags_tagcloud li
+	{
+		display:	block;
+		width:		100%;
+	}
 }

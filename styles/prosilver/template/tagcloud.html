@@ -1,0 +1,17 @@
+<h3>{L_RH_TOPICTAGS_TAGCLOUD}</h3>
+<!-- IF .rh_topictags_tags -->
+	<div class="rh_topictags_tagcloud">
+		<ul>
+			<!-- BEGIN rh_topictags_tags -->
+			<li>
+					<a href="{rh_topictags_tags.LINK}" class="{rh_topictags_tags.CSS_CLASS}">{rh_topictags_tags.NAME}</a>
+					<!-- IF RH_TOPICTAGS_TAGCLOUD_SHOW_COUNT -->
+						<span class=rh_topictags_count>({rh_topictags_tags.COUNT})</span>
+					<!-- ENDIF -->
+			</li>
+			<!-- END rh_topictags_tags -->
+		</ul>
+	</div>
+<!-- ELSE -->
+	<p>{L_RH_TOPICTAGS_NO_TAGS}</p>
+<!-- ENDIF -->

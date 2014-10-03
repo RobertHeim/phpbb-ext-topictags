@@ -9,8 +9,15 @@
 
 namespace robertheim\topictags\controller;
 
+/**
+ * @ignore
+ */
+use robertheim\topictags\PREFIXES;
+
 class main
 {
+
+	protected $config;
 
 	protected $template;
 
@@ -18,18 +25,24 @@ class main
 
 	protected $tags_manager;
 
+	protected $tagcloud_manager;
+
 	/**
 	 * Constructor
 	 */
 	public function __construct(
+						\phpbb\config\config $config,
 						\phpbb\template\template $template,
 						\phpbb\controller\helper $helper,
-						\robertheim\topictags\service\tags_manager $tags_manager
+						\robertheim\topictags\service\tags_manager $tags_manager,
+						\robertheim\topictags\service\tagcloud_manager $tagcloud_manager
 	)
 	{
-		$this->template = $template;
-		$this->helper = $helper;
-		$this->tags_manager = $tags_manager;
+		$this->config			= $config;
+		$this->template			= $template;
+		$this->helper			= $helper;
+		$this->tags_manager		= $tags_manager;
+		$this->tagcloud_manager	= $tagcloud_manager;
 	}
 
 	/**
@@ -39,16 +52,7 @@ class main
 	 */
 	public function show()
 	{
-		$tags = $this->tags_manager->get_existing_tags();
-		foreach ($tags as $tag)
-		{
-			$this->template->assign_block_vars('tags', array(
-				'NAME'	=> $tag['tag'],
-				'LINK'	=> $this->helper->route('robertheim_topictags_show_tag_controller', array(
-					'tags'	=> $tag['tag']
-					)),
-			));
-		}
+		$this->tagcloud_manager->assign_tagcloud_to_template();
 		return $this->helper->render('tags.html', 'Tags');
 	}
 

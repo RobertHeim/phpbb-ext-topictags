@@ -51,6 +51,11 @@
 			<dt><label for="robertheim_topictags_max_tags_in_tagcloud">{L_TOPICTAGS_MAX_TAGS_IN_TAGCLOUD}:</label><br /><span>{L_TOPICTAGS_MAX_TAGS_IN_TAGCLOUD_EXP}</span></dt>
 			<dd><input type="number" name="robertheim_topictags_max_tags_in_tagcloud" min="1" value="{TOPICTAGS_MAX_TAGS_IN_TAGCLOUD}"/></dd>
 		</dl>
+		<dl>
+			<dt><label for="robertheim_topictags_display_tagcount_in_tagcloud">{L_TOPICTAGS_DISPLAY_TAGCOUNT_IN_TAGCLOUD}:</label><br /><span>{L_TOPICTAGS_DISPLAY_TAGCOUNT_IN_TAGCLOUD_EXP}</span></dt>
+			<dd><input type="radio" class="radio" name="robertheim_topictags_display_tagcount_in_tagcloud" value="1" <!-- IF TOPICTAGS_DISPLAY_TAGCOUNT_IN_TAGCLOUD -->checked="checked"<!-- ENDIF -->/> {L_YES} &nbsp; 
+				<input type="radio" class="radio" name="robertheim_topictags_display_tagcount_in_tagcloud" value="0" <!-- IF not TOPICTAGS_DISPLAY_TAGCOUNT_IN_TAGCLOUD -->checked="checked"<!-- ENDIF -->/> {L_NO}</dd>
+		</dl>
 	</fieldset>
 	<fieldset>
 		<legend>{L_TOPICTAGS_CONFIG_TAGS}</legend>

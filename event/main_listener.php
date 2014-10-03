@@ -25,6 +25,7 @@ class main_listener implements EventSubscriberInterface
 	{
 		return array(
 			'core.user_setup'								=> 'load_language_on_setup',
+			'core.index_modify_page_title'					=> 'index_modify_page_title',
 			'core.modify_posting_parameters'				=> 'modify_posting_parameters',
 			'core.posting_modify_template_vars'				=> 'posting_modify_template_vars',
 			'core.viewforum_modify_topicrow'				=> 'viewforum_modify_topicrow',
@@ -45,6 +46,8 @@ class main_listener implements EventSubscriberInterface
 
 	protected $template;
 
+	protected $tagcloud_manager;
+
 	/**
 	 * Constructor
 	 */
@@ -54,7 +57,8 @@ class main_listener implements EventSubscriberInterface
 							\phpbb\controller\helper $helper,
 							\phpbb\request\request $request, 
 							\phpbb\user $user, 
-							\phpbb\template\template $template
+							\phpbb\template\template $template,
+							\robertheim\topictags\service\tagcloud_manager $tagcloud_manager
 	)
 	{
 		$this->config = $config;
@@ -63,6 +67,7 @@ class main_listener implements EventSubscriberInterface
 		$this->request = $request;
 		$this->user = $user;
 		$this->template = $template;
+		$this->tagcloud_manager = $tagcloud_manager;
 	}
 
 	/**
@@ -94,6 +99,20 @@ class main_listener implements EventSubscriberInterface
             'lang_set' => 'topictags',
         );
         $event['lang_set_ext'] = $lang_set_ext;
+    }
+
+	/**
+     * Event: core.index_modify_page_title
+	 */
+    public function index_modify_page_title($event)
+    {
+		if ($this->config[PREFIXES::CONFIG . '_display_tagcloud_on_index'])
+		{
+        	$this->template->assign_vars(array(
+				'RH_TOPICTAGS_DISPLAY_TAGCLOUD_ON_INDEX'	=> true,
+			));
+			$this->tagcloud_manager->assign_tagcloud_to_template();
+		}
     }
 
 	/**

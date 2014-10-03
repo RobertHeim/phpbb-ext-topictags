@@ -324,7 +324,7 @@ class tags_manager
 	 */
 	public function get_topics_by_tags($tags, $start, $limit, $mode = "AND", $casesensitive = false)
 	{
-		$sql = $this->build_query($tags, $mode, $casesensitive);
+		$sql = $this->get_topics_build_query($tags, $mode, $casesensitive);
 
 		$order_by = ' ORDER BY topics.topic_last_post_time DESC';
 		$sql .= $order_by;
@@ -351,7 +351,7 @@ class tags_manager
 	 */
 	public function count_topics_by_tags($tags, $mode = "AND", $casesensitive = false)
 	{
-		$sql = $this->build_query($tags, $mode, $casesensitive);
+		$sql = $this->get_topics_build_query($tags, $mode, $casesensitive);
 
 		$sql = "SELECT COUNT(*) as total_results FROM ($sql) a";
 		$result = $this->db->sql_query($sql);
@@ -360,7 +360,7 @@ class tags_manager
 		return $count;
 	}
 
-	private function build_query($tags, $mode = "AND", $casesensitive = false)
+	private function get_topics_build_query($tags, $mode = "AND", $casesensitive = false)
 	{
 		if (empty($tags))
 		{
@@ -602,4 +602,6 @@ class tags_manager
 					WHERE tt.tag_id = t.id)';
 		$this->db->sql_query($sql);
 	}
+
 }
+
