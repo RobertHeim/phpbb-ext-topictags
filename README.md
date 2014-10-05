@@ -36,7 +36,7 @@ phpBB 3.1 extension, that adds the ability to tag topics with key words.
 * Blacklist
 * User and Mod+Admin permission for who can add/edit RH topic tags
 * spaces in tags are converted to "-" by default (you can disable it in ACP)
-* 
+
 ## Installation
 
 ### 1. clone
