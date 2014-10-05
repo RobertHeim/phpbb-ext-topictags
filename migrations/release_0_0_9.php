@@ -9,8 +9,7 @@
 
 namespace robertheim\topictags\migrations;
 use robertheim\topictags\PREFIXES;
-use robertheim\topictags\TABLES;
-use robertheim\topictags\service\tags_manager;
+use robertheim\topictags\PERMISSIONS;
 
 class release_0_0_9 extends \phpbb\db\migration\migration
 {
@@ -31,11 +30,24 @@ class release_0_0_9 extends \phpbb\db\migration\migration
 	public function update_data()
 	{
 		return array(
+			// add permissions
+			array('permission.add', array(PERMISSIONS::ADMIN_EDIT_TAGS)),
+			array('permission.add', array(PERMISSIONS::MOD_EDIT_TAGS)),
+			array('permission.add', array(PERMISSIONS::USE_TAGS)),
+
+			// Set permissions for the board roles
+			array('permission.permission_set', array('ROLE_ADMIN_FULL', PERMISSIONS::ADMIN_EDIT_TAGS)),
+			array('permission.permission_set', array('ROLE_MOD_FULL', PERMISSIONS::MOD_EDIT_TAGS)),
+			array('permission.permission_set', array('ROLE_MOD_STANDARD', PERMISSIONS::MOD_EDIT_TAGS)),
+			array('permission.permission_set', array('ROLE_USER_FULL', PERMISSIONS::USE_TAGS)),
+			array('permission.permission_set', array('ROLE_USER_STANDARD', PERMISSIONS::USE_TAGS)),
+
 			array('config.add', array(PREFIXES::CONFIG.'_convert_space_to_minus', 1)),
 			array('config.add', array(PREFIXES::CONFIG.'_whitelist_enabled', 0)),
 			array('config.add', array(PREFIXES::CONFIG.'_whitelist', '')),
 			array('config.add', array(PREFIXES::CONFIG.'_blacklist_enabled', 0)),
 			array('config.add', array(PREFIXES::CONFIG.'_blacklist', '')),
+
 			array('config.update', array(PREFIXES::CONFIG.'_version', $this->version)),
 		);
 	}

@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* @package phpBB Extension - Activity Stats
+* @package phpBB Extension - RH Topic Tags
 * @copyright (c) 2014 Robet Heim
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -37,9 +37,11 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
+use robertheim\topictags\PERMISSIONS;
+
 $lang = array_merge($lang, array(
-	// ACP Module
-	'ACP_TOPICTAGS_TITLE'			=> 'RH Topic Tags',
-	'ACP_TOPICTAGS_SETTINGS'		=> 'Settings',
+	'ACL_'.mb_strtoupper(PERMISSIONS::ADMIN_EDIT_TAGS)	=> 'Can edit RH topic tags',
+	'ACL_'.mb_strtoupper(PERMISSIONS::MOD_EDIT_TAGS)	=> 'Can edit RH topic tags',
+	'ACL_'.mb_strtoupper(PERMISSIONS::USE_TAGS)			=> 'Can use RH topic tags',
 ));
 

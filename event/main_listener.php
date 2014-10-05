@@ -14,6 +14,7 @@ namespace robertheim\topictags\event;
 */
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use robertheim\topictags\PREFIXES;
+use robertheim\topictags\PERMISSIONS;
 
 /**
 * Event listener
@@ -46,6 +47,8 @@ class main_listener implements EventSubscriberInterface
 
 	protected $template;
 
+	protected $auth;
+
 	protected $tagcloud_manager;
 
 	/**
@@ -58,6 +61,7 @@ class main_listener implements EventSubscriberInterface
 							\phpbb\request\request $request, 
 							\phpbb\user $user, 
 							\phpbb\template\template $template,
+							\phpbb\auth\auth $auth,
 							\robertheim\topictags\service\tagcloud_manager $tagcloud_manager
 	)
 	{
@@ -67,6 +71,7 @@ class main_listener implements EventSubscriberInterface
 		$this->request = $request;
 		$this->user = $user;
 		$this->template = $template;
+		$this->auth = $auth;
 		$this->tagcloud_manager = $tagcloud_manager;
 	}
 
@@ -122,19 +127,23 @@ class main_listener implements EventSubscriberInterface
 	 */
 	public function modify_posting_parameters($event)
 	{
-		$data = $event->get_data();
-		$tags = $this->get_tags_from_post_request();
-
-		$all_tags = $this->tags_manager->split_valid_tags($tags);
-		$invalid_tags = $all_tags['invalid'];
-	
-		if (sizeof($invalid_tags))
+		if ($this->auth->acl_get(PERMISSIONS::USE_TAGS, PERMISSIONS::ADMIN_EDIT_TAGS, PERMISSIONS::MOD_EDIT_TAGS))
 		{
-			$this->user->add_lang_ext('robertheim/topictags', 'topictags');
-			$data['error'][] = $this->user->lang('RH_TOPICTAGS_TAGS_INVALID', join(", ", $invalid_tags));
-		}
 
-		$event->set_data($data);
+			$data = $event->get_data();
+			$tags = $this->get_tags_from_post_request();
+
+			$all_tags = $this->tags_manager->split_valid_tags($tags);
+			$invalid_tags = $all_tags['invalid'];
+
+			if (sizeof($invalid_tags))
+			{
+				$this->user->add_lang_ext('robertheim/topictags', 'topictags');
+				$data['error'][] = $this->user->lang('RH_TOPICTAGS_TAGS_INVALID', join(", ", $invalid_tags));
+			}
+
+			$event->set_data($data);
+		}
 	}
 
 	/**
@@ -144,17 +153,20 @@ class main_listener implements EventSubscriberInterface
 	 */
 	public function submit_post_end($event)
 	{
-        $event_data = $event->get_data();
-        $data = $event_data['data'];
-
-		$tags = $this->get_tags_from_post_request();
-		$all_tags = $this->tags_manager->split_valid_tags($tags);
-		$valid_tags = $all_tags['valid'];
-
-		if (!empty($valid_tags))
+		if ($this->auth->acl_get(PERMISSIONS::USE_TAGS, PERMISSIONS::ADMIN_EDIT_TAGS, PERMISSIONS::MOD_EDIT_TAGS))
 		{
-			$this->tags_manager->assign_tags_to_topic($data['topic_id'], $valid_tags);
-	        $event->set_data($event_data);
+	        $event_data = $event->get_data();
+        	$data = $event_data['data'];
+
+			$tags = $this->get_tags_from_post_request();
+			$all_tags = $this->tags_manager->split_valid_tags($tags);
+			$valid_tags = $all_tags['valid'];
+
+			if (!empty($valid_tags))
+			{
+				$this->tags_manager->assign_tags_to_topic($data['topic_id'], $valid_tags);
+		        $event->set_data($event_data);
+			}
 		}
     }
 
@@ -167,65 +179,68 @@ class main_listener implements EventSubscriberInterface
      */
     public function posting_modify_template_vars($event)
 	{
-        $data = $event->get_data();
-		$forum_id = $data['forum_id'];
-
-		if (!$this->tags_manager->is_tagging_enabled_in_forum($forum_id))
+		if ($this->auth->acl_get(PERMISSIONS::USE_TAGS, PERMISSIONS::ADMIN_EDIT_TAGS, PERMISSIONS::MOD_EDIT_TAGS))
 		{
-			return;
-		}
+			$data = $event->get_data();
+			$forum_id = $data['forum_id'];
 
-        $mode = $enable_trader = $topic_id = $post_id = $topic_first_post_id = false;
-
-        if (!empty($data['mode'])) {
-            $mode = $data['mode'];
-        }
-
-        if ($mode == 'reply') {
-            return;
-        }
-
-        if (!empty($data['post_data']['topic_id'])) {
-            $topic_id = $data['post_data']['topic_id'];
-        }
-
-        if (!empty($data['post_data']['post_id'])) {
-            $post_id = $data['post_data']['post_id'];
-        }
-
-        if (!empty($data['post_data']['topic_first_post_id'])) {
-            $topic_first_post_id = $data['post_data']['topic_first_post_id'];
-        }
-
-		$is_new_topic = $mode == 'post';
-		$is_edit_first_post = $mode == 'edit' && $topic_id && $post_id && $post_id == $topic_first_post_id;
-		if ($is_new_topic || $is_edit_first_post) {
-
-            $data['page_data']['RH_TOPICTAGS_SHOW_FIELD'] = true;
-
-	        $_post = $this->request->get_super_global(\phpbb\request\request::POST);
-			// do we got some preview-data?
-			$tags = array();
-			if (isset($_post['rh_topictags'])) {
-				// use data from post-request
-				$tags = $this->get_tags_from_post_request();
-			} elseif ($is_edit_first_post) {
-				// use data from db
-				$tags = $this->tags_manager->get_assigned_tags($topic_id);
-			}
-			$data['page_data']['RH_TOPICTAGS'] = join(", ", $tags);
-
-            if ($this->config[PREFIXES::CONFIG.'_whitelist_enabled'])
+			if (!$this->tags_manager->is_tagging_enabled_in_forum($forum_id))
 			{
-				$data['page_data']['RH_TOPICTAGS_WHITELIST_ENABLED'] = true;
-				$data['page_data']['RH_TOPICTAGS_ALLOWED_TAGS_EXP'] = $this->config[PREFIXES::CONFIG.'_whitelist'];
-			}
-			else
-			{
-				$data['page_data']['RH_TOPICTAGS_ALLOWED_TAGS_EXP'] = $this->config[PREFIXES::CONFIG.'_allowed_tags_exp_for_users'];
+				return;
 			}
 
-			$event->set_data($data);
+	        $mode = $enable_trader = $topic_id = $post_id = $topic_first_post_id = false;
+
+	        if (!empty($data['mode'])) {
+            	$mode = $data['mode'];
+	        }
+
+    	    if ($mode == 'reply') {
+	            return;
+	        }
+
+    	    if (!empty($data['post_data']['topic_id'])) {
+	            $topic_id = $data['post_data']['topic_id'];
+	        }
+
+	        if (!empty($data['post_data']['post_id'])) {
+	            $post_id = $data['post_data']['post_id'];
+    	    }
+
+    	    if (!empty($data['post_data']['topic_first_post_id'])) {
+    	        $topic_first_post_id = $data['post_data']['topic_first_post_id'];
+			    }
+
+			$is_new_topic = $mode == 'post';
+			$is_edit_first_post = $mode == 'edit' && $topic_id && $post_id && $post_id == $topic_first_post_id;
+			if ($is_new_topic || $is_edit_first_post) {
+
+		        $data['page_data']['RH_TOPICTAGS_SHOW_FIELD'] = true;
+
+			    $_post = $this->request->get_super_global(\phpbb\request\request::POST);
+				// do we got some preview-data?
+				$tags = array();
+				if (isset($_post['rh_topictags'])) {
+					// use data from post-request
+					$tags = $this->get_tags_from_post_request();
+				} elseif ($is_edit_first_post) {
+					// use data from db
+					$tags = $this->tags_manager->get_assigned_tags($topic_id);
+				}
+				$data['page_data']['RH_TOPICTAGS'] = join(", ", $tags);
+
+		        if ($this->config[PREFIXES::CONFIG.'_whitelist_enabled'])
+				{
+					$data['page_data']['RH_TOPICTAGS_WHITELIST_ENABLED'] = true;
+					$data['page_data']['RH_TOPICTAGS_ALLOWED_TAGS_EXP'] = $this->config[PREFIXES::CONFIG.'_whitelist'];
+				}
+				else
+				{
+					$data['page_data']['RH_TOPICTAGS_ALLOWED_TAGS_EXP'] = $this->config[PREFIXES::CONFIG.'_allowed_tags_exp_for_users'];
+				}
+
+				$event->set_data($data);
+			}
 		}
     }
 
@@ -276,8 +291,6 @@ class main_listener implements EventSubscriberInterface
 
 					// assign the template data
 					$data['topic_row']['RH_TOPICTAGS_TAGS'] = $rendered_tags;
-
-
 			
 					$event->set_data($data);
 				}
