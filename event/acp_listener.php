@@ -50,10 +50,6 @@ class acp_listener implements EventSubscriberInterface
 	{
 		global $user;
 		$user->add_lang_ext('robertheim/topictags', 'topictags_acp');
-
-		$data = $event->get_data();
-		$data['forum_data']['rh_topictags_enabled'] = false;
-		$event->set_data($data);
 	}
 
     public function acp_manage_forums_display_form($event)
