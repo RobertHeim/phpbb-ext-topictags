@@ -38,7 +38,11 @@
 	margin:			3px 2px 2px 2px;
 }
 
-
+.rh_topictags_count
+{
+	color:		#555;
+	font-size:	x-small;
+}
 
 .rh_topictags_tagcloud li:hover,
 .rh_tag:hover
@@ -46,6 +50,7 @@
 	background-color:	#105289;
 }
 
+.rh_topictags_tagcloud li:hover .rh_topictags_count,
 .rh_topictags_tagcloud li:hover a,
 .rh_tag:hover a
 {
@@ -53,14 +58,7 @@
 	background-color:	#105289;
 }
 
-
 /* ----------- tag sizes for tag-cloud ----------- */
-.rh_topictags_count
-{
-	color:		#555;
-	font-size:	x-small;
-}
-
 
 .rh_topictags_smallest
 {
