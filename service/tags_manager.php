@@ -195,7 +195,7 @@ class tags_manager
 				' . $this->table_prefix . TABLES::TAGS . ' AS t, 
 				' . $this->table_prefix . TABLES::TOPICTAGS . " AS tt
 			WHERE tt.topic_id = $topic_id
-				AND t.id = tt.tag_id"
+				AND t.id = tt.tag_id";
 		$result = $this->db->sql_query($sql);
 		$tags = array();
         while ($row = $this->db->sql_fetchrow($result))
@@ -220,7 +220,7 @@ class tags_manager
 
 		// get ids of tags
 		$ids = $this->get_existing_tags($valid_tags, true);
-		
+
 		// create topic_id <->tag_id link in TOPICTAGS_TABLE
 		foreach ($ids as $id)
 		{
@@ -300,13 +300,7 @@ class tags_manager
 				// note that this case is different from $tags == null where we want to get ALL existing tags.
 				return array();
 			}
-			// prepare tags for sql-where-in ('tag1', 'tag2', ...)
-			$sql_tags = array();
-			foreach ($tags as $tag)
-			{
-				$sql_tags[] = "'" . $this->db->sql_escape($tag) . "'";
-			}
-			$where = 'WHERE ' . $db->sql_in_set('tag', $sql_tags);
+			$where = 'WHERE ' . $this->db->sql_in_set('tag', $tags);
 		}
 		$sql = 'SELECT id, tag
 			FROM ' . $this->table_prefix . TABLES::TAGS . "
@@ -409,14 +403,13 @@ class tags_manager
 		// validate mode
 		$mode = ($mode == 'OR' ? 'OR' : 'AND');
 
-		$escaped_tags = array();
-		foreach ($tags as $tag)
- 		{
-			if (!$casesensitive)
-			{
-				$tag = mb_strtolower($tag);
+		$tag_count = sizeof($tags);
+		if (!$casesensitive)
+		{
+			for ($i = 0; $i < $tag_count; $i++)
+ 			{
+				$tags[$i] = mb_strtolower($tags[$i]);
 			}
-			$escaped_tags[] = "'" . $this->db->sql_escape($tag) . "'";
 		}
 		
 		// Get forums that the user is allowed to read
@@ -437,13 +430,12 @@ class tags_manager
 		$sql_where_topic_access = $this->db->sql_in_set('topics.forum_id', $forum_ary, false, true);
 		$sql_where_topic_access .= ' AND topics.topic_visibility = 1';
 
-		$sql_where_tag_in = $this->db->sql_in_set($casesensitive ? ' t.tag' : 'LOWER(t.tag)', $escaped_tags);
+		$sql_where_tag_in = $this->db->sql_in_set($casesensitive ? ' t.tag' : 'LOWER(t.tag)', $tags);
 
 		$sql = '';
 		if ('AND' == $mode)
 		{
 			// http://stackoverflow.com/questions/26038114/sql-select-distinct-where-exist-row-for-each-id-in-other-table
-			$tag_count = sizeof($tags);
 			$sql = 'SELECT topics.*
 				FROM 	' . TOPICS_TABLE								. ' topics
 					JOIN ' . $this->table_prefix . TABLES::TOPICTAGS	. ' tt ON tt.topic_id = topics.topic_id
