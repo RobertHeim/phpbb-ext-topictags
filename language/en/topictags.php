@@ -32,9 +32,15 @@ $lang = array_merge($lang, array(
 	'RH_TOPICTAGS_NO_TOPICS_FOR_TAG_OR'		=> 'There are no topics tagged with any of these tags: %s',
 	'RH_TOPICTAGS_NO_TOPICS_FOR_TAG_AND'	=> 'There are no topics tagged with all of these tags: %s',
 
-	'RH_TOPICTAGS_NO_TAGS'				=> 'There are no tags, yet.',
-
 	'RH_TOPICTAGS_TAGS_INVALID'			=> 'The following tags are invalid: %s',
+
+	'RH_TOPICTAGS_DISPLAYING_TOTAL_ALL'	=> 'Displaying all tags.',
+
+	'RH_TOPICTAGS_DISPLAYING_TOTAL'	=> array(
+		0 => 'There are no tags, yet',
+		1 => 'Displaying the top %d tag.',
+		2 => 'Displaying the top %d tags.',
+	),
 
 ));
 

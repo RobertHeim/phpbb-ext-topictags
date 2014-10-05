@@ -52,7 +52,7 @@ class main
 	 */
 	public function show()
 	{
-		$this->tagcloud_manager->assign_tagcloud_to_template();
+		$this->tagcloud_manager->assign_tagcloud_to_template(-1);
 		return $this->helper->render('tags.html', 'Tags');
 	}
 

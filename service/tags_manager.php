@@ -47,7 +47,8 @@ class tags_manager
 		$sql = 'DELETE FROM ' . $this->table_prefix . TABLES::TOPICTAGS. '
 				WHERE topic_id = ' . (int) $topic_id;
 		$this->db->sql_query($sql);
-		if ($delete_unused_tags) {
+		if ($delete_unused_tags)
+		{
 			$this->delete_unused_tags();
 		}
 		$this->calc_count_tags();
@@ -239,7 +240,8 @@ class tags_manager
 		$sql_ary_new_tags = array();
 		foreach ($tags as $tag)
 		{
-			if (!$this->in_array_r($tag, $existing_tags)) {
+			if (!$this->in_array_r($tag, $existing_tags))
+			{
 				// tag needs to be created
 				$sql_ary_new_tags[] = array('tag' => $tag);
 			}
@@ -256,7 +258,8 @@ class tags_manager
 	{
 		foreach ($haystack as $item)
 		{
-			if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && $this->in_array_r($needle, $item, $strict))) {
+			if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && $this->in_array_r($needle, $item, $strict)))
+			{
 				return true;
 			}
 		}
@@ -283,7 +286,8 @@ class tags_manager
 			}
 			// prepare tags for sql-where-in ('tag1', 'tag2', ...)
 			$sql_tags = array();
-			foreach ($tags as $tag) {
+			foreach ($tags as $tag)
+			{
 				$sql_tags[] = "'" . $this->db->sql_escape($tag) . "'";
 			}
 			$sql_tags = join(",", $sql_tags);
@@ -485,7 +489,8 @@ class tags_manager
 			'valid' => array(),
 			'invalid' => array()
 		);
-		foreach ($tags as $tag) {
+		foreach ($tags as $tag)
+		{
 			$tag = $this->clean_tag($tag);
 			$type = $this->is_valid_tag($tag, true) ? 'valid' : 'invalid';
 			$re[$type][] = $tag;
