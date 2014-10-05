@@ -75,6 +75,7 @@ class topictags_module
 				$config->set($conf_prefix.'_display_tagcloud_on_index', $request->variable($conf_prefix.'_display_tagcloud_on_index', 1));
 				$config->set($conf_prefix.'_display_tagcount_in_tagcloud', $request->variable($conf_prefix.'_display_tagcount_in_tagcloud', 1));
 				$config->set($conf_prefix.'_max_tags_in_tagcloud', $request->variable($conf_prefix.'_max_tags_in_tagcloud', 20));
+				$config->set($conf_prefix.'_convert_space_to_minus', $request->variable($conf_prefix.'_convert_space_to_minus', 1));
 
 				$msg = array();
 				$deleted_assignments_count = 0;
@@ -147,6 +148,7 @@ class topictags_module
 			'TOPICTAGS_MAX_TAGS_IN_TAGCLOUD'			=> $config[$conf_prefix.'_max_tags_in_tagcloud'],
 			'TOPICTAGS_ALLOWED_TAGS_REGEX'				=> $config[$conf_prefix.'_allowed_tags_regex'],
 			'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS'		=> $config[$conf_prefix.'_allowed_tags_exp_for_users'],
+			'TOPICTAGS_CONVERT_SPACE_TO_MINUS'			=> $config[$conf_prefix.'_convert_space_to_minus'],
 			'TOPICTAGS_IS_ENABLED_IN_ALL_FORUMS'		=> $all_enabled,
 			'TOPICTAGS_IS_DISABLED_IN_ALL_FORUMS'		=> $all_disabled,
 			'S_ERROR'									=> (sizeof($errors)) ? true : false,

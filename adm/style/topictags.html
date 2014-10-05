@@ -64,6 +64,11 @@
 			<dd><input type="text" name="robertheim_topictags_allowed_tags_regex" size="20" value="{TOPICTAGS_ALLOWED_TAGS_REGEX}" /></dd>
 		</dl>
 		<dl>
+			<dt><label for="robertheim_topictags_convert_space_to_minus">{L_TOPICTAGS_CONVERT_SPACE_TO_MINUS}:</label><br /><span>{L_TOPICTAGS_CONVERT_SPACE_TO_MINUS_EXP}</span></dt>
+			<dd><input type="radio" class="radio" name="robertheim_topictags_convert_space_to_minus" value="1" <!-- IF TOPICTAGS_CONVERT_SPACE_TO_MINUS -->checked="checked"<!-- ENDIF -->/> {L_YES} &nbsp; 
+				<input type="radio" class="radio" name="robertheim_topictags_convert_space_to_minus" value="0" <!-- IF not TOPICTAGS_CONVERT_SPACE_TO_MINUS -->checked="checked"<!-- ENDIF -->/> {L_NO}</dd>
+		</dl>
+		<dl>
 			<dt><label for="robertheim_topictags_prune">{L_TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS}:</label><br /><span>{L_TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS_EXP}</span></dt>
 			<dd><textarea name="robertheim_topictags_allowed_tags_exp_for_users" rows="3">{TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS}</textarea></dd>
 		</dl>

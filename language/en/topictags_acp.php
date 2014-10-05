@@ -93,7 +93,10 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_CALC_COUNT_TAGS_DONE'			=> 'Tag-counts have been recalculated.',
 
 	'TOPICTAGS_ALLOWED_TAGS_REGEX'				=> 'Regular Expression for allowed tags',
-	'TOPICTAGS_ALLOWED_TAGS_REGEX_EXP'			=> 'WARNING: Do not change this, if you don\'t know what you are doing. <strong>Tags can be 30 characters at maximum</strong>, please consider this during regex design.<br/>Note that afterwards invalid tags are not searchable, but are still displayed in the topics.<br/>Consider pruning the invalid tags (see maintenance-section).<br/>default: /^[a-z0-9]{3,30}$/i',
+	'TOPICTAGS_ALLOWED_TAGS_REGEX_EXP'			=> 'WARNING: Do not change this, if you don\'t know what you are doing. <strong>Tags can be 30 characters at maximum</strong>, please consider this during regex design.<br/>Note that afterwards invalid tags are not searchable, but are still displayed in the topics.<br/>Consider pruning the invalid tags (see maintenance-section).<br/>default: /^[\- a-z0-9]{3,30}$/i',
+	'TOPICTAGS_CONVERT_SPACE_TO_MINUS'			=> 'Convert " " to "-"',
+	'TOPICTAGS_CONVERT_SPACE_TO_MINUS_EXP'		=> 'If set to yes, all spaces (" ") are automatically converted to minus ("-").<br/>NOTE 1: In the regex you must allow "-"; otherwise tags with whitespaces will be rejected.<br/>NOTE 2: Existing tags with spaces will NOT be converted automatically.',
+
 	'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS'		=> 'Explanation for Users',
 	'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS_EXP'	=> 'This text is shown to the users and should explain which tags are allowed and which not.<br/>default: 0-9, a-z, A-Z, min: 3, max: 30',
 

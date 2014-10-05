@@ -499,7 +499,7 @@ class tags_manager
 	}
 
 	/**
-	 * Trims the tag to 30 characters.
+	 * Trims the tag to 30 characters and replaced spaces to "-" if configured.
 	 *
 	 * @param the tag to clean
 	 * @return cleaned tag
@@ -513,6 +513,11 @@ class tags_manager
 
 		//might have a space at the end now, so trim again
 		$tag = trim($tag);
+
+		if ($this->config[PREFIXES::CONFIG.'_convert_space_to_minus'])
+		{
+			$tag = str_replace(" ", "-", $tag);
+		}
 
 		return $tag;
 	}
