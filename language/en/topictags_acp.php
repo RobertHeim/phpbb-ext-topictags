@@ -54,7 +54,6 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_ENABLE_IN_ALL_FORUMS'			=> 'Enable RH Topic Tags in all forums',
 	'TOPICTAGS_ENABLE_IN_ALL_FORUMS_EXP'		=> 'This will enable tagging in <em>all</em> forums. You can enable (or disable) it in a single forum in the settings of the forum.',
 	'TOPICTAGS_ENABLE_IN_ALL_FORUMS_DONE'	=> array(
-			0 => 'Tagging is already enabled for all forums.',
 			1 => 'Tagging has been enabled for %d forum.',
 			2 => 'Tagging has been enabled for %d forums.',
 	),
@@ -63,7 +62,6 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_DISABLE_IN_ALL_FORUMS'			=> 'Disable RH Topic Tags in all forums',
 	'TOPICTAGS_DISABLE_IN_ALL_FORUMS_EXP'		=> 'This will disable tagging in <em>all</em> forums. You can enable (or disable) it in a single forum in the settings of the forum.',
 	'TOPICTAGS_DISABLE_IN_ALL_FORUMS_DONE'	=> array(
-			0 => 'Tagging is already disabled for all forums.',
 			1 => 'Tagging has been disabled for %d forum.',
 			2 => 'Tagging has been disabled for %d forums.',
 	),
