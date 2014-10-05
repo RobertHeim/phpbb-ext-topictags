@@ -15,6 +15,11 @@ namespace robertheim\topictags\service;
 use robertheim\topictags\TABLES;
 use robertheim\topictags\PREFIXES;
 
+/**
+* Handles all functionallity regarding tags.
+* This class is basically a manager (functions for cleaning and validating tags)
+* and a DAO (storing/retrieving tags to/from the DB).
+*/
 class tags_manager
 {
 
@@ -45,7 +50,7 @@ class tags_manager
 	{
 		// remove tags from topic
 		$sql = 'DELETE FROM ' . $this->table_prefix . TABLES::TOPICTAGS. '
-				WHERE topic_id = ' . (int) $topic_id;
+			WHERE topic_id = ' . (int) $topic_id;
 		$this->db->sql_query($sql);
 		if ($delete_unused_tags)
 		{
@@ -65,12 +70,13 @@ class tags_manager
 		// https://www.phpbb.com/community/viewtopic.php?f=461&t=2263646
 		// so we would need 2 queries, but this is slow... so we use subqueries and hope - yeah! :D
 
-		$sql = 'DELETE t FROM ' . $this->table_prefix . TABLES::TAGS . ' t
-				WHERE NOT EXISTS (
-					SELECT 1
-					FROM ' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
+		$sql = 'DELETE t
+			FROM ' . $this->table_prefix . TABLES::TAGS . ' t
+			WHERE NOT EXISTS (
+				SELECT 1
+				FROM ' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
 					WHERE tt.tag_id = t.id
-				)';
+			)';
 
 		$this->db->sql_query($sql);
 		return $this->db->sql_affectedrows();
@@ -95,8 +101,9 @@ class tags_manager
 			}
 		}
 		// delete all tag-assignments where the tag is not valid
-		$sql = 'DELETE tt FROM ' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
-				WHERE tt.tag_id IN (' . join(',', $ids_of_invalid_tags) . ')';
+		$sql = 'DELETE tt
+			FROM ' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
+			WHERE ' . $this->db->sql_in_set('tt.tag_id', $ids_of_invalid_tags);
 		$this->db->sql_query($sql);
 		$removed_count = $this->db->sql_affectedrows();
 
@@ -113,11 +120,13 @@ class tags_manager
 	public function delete_assignments_where_topic_does_not_exist()
 	{
 		// delete all tag-assignments where the topic does not exist anymore
-		$sql = 'DELETE tt FROM ' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
-				WHERE NOT EXISTS (
-					SELECT 1 FROM ' . TOPICS_TABLE . ' topics
+		$sql = 'DELETE tt
+			FROM ' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
+			WHERE NOT EXISTS (
+				SELECT 1
+				FROM ' . TOPICS_TABLE . ' topics
 					WHERE topics.topic_id = tt.topic_id
-				)';
+			)';
 		$this->db->sql_query($sql);
 		$removed_count = $this->db->sql_affectedrows();
 
@@ -149,19 +158,20 @@ class tags_manager
 			{
 				$int_ids[] = (int) $id;
 			}
-			$forums_sql_where = ' AND f.forum_id IN (' . join(',', $int_ids) . ')';
+			$forums_sql_where = ' AND ' . $this->db->sql_in_set('f.forum_id', $int_ids);
 		}
 		// Deletes all topic-assignments to topics that reside in a forum with tagging disabled.
-		$sql = 'DELETE tt FROM ' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
-				WHERE EXISTS (
-					SELECT 1
-					FROM ' . TOPICS_TABLE . ' topics,
-						' . FORUMS_TABLE . ' f
-					WHERE topics.topic_id = tt.topic_id
-						AND f.forum_id = topics.forum_id
-						AND f.rh_topictags_enabled = 0
-						' . $forums_sql_where . '
-				)';
+		$sql = 'DELETE tt
+			FROM ' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
+			WHERE EXISTS (
+				SELECT 1
+				FROM ' . TOPICS_TABLE . ' topics,
+					' . FORUMS_TABLE . " f
+				WHERE topics.topic_id = tt.topic_id
+					AND f.forum_id = topics.forum_id
+					AND f.rh_topictags_enabled = 0
+					$forums_sql_where
+			)";
 		$this->db->sql_query($sql);
 		$removed_count = $this->db->sql_affectedrows();
 
@@ -179,11 +189,14 @@ class tags_manager
 	 */
 	public function get_assigned_tags($topic_id)
 	{
-		$result = $this->db->sql_query('SELECT t.tag FROM
+		$topic_id = (int) $topic_id;
+		$sql = 'SELECT t.tag
+			FROM
 				' . $this->table_prefix . TABLES::TAGS . ' AS t, 
-				' . $this->table_prefix . TABLES::TOPICTAGS . ' AS tt
-			WHERE tt.topic_id = ' . (int) $topic_id.'
-				AND t.id = tt.tag_id');
+				' . $this->table_prefix . TABLES::TOPICTAGS . " AS tt
+			WHERE tt.topic_id = $topic_id
+				AND t.id = tt.tag_id"
+		$result = $this->db->sql_query($sql);
 		$tags = array();
         while ($row = $this->db->sql_fetchrow($result))
 		{
@@ -293,10 +306,12 @@ class tags_manager
 			{
 				$sql_tags[] = "'" . $this->db->sql_escape($tag) . "'";
 			}
-			$sql_tags = join(",", $sql_tags);
-			$where = ' WHERE tag IN (' . $sql_tags . ')';
+			$where = 'WHERE ' . $db->sql_in_set('tag', $sql_tags);
 		}
-		$result = $this->db->sql_query('SELECT id, tag FROM ' . $this->table_prefix . TABLES::TAGS . $where);
+		$sql = 'SELECT id, tag
+			FROM ' . $this->table_prefix . TABLES::TAGS . "
+			$where";
+		$result = $this->db->sql_query($sql);
 
 		$existing_tags = array();
 		if ($only_ids)
@@ -326,7 +341,9 @@ class tags_manager
 	 */
 	private function get_used_tag_ids()
 	{
-		$result = $this->db->sql_query('SELECT DISTINCT tag_id FROM ' . $this->table_prefix . TABLES::TOPICTAGS);
+		$sql = 'SELECT DISTINCT tag_id
+			FROM ' . $this->table_prefix . TABLES::TOPICTAGS;
+		$result = $this->db->sql_query($sql);
 		$ids = array();
         while ($row = $this->db->sql_fetchrow($result))
 		{
@@ -374,7 +391,8 @@ class tags_manager
 	{
 		$sql = $this->get_topics_build_query($tags, $mode, $casesensitive);
 
-		$sql = "SELECT COUNT(*) as total_results FROM ($sql) a";
+		$sql = "SELECT COUNT(*) as total_results
+			FROM ($sql) a";
 		$result = $this->db->sql_query($sql);
 		$count = (int) $this->db->sql_fetchfield('total_results');
 		$this->db->sql_freeresult($result);
@@ -419,8 +437,7 @@ class tags_manager
 		$sql_where_topic_access = $this->db->sql_in_set('topics.forum_id', $forum_ary, false, true);
 		$sql_where_topic_access .= ' AND topics.topic_visibility = 1';
 
-		$sql_where_tag_in = $casesensitive ? ' t.tag' : 'LOWER(t.tag)';
-		$sql_where_tag_in .= ' IN (' . join(',', $escaped_tags) . ')';
+		$sql_where_tag_in = $this->db->sql_in_set($casesensitive ? ' t.tag' : 'LOWER(t.tag)', $escaped_tags);
 
 		$sql = '';
 		if ('AND' == $mode)
@@ -431,13 +448,13 @@ class tags_manager
 				FROM 	' . TOPICS_TABLE								. ' topics
 					JOIN ' . $this->table_prefix . TABLES::TOPICTAGS	. ' tt ON tt.topic_id = topics.topic_id
 					JOIN ' . $this->table_prefix . TABLES::TAGS			. ' t  ON tt.tag_id = t.id
-					JOIN ' . FORUMS_TABLE								. ' f  ON f.forum_id = topics.forum_id
+					JOIN ' . FORUMS_TABLE								. " f  ON f.forum_id = topics.forum_id
 				WHERE
-					' . $sql_where_tag_in . '
+					$sql_where_tag_in
 					AND f.rh_topictags_enabled = 1
-					AND ' . $sql_where_topic_access . '
+					AND $sql_where_topic_access
 				GROUP BY topics.topic_id
-				HAVING count(t.id) = ' . $tag_count;
+				HAVING count(t.id) = $tag_count";
 		}
 		else
 		{
@@ -450,14 +467,13 @@ class tags_manager
 					$this->table_prefix . TABLES::TAGS		=> 't',
 					FORUMS_TABLE							=> 'f',
 				),
-				'WHERE'		=> '
-					' . $sql_where_tag_in . '
+				'WHERE'		=> " $sql_where_tag_in
 					AND topics.topic_id = tt.topic_id
 					AND f.rh_topictags_enabled = 1
 					AND f.forum_id = topics.forum_id
-					AND ' . $sql_where_topic_access . '
+					AND $sql_where_topic_access
 					AND t.id = tt.tag_id
-					');
+				");
 			$sql = $this->db->sql_build_query('SELECT_DISTINCT', $sql_array);
 		}
 		return $sql;
@@ -581,8 +597,8 @@ class tags_manager
 	{
 		$field = 'rh_topictags_enabled';
 		$sql = "SELECT $field
-				FROM " . FORUMS_TABLE . '
-				WHERE ' . $this->db->sql_build_array('SELECT', array('forum_id' => (int) $forum_id));
+			FROM " . FORUMS_TABLE . '
+			WHERE ' . $this->db->sql_build_array('SELECT', array('forum_id' => (int) $forum_id));
 		$result = $this->db->sql_query($sql);
 		return (int) $this->db->sql_fetchfield($field);	
 	}
@@ -594,10 +610,11 @@ class tags_manager
 	 */
 	public function enable_tags_in_all_forums()
 	{
+		$sql_ary = array(
+			'rh_topictags_enabled'	=> 1
+		);
 		$sql = 'UPDATE ' . FORUMS_TABLE . '
-			SET ' . $this->db->sql_build_array('UPDATE', array(
-				'rh_topictags_enabled'	=> 1
-				)) . '
+			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
 			WHERE forum_type = ' . FORUM_POST . '
 				AND rh_topictags_enabled = 0';
 		$this->db->sql_query($sql);
@@ -613,10 +630,11 @@ class tags_manager
 	 */
 	public function disable_tags_in_all_forums()
 	{
+		$sql_ary =  array(
+			'rh_topictags_enabled'	=> 0
+		);
 		$sql = 'UPDATE ' . FORUMS_TABLE . '
-			SET ' . $this->db->sql_build_array('UPDATE', array(
-				'rh_topictags_enabled'	=> 0
-				)) . '
+			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
 			WHERE forum_type = ' . FORUM_POST . '
 				AND rh_topictags_enabled = 1';
 		$this->db->sql_query($sql);
@@ -673,16 +691,16 @@ class tags_manager
 	public function calc_count_tags()
 	{
 		$sql = 'UPDATE ' . $this->table_prefix . TABLES::TAGS . ' t
-				SET t.count = (
-					SELECT COUNT(tt.id)
-					FROM ' . TOPICS_TABLE . ' topics,
-						' . FORUMS_TABLE . ' f,
-						' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
-					WHERE tt.tag_id = t.id
-						AND topics.topic_id = tt.topic_id
-						AND f.forum_id = topics.forum_id
-						AND f.rh_topictags_enabled = 1
-				)';
+			SET t.count = (
+				SELECT COUNT(tt.id)
+				FROM ' . TOPICS_TABLE . ' topics,
+					' . FORUMS_TABLE . ' f,
+					' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
+				WHERE tt.tag_id = t.id
+					AND topics.topic_id = tt.topic_id
+					AND f.forum_id = topics.forum_id
+					AND f.rh_topictags_enabled = 1
+			)';
 		$this->db->sql_query($sql);
 	}
 

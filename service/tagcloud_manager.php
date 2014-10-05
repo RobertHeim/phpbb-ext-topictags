@@ -15,6 +15,9 @@ namespace robertheim\topictags\service;
 use robertheim\topictags\TABLES;
 use robertheim\topictags\PREFIXES;
 
+/**
+* Handles all operations regarding the tag cloud.
+*/
 class tagcloud_manager
 {
 	private $db;
@@ -176,15 +179,15 @@ class tagcloud_manager
 		{
 			return 'rh_topictags_smallest';
 		}
-		elseif ($percent >= 20 and $percent < 40)
+		else if ($percent >= 20 and $percent < 40)
 		{
 			return 'rh_topictags_small'; 
 		}
-		elseif ($percent >= 40 and $percent < 60)
+		else if ($percent >= 40 and $percent < 60)
 		{
 			return 'rh_topictags_medium';
 		}
-		elseif ($percent >= 60 and $percent < 80)
+		else if ($percent >= 60 and $percent < 80)
 		{
 			return 'rh_topictags_large';
 		}

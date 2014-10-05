@@ -223,7 +223,7 @@ class main_listener implements EventSubscriberInterface
 				if (isset($_post['rh_topictags'])) {
 					// use data from post-request
 					$tags = $this->get_tags_from_post_request();
-				} elseif ($is_edit_first_post) {
+				} else if ($is_edit_first_post) {
 					// use data from db
 					$tags = $this->tags_manager->get_assigned_tags($topic_id);
 				}
