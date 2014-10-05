@@ -25,13 +25,17 @@ phpBB 3.1 extension, that adds the ability to tag topics with key words.
 ### Tag-Cloud
 * /tags shows a tag cloud
 * acp option for tag cloud to be displayed on board-index or not
-* acp option to limit count of tags shown in tag cloud
+* acp option to limit count of tags shown in tag cloud on the index page
 * dynamic tag-size in tag cloud depending on its usage count
 * acp option to en/disable display of usage count of tags in tag cloud
 
 ### Advanced configuration
 * configure a regex to decide which tags are valid and which are not
 * maintenance functions in ACP -> Extensions -> RH Topic Tags
+* Whitelist
+* Blacklist
+* User and Mod+Admin permission for who can add/edit RH topic tags
+* spaces in tags are converted to "-" by default (you can disable it in ACP)
 
 ## Installation
 
