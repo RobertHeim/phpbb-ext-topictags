@@ -32,6 +32,10 @@ class release_0_0_9 extends \phpbb\db\migration\migration
 	{
 		return array(
 			array('config.add', array(PREFIXES::CONFIG.'_convert_space_to_minus', 1)),
+			array('config.add', array(PREFIXES::CONFIG.'_whitelist_enabled', 0)),
+			array('config.add', array(PREFIXES::CONFIG.'_whitelist', '')),
+			array('config.add', array(PREFIXES::CONFIG.'_blacklist_enabled', 0)),
+			array('config.add', array(PREFIXES::CONFIG.'_blacklist', '')),
 			array('config.update', array(PREFIXES::CONFIG.'_version', $this->version)),
 		);
 	}

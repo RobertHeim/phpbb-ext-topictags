@@ -24,6 +24,7 @@ $lang = array_merge($lang, array(
 
 	'RH_TOPICTAGS_EXP'					=> 'Tags separated by comma (",")',
 	'RH_TOPICTAGS_ALLOWED_TAGS'			=> 'Allowed tags:',
+	'RH_TOPICTAGS_WHITELIST_EXP'		=> 'Only these tags are allowed:',
 
 	'RH_TOPICTAGS_SEARCH_HEADER_OR'		=> 'Search for topics with any of these tags: %s',
 	'RH_TOPICTAGS_SEARCH_HEADER_AND'	=> 'Search for topics with all of these tags: %s',

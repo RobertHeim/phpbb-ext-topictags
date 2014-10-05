@@ -462,6 +462,7 @@ class tags_manager
 
 	/**
 	 * Checks if the given tag matches the configured regex for valid tags, Note that the tag is trimmed to 30 characters before the check!
+	 * This method also checks if the tag is whitelisted and/or blacklisted if the lists are enabled.
 	 *
 	 * @param $tag the tag to check
 	 * @param $is_clean wether the tag has already been cleaned or not.
@@ -473,8 +474,53 @@ class tags_manager
 		{
 			$tag = $this->clean_tag($tag);
 		}
+
 		$pattern = $this->config[PREFIXES::CONFIG.'_allowed_tags_regex'];
-		return preg_match($pattern, $tag);
+		$tag_is_valid = preg_match($pattern, $tag);
+
+		if (!$tag_is_valid)
+		{
+			// non conform to regex is always invalid.
+			return false;
+		}
+
+		// from here on: tag is regex conform
+
+		// check blacklist
+		if ($this->config[PREFIXES::CONFIG.'_blacklist_enabled'])
+		{
+			$blacklist = explode(',', $this->config[PREFIXES::CONFIG.'_blacklist']);
+			foreach ($blacklist as $entry)
+			{
+				if ($tag == $this->clean_tag($entry))
+				{
+					// tag is regex-conform, but blacklisted => invalid
+					return false;
+				}
+			}
+			// regex conform and not blacklisted. => do nothing here
+		}
+
+		// here we know: tag is regex conform and not blacklisted or it's regex conform and the blacklist is disabled.
+
+		// check whitelist
+		if ($this->config[PREFIXES::CONFIG.'_whitelist_enabled'])
+		{
+			$whitelist = explode(',', $this->config[PREFIXES::CONFIG.'_whitelist']);
+			foreach ($whitelist as $entry)
+			{
+				if ($tag == $this->clean_tag($entry))
+				{
+					// tag is regex-conform not blacklisted and in the whitelist => valid
+					return true;
+				}
+			}
+			// not on whitelist, but whitelist enabled => invalid
+			return false;
+		}
+
+		// tag is regex conform, not blacklisted and the the whitelist is disabled => valid
+		return true;
 	}
 
 	/**

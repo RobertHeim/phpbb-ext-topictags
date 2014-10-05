@@ -53,14 +53,14 @@ class topictags_module
 
 			$submit = true;
 
-			$regex = $request->variable($conf_prefix.'_allowed_tags_regex', '/^[a-z0-9]{3,30}$/i');
+			$regex = $request->variable($conf_prefix.'_allowed_tags_regex', "/^[\- a-z0-9]{3,30}$/i");
 			if (empty($regex))
 			{
 					$submit = false;
 					$errors[] = $user->lang('ACP_RH_TOPICTAGS_REGEX_EMPTY');
 			}
 
-			$exp_for_users = $request->variable($conf_prefix.'_allowed_tags_exp_for_users', '0-9, a-z, A-Z, min: 3, max: 30');
+			$exp_for_users = $request->variable($conf_prefix.'_allowed_tags_exp_for_users', "-, 0-9, a-z, A-Z, spaces (will be converted to -), min: 3, max: 30");
 			if (empty($exp_for_users))
 			{
 					$submit = false;
@@ -76,6 +76,10 @@ class topictags_module
 				$config->set($conf_prefix.'_display_tagcount_in_tagcloud', $request->variable($conf_prefix.'_display_tagcount_in_tagcloud', 1));
 				$config->set($conf_prefix.'_max_tags_in_tagcloud', $request->variable($conf_prefix.'_max_tags_in_tagcloud', 20));
 				$config->set($conf_prefix.'_convert_space_to_minus', $request->variable($conf_prefix.'_convert_space_to_minus', 1));
+				$config->set($conf_prefix.'_whitelist_enabled', $request->variable($conf_prefix.'_whitelist_enabled', 0));
+				$config->set($conf_prefix.'_whitelist', $request->variable($conf_prefix.'_whitelist', ''));
+				$config->set($conf_prefix.'_blacklist_enabled', $request->variable($conf_prefix.'_blacklist_enabled', 0));
+				$config->set($conf_prefix.'_blacklist', $request->variable($conf_prefix.'_blacklist', ''));
 
 				$msg = array();
 				$deleted_assignments_count = 0;
@@ -149,6 +153,10 @@ class topictags_module
 			'TOPICTAGS_ALLOWED_TAGS_REGEX'				=> $config[$conf_prefix.'_allowed_tags_regex'],
 			'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS'		=> $config[$conf_prefix.'_allowed_tags_exp_for_users'],
 			'TOPICTAGS_CONVERT_SPACE_TO_MINUS'			=> $config[$conf_prefix.'_convert_space_to_minus'],
+			'TOPICTAGS_WHITELIST_ENABLED'				=> $config[$conf_prefix.'_whitelist_enabled'],
+			'TOPICTAGS_WHITELIST'						=> $config[$conf_prefix.'_whitelist'],
+			'TOPICTAGS_BLACKLIST_ENABLED'				=> $config[$conf_prefix.'_blacklist_enabled'],
+			'TOPICTAGS_BLACKLIST'						=> $config[$conf_prefix.'_blacklist'],
 			'TOPICTAGS_IS_ENABLED_IN_ALL_FORUMS'		=> $all_enabled,
 			'TOPICTAGS_IS_DISABLED_IN_ALL_FORUMS'		=> $all_disabled,
 			'S_ERROR'									=> (sizeof($errors)) ? true : false,

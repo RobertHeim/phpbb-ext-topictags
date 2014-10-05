@@ -84,16 +84,29 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_PRUNE_FORUMS_EXP'		=> 'This will DELETE all assignments of tags to those topics that reside in a forum with tagging disabled.',
 	'TOPICTAGS_PRUNE_FORUMS_CONFIRM'	=> 'This will REMOVE all tags from all those threads which reside in a forum with tagging disabled.',
 
-	'TOPICTAGS_PRUNE_INVALID_TAGS'			=> 'Prune invalid tags',
+	'TOPICTAGS_PRUNE_INVALID_TAGS'				=> 'Prune invalid tags',
 	'TOPICTAGS_PRUNE_INVALID_TAGS_EXP'			=> 'This will DELETE all tags (and their assignments) that are not valid anymore. This is only required if you changed the regex and want to get rid of the invalid tags.',
-	'TOPICTAGS_PRUNE_INVALID_TAGS_CONFIRM'	=> 'This will REMOVE all tags that are not conform with the configured regex and can delete a lot of your stuff, if you are not careful!',
+	'TOPICTAGS_PRUNE_INVALID_TAGS_CONFIRM'		=> 'This will REMOVE all tags that are not conform with the configured regex and can delete a lot of your stuff, if you are not careful!',
 
 	'TOPICTAGS_CALC_COUNT_TAGS'					=> 'Recalculate tag-counts',
 	'TOPICTAGS_CALC_COUNT_TAGS_EXP'				=> 'This will re-calculate how often each tag is used.',
 	'TOPICTAGS_CALC_COUNT_TAGS_DONE'			=> 'Tag-counts have been recalculated.',
 
+	'TOPICTAGS_ENABLE_WHITELIST'				=> 'Enable Whitelist',
+	'TOPICTAGS_ENABLE_WHITELIST_EXP'			=> 'If enabled, only tags that are conform to the regex AND are present in the whitelist below are allowed.<br/>NOTE 1: If the blacklist is enabled, too, and a tag is in the whitelist as well as in the blacklist, it will be rejected.<br/>NOTE 2: To prevent accidental data loss, tags that are already in the database, but not on the whitelist are NOT deleted automatically and will be displayed as well. You must remove the existing tags by hand.',
+
+	'TOPICTAGS_WHITELIST'						=> 'Whitelist',
+	'TOPICTAGS_WHITELIST_EXP'					=> 'Comma (,) separated list of allowed tags.<br/>NOTE: Tags must be conform to the regex as well, so be sure that all these tags are conform to your regex-settings below (not checked automatically).',
+
+	'TOPICTAGS_ENABLE_BLACKLIST'				=> 'Enable Blacklist',
+	'TOPICTAGS_ENABLE_BLACKLIST_EXP'			=> 'If enabled, the tags configured in the blacklist will be rejected even if they are conform with the regex.<br/>NOTE 1: To prevent accidental data loss, tags that are already in the database are not deleted automatically. You must remove them by hand from each topic.<br/>NOTE 2: The blacklist is never shown to the users.',
+
+	'TOPICTAGS_BLACKLIST'						=> 'Blacklist',
+	'TOPICTAGS_BLACKLIST_EXP'					=> 'Comma (,) separated list of forbidden tags.<br/>NOTE: All tags that are not conform with the regex are always rejected.',
+
 	'TOPICTAGS_ALLOWED_TAGS_REGEX'				=> 'Regular Expression for allowed tags',
 	'TOPICTAGS_ALLOWED_TAGS_REGEX_EXP'			=> 'WARNING: Do not change this, if you don\'t know what you are doing. <strong>Tags can be 30 characters at maximum</strong>, please consider this during regex design.<br/>Note that afterwards invalid tags are not searchable, but are still displayed in the topics.<br/>Consider pruning the invalid tags (see maintenance-section).<br/>default: /^[\- a-z0-9]{3,30}$/i',
+
 	'TOPICTAGS_CONVERT_SPACE_TO_MINUS'			=> 'Convert " " to "-"',
 	'TOPICTAGS_CONVERT_SPACE_TO_MINUS_EXP'		=> 'If set to yes, all spaces (" ") are automatically converted to minus ("-").<br/>NOTE 1: In the regex you must allow "-"; otherwise tags with whitespaces will be rejected.<br/>NOTE 2: Existing tags with spaces will NOT be converted automatically.',
 

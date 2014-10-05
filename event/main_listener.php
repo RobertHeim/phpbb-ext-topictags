@@ -215,7 +215,16 @@ class main_listener implements EventSubscriberInterface
 			}
 			$data['page_data']['RH_TOPICTAGS'] = join(", ", $tags);
 
-			$data['page_data']['RH_TOPICTAGS_ALLOWED_TAGS_EXP'] = $this->config[PREFIXES::CONFIG.'_allowed_tags_exp_for_users'];
+            if ($this->config[PREFIXES::CONFIG.'_whitelist_enabled'])
+			{
+				$data['page_data']['RH_TOPICTAGS_WHITELIST_ENABLED'] = true;
+				$data['page_data']['RH_TOPICTAGS_ALLOWED_TAGS_EXP'] = $this->config[PREFIXES::CONFIG.'_whitelist'];
+			}
+			else
+			{
+				$data['page_data']['RH_TOPICTAGS_ALLOWED_TAGS_EXP'] = $this->config[PREFIXES::CONFIG.'_allowed_tags_exp_for_users'];
+			}
+
 			$event->set_data($data);
 		}
     }
