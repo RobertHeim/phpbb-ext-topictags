@@ -107,6 +107,7 @@ class acp_listener implements EventSubscriberInterface
 			$this->tags_manager->delete_tags_from_tagdisabled_forums(array($forum_id));
 			$this->tags_manager->delete_unused_tags();
 		}
+		$this->tags_manager->calc_count_tags();
 	}
 
 }

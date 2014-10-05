@@ -358,10 +358,9 @@ class tags_manager
 	/**
 	 * Gets the topics which are tagged with any or all of the given $tags from all forums, where tagging is enabled and only those which the user is allowed to read.
 	 *
-	 * @param $start start for sql query
-	 * @param $limit limit for sql query
 	 * @param $tags the tag to find the topics for
-	 * @param $mode AND=all tags must be assigned, OR=at least one tag needs to be assigned
+	 * @param $mode AND(default)=all tags must be assigned, OR=at least one tag needs to be assigned
+	 * @param $casesensitive search case-sensitive if true, insensitive otherwise (default).
 	 * @return array of topics, each containing all fields from TOPIC_TABLE
 	 */
 	public function count_topics_by_tags($tags, $mode = "AND", $casesensitive = false)
@@ -543,7 +542,9 @@ class tags_manager
 			WHERE forum_type = ' . FORUM_POST . '
 				AND rh_topictags_enabled = 0';
 		$this->db->sql_query($sql);
-		return $this->db->sql_affectedrows();
+		$affected_rows = $this->db->sql_affectedrows();
+		$this->calc_count_tags();
+		return $affected_rows;
 	}
 
 	/**
@@ -560,7 +561,9 @@ class tags_manager
 			WHERE forum_type = ' . FORUM_POST . '
 				AND rh_topictags_enabled = 1';
 		$this->db->sql_query($sql);
-		return $this->db->sql_affectedrows();
+		$affected_rows = $this->db->sql_affectedrows();
+		$this->calc_count_tags();
+		return $affected_rows;
 	}
 
 	/**
@@ -606,15 +609,21 @@ class tags_manager
 	}
 
 	/**
-	 * Count how often each tag is used and store it for each tag.
+	 * Count how often each tag is used (skipping the usage in tagging-disabled forums) and store it for each tag.
 	 */
 	public function calc_count_tags()
 	{
 		$sql = 'UPDATE ' . $this->table_prefix . TABLES::TAGS . ' t
 				SET t.count = (
 					SELECT COUNT(tt.id)
-					FROM ' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
-					WHERE tt.tag_id = t.id)';
+					FROM ' . TOPICS_TABLE . ' topics,
+						' . FORUMS_TABLE . ' f,
+						' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
+					WHERE tt.tag_id = t.id
+						AND topics.topic_id = tt.topic_id
+						AND f.forum_id = topics.forum_id
+						AND f.rh_topictags_enabled = 1
+				)';
 		$this->db->sql_query($sql);
 	}
 

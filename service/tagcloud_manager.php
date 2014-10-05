@@ -83,10 +83,12 @@ class tagcloud_manager
 			'FROM'		=> array(
 				$this->table_prefix . TABLES::TAGS  => 't'
 			),
+			'WHERE'		=> 't.count > 0',
 			'ORDER_BY'	=> 't.count DESC',
 		);
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 		$result = $this->db->sql_query_limit($sql, (int) $limit);
+		$tags = array();
         while ($row = $this->db->sql_fetchrow($result))
 		{
 			$tags[] = array(
@@ -109,6 +111,7 @@ class tagcloud_manager
 			'FROM'		=> array(
 				$this->table_prefix . TABLES::TAGS  => 't'
 			),
+			'WHERE'		=> 't.count > 0',
 			'ORDER_BY'	=> 't.count DESC',
 		);
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
