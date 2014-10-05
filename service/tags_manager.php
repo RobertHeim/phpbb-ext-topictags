@@ -234,6 +234,9 @@ class tags_manager
 		// result contains the tags that needs to be created
 		// to_create = $tags - exting
 
+		// ensure that there isn't a tag twice in the array
+		$tags = array_unique($tags);
+
 		$existing_tags = $this->get_existing_tags($tags);
 
 		// find all tags that are not in $existing_tags and add them to $sql_ary_new_tags
