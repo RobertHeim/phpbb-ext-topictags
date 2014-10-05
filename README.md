@@ -25,7 +25,7 @@ phpBB 3.1 extension, that adds the ability to tag topics with key words.
 ### Tag-Cloud
 * /tags shows a tag cloud
 * acp option for tag cloud to be displayed on board-index or not
-* acp option to limit count of tags shown in tag cloud
+* acp option to limit count of tags shown in tag cloud on the index page
 * dynamic tag-size in tag cloud depending on its usage count
 * acp option to en/disable display of usage count of tags in tag cloud
 
