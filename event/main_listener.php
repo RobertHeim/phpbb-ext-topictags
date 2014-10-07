@@ -218,7 +218,7 @@ class main_listener implements EventSubscriberInterface
 
 				// do we got some preview-data?
 				$tags = array();
-				if ($request->is_set_post($_post['rh_topictags'])) {
+				if ($this->request->is_set_post($_post['rh_topictags'])) {
 					// use data from post-request
 					$tags = $this->get_tags_from_post_request();
 				} else if ($is_edit_first_post) {
