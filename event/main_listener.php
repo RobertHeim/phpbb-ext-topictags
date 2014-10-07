@@ -76,21 +76,25 @@ class main_listener implements EventSubscriberInterface
 	}
 
 	/**
-	 * Reads all tags from request variable 'rh_topictags' and splits them by the separator (default: comma (',')).
+	 * Reads all tags from request variable 'rh_topictags' and splits them by the separator (default: comma (',')) and trims them.
 	 * NOTE: These tags might be dirty!
 	 * 
 	 * @return array of dirty tags
 	 */
 	private function get_tags_from_post_request()
 	{
-		$tags = utf8_normalize_nfc($this->request->variable('rh_topictags', '', true));
+		$tags_string = utf8_normalize_nfc($this->request->variable('rh_topictags', '', true));
 
-		if ('' === $tags) {
+		if ('' === $tags_string) {
 			return array();
 		}
 
-		$tags_string = $tags;
-		return explode(',', $tags_string);
+		$tags = explode(',', $tags_string);
+		for ($i=0, $count = sizeof($tags); $i<$count; $i++)
+		{
+			$tags[$i] = trim($tags[$i]);
+		}
+		return $tags;
 	}
 
 	/**
@@ -218,7 +222,7 @@ class main_listener implements EventSubscriberInterface
 
 				// do we got some preview-data?
 				$tags = array();
-				if ($this->request->is_set_post($_post['rh_topictags'])) {
+				if ($this->request->is_set_post('rh_topictags')) {
 					// use data from post-request
 					$tags = $this->get_tags_from_post_request();
 				} else if ($is_edit_first_post) {
