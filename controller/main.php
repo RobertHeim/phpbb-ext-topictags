@@ -66,24 +66,32 @@ class main
 	public function show_tag($tags, $mode, $casesensitive)
 	{
 		global $user, $phpbb_container, $config, $phpbb_root_path, $request;
-		
-		$tags = explode(',', urldecode($tags));
-		// remove possible duplicates
-		$tags = array_unique($tags);
-		$all_tags = $this->tags_manager->split_valid_tags($tags);
-		$tags = $all_tags['valid'];
-		$tags_string = join(', ', $tags);
 
 		// validate mode
 		// default == AND
 		$mode = ($mode == 'OR' ? 'OR' : 'AND');
 
-		$ignored_tags_str = false;
+		$tags = explode(',', urldecode($tags));
+		// remove possible duplicates
+		$tags = array_unique($tags);
+		$all_tags = $this->tags_manager->split_valid_tags($tags);
+
 		if (sizeof($all_tags['invalid']) > 0)
 		{
-			$ignored_tags_str = $user->lang('RH_TOPICTAGS_SEARCH_IGNORED_TAGS',
-				join(', ', $all_tags['invalid']) 
+			$this->template->assign_var('RH_TOPICTAGS_SEARCH_IGNORED_TAGS',
+				$user->lang('RH_TOPICTAGS_SEARCH_IGNORED_TAGS', join(', ', $all_tags['invalid']))
 			);
+		}
+
+		$tags = $all_tags['valid'];
+		$tags_string = join(', ', $tags);
+		$this->template->assign_var('RH_TOPICTAGS_SEARCH_HEADER',
+			$user->lang('RH_TOPICTAGS_SEARCH_HEADER_' . $mode, $tags_string)
+		);
+		if (empty($tags))
+		{
+			// no valid tags
+			return $this->helper->render('show_tag.html', 'Tag-'.$user->lang('SEARCH'));
 		}
 
 		$pagination		= $phpbb_container->get('pagination');
@@ -104,13 +112,7 @@ class main
 		$pagination->generate_template_pagination($base_url, 'pagination', 'start', $topics_count, $config['topics_per_page'], $start);
 
 		$user->add_lang('viewforum');
-		$this->template->assign_vars(array(
-			'RH_TOPICTAGS_SEARCH_HEADER'		=> $user->lang('RH_TOPICTAGS_SEARCH_HEADER_' . $mode, 
-				$tags_string
-			),
-			'RH_TOPICTAGS_SEARCH_IGNORED_TAGS'	=> $ignored_tags_str,
-			'TOTAL_TOPICS'						=> $user->lang('VIEW_FORUM_TOPICS', $topics_count),
-		));
+		$this->template->assign_var('TOTAL_TOPICS', $user->lang('VIEW_FORUM_TOPICS', $topics_count));
 
 		if (sizeof($topics) <= 0)
 		{
