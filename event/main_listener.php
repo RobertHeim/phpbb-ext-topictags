@@ -76,20 +76,20 @@ class main_listener implements EventSubscriberInterface
 	}
 
 	/**
-	 * Reads all tags in POST[rh_topictags] and splits them by the separator (default: comma (',')).
+	 * Reads all tags from request variable 'rh_topictags' and splits them by the separator (default: comma (',')).
 	 * NOTE: These tags might be dirty!
 	 * 
 	 * @return array of dirty tags
 	 */
 	private function get_tags_from_post_request()
 	{
-        $post = $this->request->get_super_global(\phpbb\request\request::POST);
+		$tags = utf8_normalize_nfc($this->request->variable('rh_topictags', '', true));
 
-		if (!isset($post['rh_topictags'])) {
+		if ('' === $tags) {
 			return array();
 		}
 
-		$tags_string = $post['rh_topictags'];
+		$tags_string = $tags;
 		return explode(',', $tags_string);
 	}
 
@@ -216,10 +216,9 @@ class main_listener implements EventSubscriberInterface
 
 		        $data['page_data']['RH_TOPICTAGS_SHOW_FIELD'] = true;
 
-			    $_post = $this->request->get_super_global(\phpbb\request\request::POST);
 				// do we got some preview-data?
 				$tags = array();
-				if (isset($_post['rh_topictags'])) {
+				if ($request->is_set_post($_post['rh_topictags'])) {
 					// use data from post-request
 					$tags = $this->get_tags_from_post_request();
 				} else if ($is_edit_first_post) {

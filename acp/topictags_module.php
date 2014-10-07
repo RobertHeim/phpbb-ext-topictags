@@ -53,14 +53,14 @@ class topictags_module
 
 			$submit = true;
 
-			$regex = $request->variable($conf_prefix.'_allowed_tags_regex', "/^[\- a-z0-9]{3,30}$/i");
+			$regex = utf8_normalize_nfc($request->variable($conf_prefix.'_allowed_tags_regex', "/^[\- a-z0-9]{3,30}$/i", true));
 			if (empty($regex))
 			{
 					$submit = false;
 					$errors[] = $user->lang('ACP_RH_TOPICTAGS_REGEX_EMPTY');
 			}
 
-			$exp_for_users = $request->variable($conf_prefix.'_allowed_tags_exp_for_users', "-, 0-9, a-z, A-Z, spaces (will be converted to -), min: 3, max: 30");
+			$exp_for_users = utf8_normalize_nfc($request->variable($conf_prefix.'_allowed_tags_exp_for_users', "-, 0-9, a-z, A-Z, spaces (will be converted to -), min: 3, max: 30", true));
 			if (empty($exp_for_users))
 			{
 					$submit = false;
@@ -77,9 +77,9 @@ class topictags_module
 				$config->set($conf_prefix.'_max_tags_in_tagcloud', $request->variable($conf_prefix.'_max_tags_in_tagcloud', 20));
 				$config->set($conf_prefix.'_convert_space_to_minus', $request->variable($conf_prefix.'_convert_space_to_minus', 1));
 				$config->set($conf_prefix.'_whitelist_enabled', $request->variable($conf_prefix.'_whitelist_enabled', 0));
-				$config->set($conf_prefix.'_whitelist', $request->variable($conf_prefix.'_whitelist', ''));
+				$config->set($conf_prefix.'_whitelist', utf8_normalize_nfc($request->variable($conf_prefix.'_whitelist', '', true)));
 				$config->set($conf_prefix.'_blacklist_enabled', $request->variable($conf_prefix.'_blacklist_enabled', 0));
-				$config->set($conf_prefix.'_blacklist', $request->variable($conf_prefix.'_blacklist', ''));
+				$config->set($conf_prefix.'_blacklist', utf8_normalize_nfc($request->variable($conf_prefix.'_blacklist', '', true)));
 
 				$msg = array();
 				$deleted_assignments_count = 0;
