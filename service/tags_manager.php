@@ -291,7 +291,7 @@ class tags_manager
 	 */
 	public function get_existing_tags($tags = null, $only_ids = false)
 	{
-		$where = "";
+		$where = '';
 		if ($tags)
 		{
 			if (empty($tags))
@@ -355,7 +355,7 @@ class tags_manager
 	 * @param $mode AND=all tags must be assigned, OR=at least one tag needs to be assigned
 	 * @return array of topics, each containing all fields from TOPIC_TABLE
 	 */
-	public function get_topics_by_tags($tags, $start, $limit, $mode = "AND", $casesensitive = false)
+	public function get_topics_by_tags($tags, $start, $limit, $mode = 'AND', $casesensitive = false)
 	{
 		$sql = $this->get_topics_build_query($tags, $mode, $casesensitive);
 
@@ -381,7 +381,7 @@ class tags_manager
 	 * @param $casesensitive search case-sensitive if true, insensitive otherwise (default).
 	 * @return array of topics, each containing all fields from TOPIC_TABLE
 	 */
-	public function count_topics_by_tags($tags, $mode = "AND", $casesensitive = false)
+	public function count_topics_by_tags($tags, $mode = 'AND', $casesensitive = false)
 	{
 		$sql = $this->get_topics_build_query($tags, $mode, $casesensitive);
 
@@ -393,7 +393,7 @@ class tags_manager
 		return $count;
 	}
 
-	private function get_topics_build_query($tags, $mode = "AND", $casesensitive = false)
+	private function get_topics_build_query($tags, $mode = 'AND', $casesensitive = false)
 	{
 		if (empty($tags))
 		{
@@ -573,7 +573,7 @@ class tags_manager
 
 		if ($this->config[PREFIXES::CONFIG.'_convert_space_to_minus'])
 		{
-			$tag = str_replace(" ", "-", $tag);
+			$tag = str_replace(' ', '-', $tag);
 		}
 
 		return $tag;

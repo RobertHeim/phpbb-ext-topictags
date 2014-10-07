@@ -139,7 +139,7 @@ class main_listener implements EventSubscriberInterface
 			if (sizeof($invalid_tags))
 			{
 				$this->user->add_lang_ext('robertheim/topictags', 'topictags');
-				$data['error'][] = $this->user->lang('RH_TOPICTAGS_TAGS_INVALID', join(", ", $invalid_tags));
+				$data['error'][] = $this->user->lang('RH_TOPICTAGS_TAGS_INVALID', join(', ', $invalid_tags));
 			}
 
 			$event->set_data($data);
@@ -225,7 +225,7 @@ class main_listener implements EventSubscriberInterface
 					// use data from db
 					$tags = $this->tags_manager->get_assigned_tags($topic_id);
 				}
-				$data['page_data']['RH_TOPICTAGS'] = join(", ", $tags);
+				$data['page_data']['RH_TOPICTAGS'] = join(', ', $tags);
 
 		        if ($this->config[PREFIXES::CONFIG.'_whitelist_enabled'])
 				{

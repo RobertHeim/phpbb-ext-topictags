@@ -14,7 +14,7 @@ use robertheim\topictags\service\tags_manager;
 
 class release_0_0_8 extends \phpbb\db\migration\migration
 {
-	protected $version = "0.0.8-DEV";
+	protected $version = '0.0.8-DEV';
 
 	public function effectively_installed()
 	{

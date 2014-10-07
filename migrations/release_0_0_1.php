@@ -13,7 +13,7 @@ use robertheim\topictags\PREFIXES;
 
 class release_0_0_1 extends \phpbb\db\migration\migration
 {
-	protected $version = "0.0.1-DEV";
+	protected $version = '0.0.1-DEV';
 
 	protected $config_prefix = PREFIXES::CONFIG;
 

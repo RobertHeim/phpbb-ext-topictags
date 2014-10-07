@@ -12,7 +12,7 @@ use robertheim\topictags\PREFIXES;
 
 class release_0_0_7 extends \phpbb\db\migration\migration
 {
-	protected $version = "0.0.7-DEV";
+	protected $version = '0.0.7-DEV';
 
 	public function effectively_installed()
 	{

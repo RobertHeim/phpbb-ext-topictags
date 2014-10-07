@@ -67,7 +67,7 @@ class main
 	{
 		global $user, $phpbb_container, $config, $phpbb_root_path, $request;
 		
-		$tags = explode(",", $tags);
+		$tags = explode(',', $tags);
 		// remove possible duplicates
 		$tags = array_unique($tags);
 		$all_tags = $this->tags_manager->split_valid_tags($tags);
@@ -82,7 +82,7 @@ class main
 		if (sizeof($all_tags['invalid']) > 0)
 		{
 			$ignored_tags_str = $user->lang('RH_TOPICTAGS_SEARCH_IGNORED_TAGS',
-				join(", ", $all_tags['invalid']) 
+				join(', ', $all_tags['invalid']) 
 			);
 		}
 

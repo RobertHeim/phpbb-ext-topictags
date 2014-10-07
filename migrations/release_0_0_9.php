@@ -13,7 +13,7 @@ use robertheim\topictags\PERMISSIONS;
 
 class release_0_0_9 extends \phpbb\db\migration\migration
 {
-	protected $version = "0.0.9-DEV";
+	protected $version = '0.0.9-DEV';
 
 	public function effectively_installed()
 	{
