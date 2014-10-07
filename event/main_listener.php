@@ -278,7 +278,7 @@ class main_listener implements EventSubscriberInterface
 						$this->template->assign_block_vars('rh_tags_tmp', array (
 							'NAME'	=> $tag,
 							'LINK'	=> $this->helper->route('robertheim_topictags_show_tag_controller', array(
-											'tags'	=> $tag,
+											'tags'	=> urlencode($tag),
 										)),
 						));
 					}
@@ -322,7 +322,7 @@ class main_listener implements EventSubscriberInterface
 			        $this->template->assign_block_vars('rh_topic_tags', array(
 						'NAME' => $tag,
 						'LINK' => $this->helper->route('robertheim_topictags_show_tag_controller', array(
-							'tags'	=> $tag
+							'tags'	=> urlencode($tag)
 						)),
 					));
 				}

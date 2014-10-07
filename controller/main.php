@@ -67,7 +67,7 @@ class main
 	{
 		global $user, $phpbb_container, $config, $phpbb_root_path, $request;
 		
-		$tags = explode(',', $tags);
+		$tags = explode(',', urldecode($tags));
 		// remove possible duplicates
 		$tags = array_unique($tags);
 		$all_tags = $this->tags_manager->split_valid_tags($tags);
@@ -97,7 +97,7 @@ class main
 		$topics			= $this->tags_manager->get_topics_by_tags($tags, $start, $limit, $mode, $casesensitive);
 
 		$base_url		= $this->helper->route('robertheim_topictags_show_tag_controller', array(
-								'tags'	=> $tags_string,
+								'tags'	=> urlencode($tags_string),
 							));
 		$base_url		= append_sid($base_url);
 

@@ -86,7 +86,7 @@ class tagcloud_manager
 		{
 			$css_class = $this->get_css_class($tag['count'], $maximum);
 			$link = $this->helper->route('robertheim_topictags_show_tag_controller', array(
-						'tags'	=> $tag['tag']
+						'tags'	=> urlencode($tag['tag'])
 					));
 
 			$this->template->assign_block_vars('rh_topictags_tags', array(
