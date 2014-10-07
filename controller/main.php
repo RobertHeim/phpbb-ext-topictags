@@ -76,7 +76,7 @@ class main
 
 		// validate mode
 		// default == AND
-		$mode = $mode == 'OR' ? 'OR' : 'AND';
+		$mode = ($mode == 'OR' ? 'OR' : 'AND');
 
 		$ignored_tags_str = false;
 		if (sizeof($all_tags['invalid']) > 0)

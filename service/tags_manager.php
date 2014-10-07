@@ -384,7 +384,6 @@ class tags_manager
 	public function count_topics_by_tags($tags, $mode = 'AND', $casesensitive = false)
 	{
 		$sql = $this->get_topics_build_query($tags, $mode, $casesensitive);
-
 		$sql = "SELECT COUNT(*) as total_results
 			FROM ($sql) a";
 		$result = $this->db->sql_query($sql);
@@ -393,11 +392,18 @@ class tags_manager
 		return $count;
 	}
 
+	/**
+	 * Builds an sql query that selects all topics assigned with the tags depending on $mode and $casesensitive
+	 * @param $tags array of tags
+	 * @param $mode AND or OR
+	 * @param $casesensitive false or true
+	 * @return string 'SELECT topics.* FROM ' . TOPICS_TABLE . ' topics WHERE ' . [calculated where]
+	 */
 	private function get_topics_build_query($tags, $mode = 'AND', $casesensitive = false)
 	{
 		if (empty($tags))
 		{
-			return array();
+			return 'SELECT topics.* FROM ' . TOPICS_TABLE . ' topics WHERE 0=1';
 		}
 
 		// validate mode
@@ -411,7 +417,7 @@ class tags_manager
 				$tags[$i] = mb_strtolower($tags[$i]);
 			}
 		}
-		
+
 		// Get forums that the user is allowed to read
 		$forum_ary = array();
 		$forum_read_ary = $this->auth->acl_getf('f_read');
