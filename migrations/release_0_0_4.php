@@ -12,7 +12,7 @@ use robertheim\topictags\PREFIXES;
 
 class release_0_0_4 extends \phpbb\db\migration\migration
 {
-	protected $version = "0.0.4-DEV";
+	protected $version = '0.0.4-DEV';
 
 	public function effectively_installed()
 	{
@@ -28,9 +28,11 @@ class release_0_0_4 extends \phpbb\db\migration\migration
 
 	public function update_data()
 	{
+		global $user;
+		$user->add_lang_ext('robertheim/topictags', 'topictags_acp');
 		return array(
-			array('config.add', array(PREFIXES::CONFIG.'_allowed_tags_regex', "/^[\- a-z0-9]{3,30}$/i")),
-			array('config.add', array(PREFIXES::CONFIG.'_allowed_tags_exp_for_users', "-, 0-9, a-z, A-Z, spaces (will be converted to -), min: 3, max: 30")),
+			array('config.add', array(PREFIXES::CONFIG.'_allowed_tags_regex', $user->lang('ACP_RH_TOPICTAGS_REGEX_DEFAULT'))),
+			array('config.add', array(PREFIXES::CONFIG.'_allowed_tags_exp_for_users', $user->lang('ACP_RH_TOPICTAGS_REGEX_EXP_FOR_USERS_DEFAULT'))),
 			array('config.update', array(PREFIXES::CONFIG.'_version', $this->version)),
 
 			array('module.add', array(

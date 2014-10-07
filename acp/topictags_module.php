@@ -53,14 +53,14 @@ class topictags_module
 
 			$submit = true;
 
-			$regex = utf8_normalize_nfc($request->variable($conf_prefix.'_allowed_tags_regex', "/^[\- a-z0-9]{3,30}$/i", true));
+			$regex = utf8_normalize_nfc($request->variable($conf_prefix.'_allowed_tags_regex', $user->lang('ACP_RH_TOPICTAGS_REGEX_DEFAULT'), true));
 			if (empty($regex))
 			{
 					$submit = false;
 					$errors[] = $user->lang('ACP_RH_TOPICTAGS_REGEX_EMPTY');
 			}
 
-			$exp_for_users = utf8_normalize_nfc($request->variable($conf_prefix.'_allowed_tags_exp_for_users', "-, 0-9, a-z, A-Z, spaces (will be converted to -), min: 3, max: 30", true));
+			$exp_for_users = utf8_normalize_nfc($request->variable($conf_prefix.'_allowed_tags_exp_for_users', $user->lang('ACP_RH_TOPICTAGS_REGEX_EXP_FOR_USERS_DEFAULT'), true));
 			if (empty($exp_for_users))
 			{
 					$submit = false;
@@ -137,7 +137,7 @@ class topictags_module
 					$msg[] = $user->lang('TOPICTAGS_SETTINGS_SAVED');
 				}
 
-				trigger_error(join("<br/>", $msg) . adm_back_link($this->u_action));
+				trigger_error(join('<br/>', $msg) . adm_back_link($this->u_action));
 			}
 		}
 

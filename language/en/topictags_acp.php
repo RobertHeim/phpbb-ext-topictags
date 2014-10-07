@@ -17,6 +17,12 @@ if (empty($lang) || !is_array($lang))
     $lang = array();
 }
 
+// these will be re-used in the definitions below - that is why we need to define and merge them first.
+$lang = array_merge($lang, array(
+	'ACP_RH_TOPICTAGS_REGEX_DEFAULT'				=> '/^[\- a-z0-9]{3,30}$/i',
+	'ACP_RH_TOPICTAGS_REGEX_EXP_FOR_USERS_DEFAULT'	=> '-, 0-9, a-z, A-Z, spaces (will be converted to -), min: 3, max: 30',
+));
+
 $lang = array_merge($lang, array(
 	// forum settings page
 	'ACP_RH_TOPICTAGS_ENABLE'								=> 'Enable RH Topic Tags',
@@ -28,6 +34,7 @@ $lang = array_merge($lang, array(
 
 	// config
 	'TOPICTAGS_INSTALLED'					=> 'Installed Version: v%s',
+
 	'ACP_RH_TOPICTAGS_REGEX_EMPTY'			=> 'The regular expression cannot be left empty.',
 	'ACP_RH_TOPICTAGS_EXP_FOR_USERS_EMPTY'	=> 'The explanation of which tags are allowed cannot be left empty.',
 
@@ -105,13 +112,13 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_BLACKLIST_EXP'					=> 'Comma (,) separated list of forbidden tags.<br/>NOTE: All tags that are not conform with the regex are always rejected.',
 
 	'TOPICTAGS_ALLOWED_TAGS_REGEX'				=> 'Regular Expression for allowed tags',
-	'TOPICTAGS_ALLOWED_TAGS_REGEX_EXP'			=> 'WARNING: Do not change this, if you don\'t know what you are doing. <strong>Tags can be 30 characters at maximum</strong>, please consider this during regex design.<br/>Note that afterwards invalid tags are not searchable, but are still displayed in the topics.<br/>Consider pruning the invalid tags (see maintenance-section).<br/>default: /^[\- a-z0-9]{3,30}$/i',
+	'TOPICTAGS_ALLOWED_TAGS_REGEX_EXP'			=> 'WARNING: Do not change this, if you don\'t know what you are doing. <strong>Tags can be 30 characters at maximum</strong>, please consider this during regex design.<br/>Note that afterwards invalid tags are not searchable, but are still displayed in the topics.<br/>Consider pruning the invalid tags (see maintenance-section).<br/>default: ' . $lang['ACP_RH_TOPICTAGS_REGEX_DEFAULT'],
 
 	'TOPICTAGS_CONVERT_SPACE_TO_MINUS'			=> 'Convert " " to "-"',
 	'TOPICTAGS_CONVERT_SPACE_TO_MINUS_EXP'		=> 'If set to yes, all spaces (" ") are automatically converted to minus ("-").<br/>NOTE 1: In the regex you must allow "-"; otherwise tags with whitespaces will be rejected.<br/>NOTE 2: Existing tags with spaces will NOT be converted automatically.',
 
 	'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS'		=> 'Explanation for Users',
-	'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS_EXP'	=> 'This text is shown to the users and should explain which tags are allowed and which not.<br/>default: 0-9, a-z, A-Z, min: 3, max: 30',
+	'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS_EXP'	=> 'This text is shown to the users and should explain which tags are allowed and which not.<br/>default: ' . $lang['ACP_RH_TOPICTAGS_EXP_FOR_USERS_DEFAULT'],
 
 ));
 
