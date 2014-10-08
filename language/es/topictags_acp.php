@@ -118,7 +118,7 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_CONVERT_SPACE_TO_MINUS_EXP'		=> 'Si se establece en sí, todos los espacios (" ") se convierten automáticamente a menos ("-").<br/>NOTA 1: En la expresión regular se debe permitir "-"; de lo contrario se rechazarán las etiquetas con espacios en blanco.<br/>NOTA 2: Las etiquetas existentes con espacios NO se convertirán automáticamente.',
 
 	'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS'		=> 'Explicación para los usuarios',
-	'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS_EXP'	=> 'Este texto se muestra a los usuarios y debe explicar qué etiquetas se permiten, y cuáles no.<br/>Por defecto: ' . $lang['ACP_RH_TOPICTAGS_EXP_FOR_USERS_DEFAULT'],
+	'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS_EXP'	=> 'Este texto se muestra a los usuarios y debe explicar qué etiquetas se permiten, y cuáles no.<br/>Por defecto: ' . $lang['ACP_RH_TOPICTAGS_REGEX_EXP_FOR_USERS_DEFAULT'],
 
 ));
 
