@@ -40,7 +40,7 @@ phpBB 3.1 extension, that adds the ability to tag topics with key words.
 ## Installation
 
 ### 1. clone
-Clone (or download an move) the repository into the folder phpBB3/ext/robertheim/threadtags:
+Clone (or download an move) the repository into the folder phpBB3/ext/robertheim/topictags:
 
 ```
 cd phpBB3
