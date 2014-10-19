@@ -16,13 +16,16 @@
 }
 
 .rh_topictags_tagcloud li,
-.rh_tag
+.rh_tag,
+tags-input .tags .tag-item
 {
 	list-style-type:	none;
 	display:			inline-block;
 	text-align:			center;
+	background: none;
 	border-radius:		10px;
 	background-color:	#cadceb;
+
 }
 
 .rh_topictags_tagcloud li
@@ -32,7 +35,8 @@
 	font-weight:		bold;
 }
 
-.rh_tag
+.rh_tag,
+tags-input .tags .tag-item
 {
 	padding:		1px 8px;
 	margin:			3px 2px 2px 2px;
@@ -46,13 +50,16 @@
 
 .rh_topictags_tagcloud li:hover,
 .rh_tag:hover
+,tags-input .tags .tag-item:hover
 {
 	background-color:	#105289;
 }
 
 .rh_topictags_tagcloud li:hover .rh_topictags_count,
 .rh_topictags_tagcloud li:hover a,
-.rh_tag:hover a
+.rh_tag:hover a,
+tags-input .tags .tag-item:hover,
+tags-input .tags .tag-item:hover a
 {
 	color:				#cadceb;
 	background-color:	#105289;
