@@ -103,7 +103,7 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_ENABLE_WHITELIST_EXP'			=> 'Si está habilitado, sólo etiquetas que son conformes con la expresión regular y están presentes en la lista blanca de abajo estarán permitidas.<br/>NOTA 1: Si la lista negra está activada, también, y es una etiqueta en la lista blanca, así como en la lista negra, será rechazada.<br/>NOTA 2: Para evitar la pérdida accidental de datos, las etiquetas que ya están en la base de datos, pero no en la lista blanca no se eliminan automáticamente y se mostrarán también. Debe quitar las etiquetas existentes con a mano.',
 
 	'TOPICTAGS_WHITELIST'						=> 'Lista blanca',
-	'TOPICTAGS_WHITELIST_EXP'					=> 'Separadas por coma (,) lista de etiquetas permitidas.<br/>NOTA: Las etiquetas deben ser conformes con la expresión regular, así, así que asegúrese de que todas estas etiquetas se ajustan a sus expresiones regulares (ajustes de abajo, no controladas de forma automática).',
+	'TOPICTAGS_WHITELIST_EXP'					=> 'Lista de etiquetas permitidas.<br/>NOTA: Las etiquetas deben ser conformes con la expresión regular, así, así que asegúrese de que todas estas etiquetas se ajustan a sus expresiones regulares (ajustes de abajo, no controladas de forma automática).',
 
 	'TOPICTAGS_ENABLE_BLACKLIST'				=> 'Habilitar Lista negra',
 	'TOPICTAGS_ENABLE_BLACKLIST_EXP'			=> 'Si está activado, las variables configuradas en la lista negra serán rechazadas, incluso si están conformes con la expresión regular.<br/>NOTA 1: Para evitar la pérdida accidental de datos, las etiquetas que ya están en la base de datos no se eliminan automáticamente. Debe eliminar a mano de cada tema.<br/>NOTA 2: La lista negra nunca se muestra a los usuarios.',

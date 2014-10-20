@@ -238,10 +238,19 @@ class main_listener implements EventSubscriberInterface
 				$data['page_data']['RH_TOPICTAGS_ALLOWED_TAGS_REGEX'] = $this->config[PREFIXES::CONFIG.'_allowed_tags_regex'];
 				$data['page_data']['RH_TOPICTAGS_CONVERT_SPACE_TO_MINUS'] = $this->config[PREFIXES::CONFIG.'_convert_space_to_minus'] ? 'true' : 'false';
 
+				$data['page_data']['S_RH_TOPICTAGS_WHITELIST_ENABLED'] = $this->config[PREFIXES::CONFIG.'_whitelist_enabled'];
+
 		        if ($this->config[PREFIXES::CONFIG.'_whitelist_enabled'])
 				{
-					$data['page_data']['RH_TOPICTAGS_WHITELIST_ENABLED'] = true;
-					$data['page_data']['RH_TOPICTAGS_ALLOWED_TAGS_EXP'] = $this->config[PREFIXES::CONFIG.'_whitelist'];
+					$data['page_data']['S_RH_TOPICTAGS_WHITELIST_ENABLED'] = true;
+					$tags = json_decode($this->config[PREFIXES::CONFIG.'_whitelist'], true);
+					for ($i = 0, $size = sizeof($tags); $i < $size; $i++)
+					{
+						$this->template->assign_block_vars('rh_topictags_whitelist', array(
+							'LINK' => '#',
+							'NAME' => $tags[$i],
+						));
+					}
 				}
 				else
 				{

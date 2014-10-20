@@ -103,7 +103,7 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_ENABLE_WHITELIST_EXP'			=> 'If enabled, only tags that are conform to the regex AND are present in the whitelist below are allowed.<br/>NOTE 1: If the blacklist is enabled, too, and a tag is in the whitelist as well as in the blacklist, it will be rejected.<br/>NOTE 2: To prevent accidental data loss, tags that are already in the database, but not on the whitelist are NOT deleted automatically and will be displayed as well. You must remove the existing tags by hand.',
 
 	'TOPICTAGS_WHITELIST'						=> 'Whitelist',
-	'TOPICTAGS_WHITELIST_EXP'					=> 'Comma (,) separated list of allowed tags.<br/>NOTE: Tags must be conform to the regex as well, so be sure that all these tags are conform to your regex-settings below (not checked automatically).',
+	'TOPICTAGS_WHITELIST_EXP'					=> 'List of allowed tags.<br/>NOTE: Tags must be conform to the regex as well, so be sure that all these tags are conform to your regex-settings below (not checked automatically).',
 
 	'TOPICTAGS_ENABLE_BLACKLIST'				=> 'Enable Blacklist',
 	'TOPICTAGS_ENABLE_BLACKLIST_EXP'			=> 'If enabled, the tags configured in the blacklist will be rejected even if they are conform with the regex.<br/>NOTE 1: To prevent accidental data loss, tags that are already in the database are not deleted automatically. You must remove them by hand from each topic.<br/>NOTE 2: The blacklist is never shown to the users.',

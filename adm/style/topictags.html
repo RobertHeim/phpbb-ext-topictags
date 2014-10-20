@@ -79,7 +79,14 @@
 		</dl>
 		<dl>
 			<dt><label for="robertheim_topictags_whitelist">{L_TOPICTAGS_WHITELIST}:</label><br /><span>{L_TOPICTAGS_WHITELIST_EXP}</span></dt>
-			<dd><textarea name="robertheim_topictags_whitelist" rows="3">{TOPICTAGS_WHITELIST}</textarea></dd>
+			<dd>
+				<div style="width:90%" ng-app="rhTopicTagsInputApp" ng-controller="rhTopicTagsInputCtrl" data-ng-init="init('{TOPICTAGS_WHITELIST}')">
+					<tags-input ng-model="tags" add-on-comma="true" replace-spaces-with-dashes="{TOPICTAGS_CONVERT_SPACE_TO_MINUS}" placeholder="..." tabindex="2" enable-editing-last-tag="true" min-length="1">
+						<auto-complete source="loadTags($query)"></auto-complete>
+					</tags-input>
+					<input type="hidden" name="robertheim_topictags_whitelist" id="rh_topictags" value="{[{ jsonRep }]}" />
+				</div>
+			</dd>
 		</dl>
 		<dl>
 			<dt><label for="robertheim_topictags_blacklist_enabled">{L_TOPICTAGS_ENABLE_BLACKLIST}:</label><br /><span>{L_TOPICTAGS_ENABLE_BLACKLIST_EXP}</span></dt>

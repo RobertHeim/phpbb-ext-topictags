@@ -557,7 +557,7 @@ class tags_manager
 		// check whitelist
 		if ($this->config[PREFIXES::CONFIG.'_whitelist_enabled'])
 		{
-			$whitelist = explode(',', $this->config[PREFIXES::CONFIG.'_whitelist']);
+			$whitelist = json_decode($this->config[PREFIXES::CONFIG.'_whitelist'], true);
 			foreach ($whitelist as $entry)
 			{
 				if ($tag == $this->clean_tag($entry))

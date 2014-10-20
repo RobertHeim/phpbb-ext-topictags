@@ -77,7 +77,18 @@ class topictags_module
 				$config->set($conf_prefix.'_max_tags_in_tagcloud', $request->variable($conf_prefix.'_max_tags_in_tagcloud', 20));
 				$config->set($conf_prefix.'_convert_space_to_minus', $request->variable($conf_prefix.'_convert_space_to_minus', 1));
 				$config->set($conf_prefix.'_whitelist_enabled', $request->variable($conf_prefix.'_whitelist_enabled', 0));
-				$config->set($conf_prefix.'_whitelist', utf8_normalize_nfc($request->variable($conf_prefix.'_whitelist', '', true)));
+				$whitelist = base64_decode($request->variable($conf_prefix.'_whitelist', ''));
+				if (!empty($whitelist))
+				{
+					$whitelist = json_decode(utf8_encode($whitelist), true);
+					$tags = array();
+					for ($i = 0, $size = sizeof($whitelist); $i < $size; $i++)
+					{
+						$tags[] = $whitelist[$i]['text'];
+					}
+					$whitelist = json_encode($tags);
+				}
+				$config->set($conf_prefix.'_whitelist', $whitelist);
 				$config->set($conf_prefix.'_blacklist_enabled', $request->variable($conf_prefix.'_blacklist_enabled', 0));
 				$config->set($conf_prefix.'_blacklist', utf8_normalize_nfc($request->variable($conf_prefix.'_blacklist', '', true)));
 
@@ -141,9 +152,11 @@ class topictags_module
 			}
 		}
 
+		$whitelist = $config[$conf_prefix.'_whitelist'];
+		$whitelist = base64_encode($whitelist);
+
 		$all_enabled = $tags_manager->is_enabled_in_all_forums();
 		$all_disabled = ($all_enabled ? false : $tags_manager->is_disabled_in_all_forums());
-
 		$template->assign_vars(array(
 			'TOPICTAGS_VERSION'							=> $user->lang('TOPICTAGS_INSTALLED', $config[$conf_prefix.'_version']),
 			'TOPICTAGS_DISPLAY_TAGS_IN_VIEWFORUM'		=> $config[$conf_prefix.'_display_tags_in_viewforum'],
@@ -154,11 +167,13 @@ class topictags_module
 			'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS'		=> $config[$conf_prefix.'_allowed_tags_exp_for_users'],
 			'TOPICTAGS_CONVERT_SPACE_TO_MINUS'			=> $config[$conf_prefix.'_convert_space_to_minus'],
 			'TOPICTAGS_WHITELIST_ENABLED'				=> $config[$conf_prefix.'_whitelist_enabled'],
-			'TOPICTAGS_WHITELIST'						=> $config[$conf_prefix.'_whitelist'],
+			'TOPICTAGS_WHITELIST'						=> $whitelist,
 			'TOPICTAGS_BLACKLIST_ENABLED'				=> $config[$conf_prefix.'_blacklist_enabled'],
 			'TOPICTAGS_BLACKLIST'						=> $config[$conf_prefix.'_blacklist'],
 			'TOPICTAGS_IS_ENABLED_IN_ALL_FORUMS'		=> $all_enabled,
 			'TOPICTAGS_IS_DISABLED_IN_ALL_FORUMS'		=> $all_disabled,
+			'S_RH_TOPICTAGS_INCLUDE_NG_TAGS_INPUT'		=> true,
+			'S_RH_TOPICTAGS_INCLUDE_CSS'				=> true,
 			'S_ERROR'									=> (sizeof($errors)) ? true : false,
 			'ERROR_MSG'									=> implode('<br />', $errors),
 			'U_ACTION'									=> $this->u_action,

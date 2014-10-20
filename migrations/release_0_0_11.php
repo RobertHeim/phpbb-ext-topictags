@@ -28,7 +28,18 @@ class release_0_0_11 extends \phpbb\db\migration\migration
 
 	public function update_data()
 	{
+		$whitelist = $config[PREFIXES::CONFIG.'_whitelist'];
+		if (empty($whitelist))
+		{
+			$whitelist = array();
+		}
+		else
+		{
+			$whitelist = explode(',', $whitelist);
+		}
+		$whitelist = json_encode($whitelist);
 		return array(
+			array('config.update', array(PREFIXES::CONFIG.'_whitelist', $whitelist)),
 			array('config.update', array(PREFIXES::CONFIG.'_version', $this->version)),
 		);
 	}
