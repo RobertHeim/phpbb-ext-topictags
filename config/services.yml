@@ -25,6 +25,8 @@ services:
             - @config
             - @template
             - @controller.helper
+            - @request
+            - @user
             - @robertheim.topictags.tags_manager
             - @robertheim.topictags.tagcloud_manager
     robertheim.topictags.tags_manager:

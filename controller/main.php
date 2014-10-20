@@ -13,6 +13,7 @@ namespace robertheim\topictags\controller;
  * @ignore
  */
 use robertheim\topictags\PREFIXES;
+use phpbb\json_response;
 
 class main
 {
@@ -22,6 +23,10 @@ class main
 	protected $template;
 
 	protected $helper;
+
+	protected $request;
+
+	protected $user;
 
 	protected $tags_manager;
 
@@ -34,6 +39,8 @@ class main
 						\phpbb\config\config $config,
 						\phpbb\template\template $template,
 						\phpbb\controller\helper $helper,
+						\phpbb\request\request $request, 
+						\phpbb\user $user, 
 						\robertheim\topictags\service\tags_manager $tags_manager,
 						\robertheim\topictags\service\tagcloud_manager $tagcloud_manager
 	)
@@ -41,6 +48,8 @@ class main
 		$this->config			= $config;
 		$this->template			= $template;
 		$this->helper			= $helper;
+		$this->request			= $request;
+		$this->user				= $user;
 		$this->tags_manager		= $tags_manager;
 		$this->tagcloud_manager	= $tagcloud_manager;
 	}
@@ -251,4 +260,25 @@ class main
 		return $this->helper->render('show_tag.html', 'Tag-'.$user->lang('SEARCH'));
 	}
 
+	/**
+	 * Gets suggestions for tags based on a ajax request, route: /tags/suggest
+	 *
+	 * @param php://input raw post data must contain a json-encoded object of this structure: {"query":"...", "exclude":["...", "...", ...]}
+	 */
+	public function suggest_tags()
+	{
+		// TODO: when symfony2 is updated to at least 2.4 add to route:
+		// condition: "context.isXmlHttpRequest()" instead of using the helper->error(..., 404)
+		if ($this->request->is_ajax())
+		{
+			$data = json_decode(file_get_contents('php://input'), true);
+			$query = $data['query'];
+			$exclude = $data['exclude'];
+			$tags = $this->tags_manager->get_tag_suggestions($query, $exclude, 5);
+			$json_response = new json_response();
+			$json_response->send($tags);
+		}
+		// fake a 404
+		return $this->helper->error('No route found for "' . $this->helper->get_current_url() . '"' , 404);
+	}
 }

@@ -22,7 +22,6 @@ $lang = array_merge($lang, array(
 
 	'RH_TOPICTAGS_TAGCLOUD'				=> 'Облако тегов',
 
-	'RH_TOPICTAGS_EXP'					=> 'Теги, разделенные запятой (",")',
 	'RH_TOPICTAGS_ALLOWED_TAGS'			=> 'Разрешенные теги:',
 	'RH_TOPICTAGS_WHITELIST_EXP'		=> 'Разрешены только эти теги:',
 

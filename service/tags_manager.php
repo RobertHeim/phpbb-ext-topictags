@@ -205,6 +205,40 @@ class tags_manager
 		return $tags;
 	}
 
+	/**
+	 * Gets $count tags that start with $query, ordered by their usage count (desc).
+	 * Note: that $query needs to be at least 3 characters long.
+	 *
+	 * @param $query prefix of tags to search
+	 * @param $exclude array of tags that should be ignored
+	 * @param $count count of tags to return
+	 * @return array (array('text' => '...'), array('text' => '...'))
+	 */
+	public function get_tag_suggestions($query, $exclude, $count)
+	{
+		if (mb_strlen($query, 'UTF-8') < 3)
+		{
+			return array();
+		}
+		$sql_array = array(
+			'SELECT'	=> 't.tag',
+			'FROM'		=> array(
+				$this->table_prefix . TABLES::TAGS		=> 't',
+			),
+			'WHERE'		=> 't.tag ' . $this->db->sql_like_expression($query . $this->db->get_any_char()) . '
+								AND ' . $this->db->sql_in_set('t.tag', $exclude, true, true),
+			'ORDER BY'	=> 't.count DESC',
+		);
+		$sql = $this->db->sql_build_query('SELECT_DISTINCT', $sql_array);
+		$result = $this->db->sql_query_limit($sql, $count);
+		$tags = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$tags[] = array('text' => $row['tag']);
+		}
+		return $tags;
+	}
+
     /**
      * Assigns exactly the given valid tags to the topic (all other tags are removed from the topic and if a tag does not exist yet, it will be created).
 	 *

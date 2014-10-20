@@ -1,18 +1,15 @@
 <!-- IF RH_TOPICTAGS_SHOW_FIELD -->
 <dl style="clear: left;">
-	<dt><label for="rh_topictags">{L_RH_TOPICTAGS}:</label><br/>{L_RH_TOPICTAGS_EXP}</dt>
-	<dd>
-		<div ng-app="rhTopicTagsInputApp" ng-controller="rhTopicTagsInputCtrl" data-ng-init="init('{RH_TOPICTAGS}')">
+	<dt><label for="rh_topictags">{L_RH_TOPICTAGS}:</label></dt>
+	<dd><!-- Cannot put tags here, because z-indey is buggy -->{L_RH_TOPICTAGS_ALLOWED_TAGS} {RH_TOPICTAGS_ALLOWED_TAGS_EXP}</dd>
+</dl>
+
+<div ng-app="rhTopicTagsInputApp" ng-controller="rhTopicTagsInputCtrl" data-ng-init="init('{RH_TOPICTAGS}')">
 <!-- allowed-tags-pattern="{RH_TOPICTAGS_ALLOWED_TAGS_REGEX}" -->
-			<tags-input ng-model="tags" add-on-comma="true" replace-spaces-with-dashes="{RH_TOPICTAGS_CONVERT_SPACE_TO_MINUS}" placeholder="..." tabindex="2" enable-editing-last-tag="true" min-length="1">
-				<auto-complete source="loadTags($query)"></auto-complete>
-			</tags-input>
-			<input type="hidden" name="rh_topictags" id="rh_topictags" value="{[{ jsonRep }]}" />
-		</div>
-	</dd>
-</dl>
-<dl>
-	<dt>{L_RH_TOPICTAGS_ALLOWED_TAGS}</dt>
-	<dd>{RH_TOPICTAGS_ALLOWED_TAGS_EXP}</dd>
-</dl>
+	<tags-input ng-model="tags" add-on-comma="true" replace-spaces-with-dashes="{RH_TOPICTAGS_CONVERT_SPACE_TO_MINUS}" placeholder="..." tabindex="2" enable-editing-last-tag="true" min-length="1">
+		<auto-complete source="loadTags($query)"></auto-complete>
+	</tags-input>
+	<input type="hidden" name="rh_topictags" id="rh_topictags" value="{[{ jsonRep }]}" />
+</div>
+
 <!-- ENDIF -->

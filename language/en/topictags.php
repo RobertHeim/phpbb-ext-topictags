@@ -22,7 +22,6 @@ $lang = array_merge($lang, array(
 
 	'RH_TOPICTAGS_TAGCLOUD'				=> 'Tag cloud',
 
-	'RH_TOPICTAGS_EXP'					=> 'Tags separated by comma (",")',
 	'RH_TOPICTAGS_ALLOWED_TAGS'			=> 'Allowed tags:',
 	'RH_TOPICTAGS_WHITELIST_EXP'		=> 'Only these tags are allowed:',
 
