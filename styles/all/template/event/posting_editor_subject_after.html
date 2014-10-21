@@ -17,8 +17,8 @@
 </dl>
 
 <div ng-app="rhTopicTagsInputApp" ng-controller="rhTopicTagsInputCtrl" data-ng-init="init('{RH_TOPICTAGS}')">
-<!-- allowed-tags-pattern="{RH_TOPICTAGS_ALLOWED_TAGS_REGEX}" -->
-<div id="myApp"></div>
+	<div id="rhTopicTagsInputAppScope"></div>
+	<!-- allowed-tags-pattern="{RH_TOPICTAGS_ALLOWED_TAGS_REGEX}" -->
 	<tags-input ng-model="tags" add-on-comma="true" replace-spaces-with-dashes="{RH_TOPICTAGS_CONVERT_SPACE_TO_MINUS}" placeholder="..." tabindex="2" enable-editing-last-tag="true" min-length="1">
 		<auto-complete source="loadTags($query)"></auto-complete>
 	</tags-input>
@@ -26,3 +26,4 @@
 </div>
 
 <!-- ENDIF -->
+

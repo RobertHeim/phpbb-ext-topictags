@@ -41,5 +41,7 @@ $lang = array_merge($lang, array(
 	// ACP Module
 	'ACP_TOPICTAGS_TITLE'			=> 'RH Topic Tags',
 	'ACP_TOPICTAGS_SETTINGS'		=> 'Settings',
+	'ACP_TOPICTAGS_WHITELIST'		=> 'Whitelist',
+	'ACP_TOPICTAGS_BLACKLIST'		=> 'Blacklist',
 ));
 

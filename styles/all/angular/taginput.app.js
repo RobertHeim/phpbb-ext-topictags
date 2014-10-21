@@ -17,9 +17,11 @@ angular.module('rhTopicTagsInputApp', ['ngTagsInput'])
 	.controller('rhTopicTagsInputCtrl', function($scope, $http) {
 		$scope.tags = [];
 		$scope.init = function (initTags) {
-			initTags = JSON.parse(atob(initTags));
-			for (var i = 0; i < initTags.length; i++) {
-				this.tags.push(initTags[i]);
+			if ('' != initTags) {
+				initTags = JSON.parse(atob(initTags));
+				for (var i = 0; i < initTags.length; i++) {
+					this.tags.push(initTags[i]);
+				}
 			}
 		}
 		$scope.loadTags = function(query) {

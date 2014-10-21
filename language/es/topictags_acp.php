@@ -109,7 +109,7 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_ENABLE_BLACKLIST_EXP'			=> 'Si está activado, las variables configuradas en la lista negra serán rechazadas, incluso si están conformes con la expresión regular.<br/>NOTA 1: Para evitar la pérdida accidental de datos, las etiquetas que ya están en la base de datos no se eliminan automáticamente. Debe eliminar a mano de cada tema.<br/>NOTA 2: La lista negra nunca se muestra a los usuarios.',
 
 	'TOPICTAGS_BLACKLIST'						=> 'Lista negra',
-	'TOPICTAGS_BLACKLIST_EXP'					=> 'Separadas por coma (,) lista de etiquetas prohibidas.<br/>NOTA: Todas las etiquetas que no están conformes con la expresión regular siempre serán rechazadas.',
+	'TOPICTAGS_BLACKLIST_EXP'					=> 'Lista de etiquetas prohibidas.<br/>NOTA: Todas las etiquetas que no están conformes con la expresión regular siempre serán rechazadas.',
 
 	'TOPICTAGS_ALLOWED_TAGS_REGEX'				=> 'Regular Expression for allowed tags',
 	'TOPICTAGS_ALLOWED_TAGS_REGEX_EXP'			=> 'ADVERTENCIA: No cambie esto, si no sabe lo que está haciendo. <strong>Las etiquetas pueden ser de 30 caracteres como máximo</strong>, por favor considere esto durante el diseño de expresiones regulares.<br/>Tenga en cuenta que las etiquetas no válidas, no se pueden buscar después, pero todavía se muestran en los temas.<br/>Considere la limpieza de las etiquetas no válidas (ver sección de mantenimiento).<br/>Por defecto: ' . $lang['ACP_RH_TOPICTAGS_REGEX_DEFAULT'],

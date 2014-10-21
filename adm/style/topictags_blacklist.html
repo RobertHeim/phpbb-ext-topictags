@@ -1,0 +1,40 @@
+<!-- INCLUDE overall_header.html -->
+
+<a id="maincontent"></a>
+
+<h1>{L_TOPICTAGS_TITLE}</h1>
+<p>{TOPICTAGS_VERSION}</p>
+
+<!-- IF S_ERROR -->
+	<div class="errorbox">
+		<h3>{L_WARNING}</h3>
+		<p>{ERROR_MSG}</p>
+	</div>
+<!-- ENDIF -->
+
+<form id="acp_board" method="post" action="{U_ACTION}">
+	<fieldset>
+		<legend>{L_TOPICTAGS_CONFIG_TAGS}</legend>
+		<dl>
+			<dt><label for="robertheim_topictags_blacklist_enabled">{L_TOPICTAGS_ENABLE_BLACKLIST}:</label><br /><span>{L_TOPICTAGS_ENABLE_BLACKLIST_EXP}</span></dt>
+			<dd><input type="radio" class="radio" name="robertheim_topictags_blacklist_enabled" value="1" <!-- IF TOPICTAGS_BLACKLIST_ENABLED -->checked="checked"<!-- ENDIF -->/> {L_YES} &nbsp; 
+				<input type="radio" class="radio" name="robertheim_topictags_blacklist_enabled" value="0" <!-- IF not TOPICTAGS_BLACKLIST_ENABLED -->checked="checked"<!-- ENDIF -->/> {L_NO}</dd>
+		</dl>
+		<dl>
+			<dt><label for="robertheim_topictags_blacklist">{L_TOPICTAGS_BLACKLIST}:</label><br /><span>{L_TOPICTAGS_BLACKLIST_EXP}</span></dt>
+			<dd><!-- Cannot put tags here, because overflow:hidden of dl-tag --></dd>
+		</dl>
+		<div style="width:40%; margin-top:-45px;margin-left:46%" ng-app="rhTopicTagsInputApp" ng-controller="rhTopicTagsInputCtrl" data-ng-init="init('{TOPICTAGS_BLACKLIST}')">
+			<tags-input ng-model="tags" add-on-comma="true" replace-spaces-with-dashes="{TOPICTAGS_CONVERT_SPACE_TO_MINUS}" placeholder="..." tabindex="2" enable-editing-last-tag="true" min-length="1">
+				<auto-complete source="loadTags($query)"></auto-complete>
+			</tags-input>
+			<input type="hidden" name="robertheim_topictags_blacklist" id="rh_topictags" value="{[{ jsonRep }]}" />
+		</div>
+	</fieldset>
+	<p class="submit-buttons">
+		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+	</p>
+{S_FORM_TOKEN}
+</form>
+<!-- INCLUDE overall_footer.html -->

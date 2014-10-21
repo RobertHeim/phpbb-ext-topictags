@@ -30,11 +30,22 @@ class topictags_module
 
 		$user->add_lang_ext('robertheim/topictags', 'topictags_acp');
 
-		// Load a template from adm/style for our ACP page
-		$this->tpl_name = 'topictags';
+		if ('whitelist' == $mode)
+		{
+			$this->tpl_name = 'topictags_whitelist';
+			$this->page_title = 'ACP_TOPICTAGS_WHITELIST';
 
-		// Set the page title for our ACP page
-		$this->page_title = 'ACP_TOPICTAGS_SETTINGS';
+		}
+		else if ('blacklist' == $mode)
+		{
+			$this->tpl_name = 'topictags_blacklist';
+			$this->page_title = 'ACP_TOPICTAGS_BLACKLIST';
+		}
+		else
+		{
+			$this->tpl_name = 'topictags';
+			$this->page_title = 'ACP_TOPICTAGS_SETTINGS';
+		}
 
 		// Define the name of the form for use as a form key
 		$form_name = 'topictags';
@@ -52,30 +63,10 @@ class topictags_module
 			}
 
 			$submit = true;
+			$msg = array();
 
-			$regex = utf8_normalize_nfc($request->variable($conf_prefix.'_allowed_tags_regex', $user->lang('ACP_RH_TOPICTAGS_REGEX_DEFAULT'), true));
-			if (empty($regex))
+			if ('whitelist' == $mode)
 			{
-					$submit = false;
-					$errors[] = $user->lang('ACP_RH_TOPICTAGS_REGEX_EMPTY');
-			}
-
-			$exp_for_users = utf8_normalize_nfc($request->variable($conf_prefix.'_allowed_tags_exp_for_users', $user->lang('ACP_RH_TOPICTAGS_REGEX_EXP_FOR_USERS_DEFAULT'), true));
-			if (empty($exp_for_users))
-			{
-					$submit = false;
-					$errors[] = $user->lang('ACP_RH_TOPICTAGS_EXP_FOR_USERS_EMPTY');
-			}
-
-			if ($submit)
-			{
-				$config->set($conf_prefix.'_display_tags_in_viewforum', $request->variable($conf_prefix.'_display_tags_in_viewforum', 1));
-				$config->set($conf_prefix.'_allowed_tags_regex', $regex);
-				$config->set($conf_prefix.'_allowed_tags_exp_for_users', $exp_for_users);
-				$config->set($conf_prefix.'_display_tagcloud_on_index', $request->variable($conf_prefix.'_display_tagcloud_on_index', 1));
-				$config->set($conf_prefix.'_display_tagcount_in_tagcloud', $request->variable($conf_prefix.'_display_tagcount_in_tagcloud', 1));
-				$config->set($conf_prefix.'_max_tags_in_tagcloud', $request->variable($conf_prefix.'_max_tags_in_tagcloud', 20));
-				$config->set($conf_prefix.'_convert_space_to_minus', $request->variable($conf_prefix.'_convert_space_to_minus', 1));
 				$config->set($conf_prefix.'_whitelist_enabled', $request->variable($conf_prefix.'_whitelist_enabled', 0));
 				$whitelist = base64_decode($request->variable($conf_prefix.'_whitelist', ''));
 				if (!empty($whitelist))
@@ -89,95 +80,160 @@ class topictags_module
 					$whitelist = json_encode($tags);
 				}
 				$config->set($conf_prefix.'_whitelist', $whitelist);
+			}
+
+			if ('blacklist' == $mode)
+			{
 				$config->set($conf_prefix.'_blacklist_enabled', $request->variable($conf_prefix.'_blacklist_enabled', 0));
-				$config->set($conf_prefix.'_blacklist', utf8_normalize_nfc($request->variable($conf_prefix.'_blacklist', '', true)));
+				$blacklist = base64_decode($request->variable($conf_prefix.'_blacklist', ''));
+				if (!empty($blacklist))
+				{
+					$blacklist = json_decode(utf8_encode($blacklist), true);
+					$tags = array();
+					for ($i = 0, $size = sizeof($blacklist); $i < $size; $i++)
+					{
+						$tags[] = $blacklist[$i]['text'];
+					}
+					$blacklist = json_encode($tags);
+				}
+				$config->set($conf_prefix.'_blacklist', $blacklist);
+			}
 
-				$msg = array();
-				$deleted_assignments_count = 0;
-				$delete_unused_tags = false;
+			if ('settings' == $mode)
+			{
+				$regex = utf8_normalize_nfc($request->variable($conf_prefix.'_allowed_tags_regex', $user->lang('ACP_RH_TOPICTAGS_REGEX_DEFAULT'), true));
+				if (empty($regex))
+				{
+						$submit = false;
+						$errors[] = $user->lang('ACP_RH_TOPICTAGS_REGEX_EMPTY');
+				}
+
+				$exp_for_users = utf8_normalize_nfc($request->variable($conf_prefix.'_allowed_tags_exp_for_users', $user->lang('ACP_RH_TOPICTAGS_REGEX_EXP_FOR_USERS_DEFAULT'), true));
+				if (empty($exp_for_users))
+				{
+						$submit = false;
+						$errors[] = $user->lang('ACP_RH_TOPICTAGS_EXP_FOR_USERS_EMPTY');
+				}
+
+				if ($submit)
+				{
+					$config->set($conf_prefix.'_display_tags_in_viewforum', $request->variable($conf_prefix.'_display_tags_in_viewforum', 1));
+					$config->set($conf_prefix.'_allowed_tags_regex', $regex);
+					$config->set($conf_prefix.'_allowed_tags_exp_for_users', $exp_for_users);
+					$config->set($conf_prefix.'_display_tagcloud_on_index', $request->variable($conf_prefix.'_display_tagcloud_on_index', 1));
+					$config->set($conf_prefix.'_display_tagcount_in_tagcloud', $request->variable($conf_prefix.'_display_tagcount_in_tagcloud', 1));
+					$config->set($conf_prefix.'_max_tags_in_tagcloud', $request->variable($conf_prefix.'_max_tags_in_tagcloud', 20));
+					$config->set($conf_prefix.'_convert_space_to_minus', $request->variable($conf_prefix.'_convert_space_to_minus', 1));
+
+					$deleted_assignments_count = 0;
+					$delete_unused_tags = false;
 	
-				if ($request->variable($conf_prefix.'_enable_in_all_forums', 0) > 0)
-				{
-					$count_affected = $tags_manager->enable_tags_in_all_forums();
-					$msg[] = $user->lang('TOPICTAGS_ENABLE_IN_ALL_FORUMS_DONE', $count_affected);
-				}
+					if ($request->variable($conf_prefix.'_enable_in_all_forums', 0) > 0)
+					{
+						$count_affected = $tags_manager->enable_tags_in_all_forums();
+						$msg[] = $user->lang('TOPICTAGS_ENABLE_IN_ALL_FORUMS_DONE', $count_affected);
+					}
 
-				if ($request->variable($conf_prefix.'_disable_in_all_forums', 0) > 0)
-				{
-					$count_affected = $tags_manager->disable_tags_in_all_forums();
-					$msg[] = $user->lang('TOPICTAGS_DISABLE_IN_ALL_FORUMS_DONE', $count_affected);
-				}
+					if ($request->variable($conf_prefix.'_disable_in_all_forums', 0) > 0)
+					{
+						$count_affected = $tags_manager->disable_tags_in_all_forums();
+						$msg[] = $user->lang('TOPICTAGS_DISABLE_IN_ALL_FORUMS_DONE', $count_affected);
+					}
 
-				if ($request->variable($conf_prefix.'_calc_count_tags', 0) > 0)
-				{
-					$tags_manager->calc_count_tags();
-					$msg[] = $user->lang('TOPICTAGS_CALC_COUNT_TAGS_DONE');
-				}
+					if ($request->variable($conf_prefix.'_calc_count_tags', 0) > 0)
+					{
+						$tags_manager->calc_count_tags();
+						$msg[] = $user->lang('TOPICTAGS_CALC_COUNT_TAGS_DONE');
+					}
 
-				if ($request->variable($conf_prefix.'_prune', 0) > 0)
-				{
-					$deleted_assignments_count += $tags_manager->delete_assignments_where_topic_does_not_exist();
-					$delete_unused_tags = true;
-				}
+					if ($request->variable($conf_prefix.'_prune', 0) > 0)
+					{
+						$deleted_assignments_count += $tags_manager->delete_assignments_where_topic_does_not_exist();
+						$delete_unused_tags = true;
+					}
 
-				if ($request->variable($conf_prefix.'_prune_forums', 0) > 0)
-				{
-					$deleted_assignments_count += $tags_manager->delete_tags_from_tagdisabled_forums();
-					$delete_unused_tags = true;
-				}
+					if ($request->variable($conf_prefix.'_prune_forums', 0) > 0)
+					{
+						$deleted_assignments_count += $tags_manager->delete_tags_from_tagdisabled_forums();
+						$delete_unused_tags = true;
+					}
 
-				if ($request->variable($conf_prefix.'_prune_invalid_tags', 0) > 0)
-				{
-					$deleted_assignments_count += $tags_manager->delete_assignments_of_invalid_tags();
-					$delete_unused_tags = true;
-				}
+					if ($request->variable($conf_prefix.'_prune_invalid_tags', 0) > 0)
+					{
+						$deleted_assignments_count += $tags_manager->delete_assignments_of_invalid_tags();
+						$delete_unused_tags = true;
+					}
 	
-				if ($delete_unused_tags)
-				{
-					$deleted_tags_count = $tags_manager->delete_unused_tags();
-					$msg[] = $user->lang('TOPICTAGS_PRUNE_TAGS_DONE', $deleted_tags_count);
-				}
+					if ($delete_unused_tags)
+					{
+						$deleted_tags_count = $tags_manager->delete_unused_tags();
+						$msg[] = $user->lang('TOPICTAGS_PRUNE_TAGS_DONE', $deleted_tags_count);
+					}
 	
-				if ($deleted_assignments_count > 0)
-				{
-					$msg[] = $user->lang('TOPICTAGS_PRUNE_ASSIGNMENTS_DONE', $deleted_assignments_count);
+					if ($deleted_assignments_count > 0)
+					{
+						$msg[] = $user->lang('TOPICTAGS_PRUNE_ASSIGNMENTS_DONE', $deleted_assignments_count);
+					}
 				}
-	
+			}
+			if ($submit)
+			{
 				if (empty($msg))
 				{
 					$msg[] = $user->lang('TOPICTAGS_SETTINGS_SAVED');
 				}
-
 				trigger_error(join('<br/>', $msg) . adm_back_link($this->u_action));
 			}
 		}
-
-		$whitelist = $config[$conf_prefix.'_whitelist'];
-		$whitelist = base64_encode($whitelist);
-
-		$all_enabled = $tags_manager->is_enabled_in_all_forums();
-		$all_disabled = ($all_enabled ? false : $tags_manager->is_disabled_in_all_forums());
-		$template->assign_vars(array(
-			'TOPICTAGS_VERSION'							=> $user->lang('TOPICTAGS_INSTALLED', $config[$conf_prefix.'_version']),
-			'TOPICTAGS_DISPLAY_TAGS_IN_VIEWFORUM'		=> $config[$conf_prefix.'_display_tags_in_viewforum'],
-			'TOPICTAGS_DISPLAY_TAGCLOUD_ON_INDEX'		=> $config[$conf_prefix.'_display_tagcloud_on_index'],
-			'TOPICTAGS_DISPLAY_TAGCOUNT_IN_TAGCLOUD'	=> $config[$conf_prefix.'_display_tagcount_in_tagcloud'],
-			'TOPICTAGS_MAX_TAGS_IN_TAGCLOUD'			=> $config[$conf_prefix.'_max_tags_in_tagcloud'],
-			'TOPICTAGS_ALLOWED_TAGS_REGEX'				=> $config[$conf_prefix.'_allowed_tags_regex'],
-			'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS'		=> $config[$conf_prefix.'_allowed_tags_exp_for_users'],
-			'TOPICTAGS_CONVERT_SPACE_TO_MINUS'			=> $config[$conf_prefix.'_convert_space_to_minus'],
-			'TOPICTAGS_WHITELIST_ENABLED'				=> $config[$conf_prefix.'_whitelist_enabled'],
-			'TOPICTAGS_WHITELIST'						=> $whitelist,
-			'TOPICTAGS_BLACKLIST_ENABLED'				=> $config[$conf_prefix.'_blacklist_enabled'],
-			'TOPICTAGS_BLACKLIST'						=> $config[$conf_prefix.'_blacklist'],
-			'TOPICTAGS_IS_ENABLED_IN_ALL_FORUMS'		=> $all_enabled,
-			'TOPICTAGS_IS_DISABLED_IN_ALL_FORUMS'		=> $all_disabled,
-			'S_RH_TOPICTAGS_INCLUDE_NG_TAGS_INPUT'		=> true,
-			'S_RH_TOPICTAGS_INCLUDE_CSS'				=> true,
-			'S_ERROR'									=> (sizeof($errors)) ? true : false,
-			'ERROR_MSG'									=> implode('<br />', $errors),
-			'U_ACTION'									=> $this->u_action,
-		));
+		if ('whitelist' == $mode)
+		{
+			$whitelist = $config[$conf_prefix.'_whitelist'];
+			$whitelist = base64_encode($whitelist);
+			$template->assign_vars(array(
+				'TOPICTAGS_VERSION'							=> $user->lang('TOPICTAGS_INSTALLED', $config[$conf_prefix.'_version']),
+				'TOPICTAGS_WHITELIST_ENABLED'				=> $config[$conf_prefix.'_whitelist_enabled'],
+				'TOPICTAGS_WHITELIST'						=> $whitelist,
+				'S_RH_TOPICTAGS_INCLUDE_NG_TAGS_INPUT'		=> true,
+				'S_RH_TOPICTAGS_INCLUDE_CSS'				=> true,
+				'S_ERROR'									=> (sizeof($errors)) ? true : false,
+				'ERROR_MSG'									=> implode('<br />', $errors),
+				'U_ACTION'									=> $this->u_action,
+			));
+		}
+		else if ('blacklist' == $mode)
+		{
+			$blacklist = $config[$conf_prefix.'_blacklist'];
+			$blacklist = base64_encode($blacklist);
+			$template->assign_vars(array(
+				'TOPICTAGS_VERSION'							=> $user->lang('TOPICTAGS_INSTALLED', $config[$conf_prefix.'_version']),
+				'TOPICTAGS_BLACKLIST_ENABLED'				=> $config[$conf_prefix.'_blacklist_enabled'],
+				'TOPICTAGS_BLACKLIST'						=> $blacklist,
+				'S_RH_TOPICTAGS_INCLUDE_NG_TAGS_INPUT'		=> true,
+				'S_RH_TOPICTAGS_INCLUDE_CSS'				=> true,
+				'S_ERROR'									=> (sizeof($errors)) ? true : false,
+				'ERROR_MSG'									=> implode('<br />', $errors),
+				'U_ACTION'									=> $this->u_action,
+			));
+		}
+		else
+		{
+			$all_enabled = $tags_manager->is_enabled_in_all_forums();
+			$all_disabled = ($all_enabled ? false : $tags_manager->is_disabled_in_all_forums());
+			$template->assign_vars(array(
+				'TOPICTAGS_VERSION'							=> $user->lang('TOPICTAGS_INSTALLED', $config[$conf_prefix.'_version']),
+				'TOPICTAGS_DISPLAY_TAGS_IN_VIEWFORUM'		=> $config[$conf_prefix.'_display_tags_in_viewforum'],
+				'TOPICTAGS_DISPLAY_TAGCLOUD_ON_INDEX'		=> $config[$conf_prefix.'_display_tagcloud_on_index'],
+				'TOPICTAGS_DISPLAY_TAGCOUNT_IN_TAGCLOUD'	=> $config[$conf_prefix.'_display_tagcount_in_tagcloud'],
+				'TOPICTAGS_MAX_TAGS_IN_TAGCLOUD'			=> $config[$conf_prefix.'_max_tags_in_tagcloud'],
+				'TOPICTAGS_ALLOWED_TAGS_REGEX'				=> $config[$conf_prefix.'_allowed_tags_regex'],
+				'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS'		=> $config[$conf_prefix.'_allowed_tags_exp_for_users'],
+				'TOPICTAGS_CONVERT_SPACE_TO_MINUS'			=> $config[$conf_prefix.'_convert_space_to_minus'],
+				'TOPICTAGS_IS_ENABLED_IN_ALL_FORUMS'		=> $all_enabled,
+				'TOPICTAGS_IS_DISABLED_IN_ALL_FORUMS'		=> $all_disabled,
+				'S_ERROR'									=> (sizeof($errors)) ? true : false,
+				'ERROR_MSG'									=> implode('<br />', $errors),
+				'U_ACTION'									=> $this->u_action,
+			));
+		}
 	}
-
 }

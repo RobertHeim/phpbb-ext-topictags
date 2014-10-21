@@ -109,7 +109,7 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_ENABLE_BLACKLIST_EXP'			=> 'If enabled, the tags configured in the blacklist will be rejected even if they are conform with the regex.<br/>NOTE 1: To prevent accidental data loss, tags that are already in the database are not deleted automatically. You must remove them by hand from each topic.<br/>NOTE 2: The blacklist is never shown to the users.',
 
 	'TOPICTAGS_BLACKLIST'						=> 'Blacklist',
-	'TOPICTAGS_BLACKLIST_EXP'					=> 'Comma (,) separated list of forbidden tags.<br/>NOTE: All tags that are not conform with the regex are always rejected.',
+	'TOPICTAGS_BLACKLIST_EXP'					=> 'List of forbidden tags.<br/>NOTE: All tags that are not conform with the regex are always rejected.',
 
 	'TOPICTAGS_ALLOWED_TAGS_REGEX'				=> 'Regular Expression for allowed tags',
 	'TOPICTAGS_ALLOWED_TAGS_REGEX_EXP'			=> 'WARNING: Do not change this, if you don\'t know what you are doing. <strong>Tags can be 30 characters at maximum</strong>, please consider this during regex design.<br/>Note that afterwards invalid tags are not searchable, but are still displayed in the topics.<br/>Consider pruning the invalid tags (see maintenance-section).<br/>default: ' . $lang['ACP_RH_TOPICTAGS_REGEX_DEFAULT'],

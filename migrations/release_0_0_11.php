@@ -28,6 +28,9 @@ class release_0_0_11 extends \phpbb\db\migration\migration
 
 	public function update_data()
 	{
+		global $config;
+
+		// convert whitelist to json
 		$whitelist = $config[PREFIXES::CONFIG.'_whitelist'];
 		if (empty($whitelist))
 		{
@@ -38,8 +41,28 @@ class release_0_0_11 extends \phpbb\db\migration\migration
 			$whitelist = explode(',', $whitelist);
 		}
 		$whitelist = json_encode($whitelist);
+
+		// convert blacklist to json
+		$blacklist = $config[PREFIXES::CONFIG.'_blacklist'];
+		if (empty($blacklist))
+		{
+			$blacklist = array();
+		}
+		else
+		{
+			$blacklist = explode(',', $blacklist);
+		}
+		$blacklist = json_encode($blacklist);
+
 		return array(
 			array('config.update', array(PREFIXES::CONFIG.'_whitelist', $whitelist)),
+			array('config.update', array(PREFIXES::CONFIG.'_blacklist', $blacklist)),
+			array('module.add', array(
+				'acp', 'ACP_TOPICTAGS_TITLE', array(
+					'module_basename'	=> '\robertheim\topictags\acp\topictags_module',
+					'auth'				=> 'ext_robertheim/topictags && acl_a_board',
+					'modes'				=> array('whitelist', 'blacklist'),
+				))),
 			array('config.update', array(PREFIXES::CONFIG.'_version', $this->version)),
 		);
 	}

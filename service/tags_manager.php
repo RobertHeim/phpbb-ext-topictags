@@ -540,7 +540,7 @@ class tags_manager
 		// check blacklist
 		if ($this->config[PREFIXES::CONFIG.'_blacklist_enabled'])
 		{
-			$blacklist = explode(',', $this->config[PREFIXES::CONFIG.'_blacklist']);
+			$blacklist = json_decode($this->config[PREFIXES::CONFIG.'_blacklist']);
 			foreach ($blacklist as $entry)
 			{
 				if ($tag == $this->clean_tag($entry))
