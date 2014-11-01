@@ -43,5 +43,6 @@ $lang = array_merge($lang, array(
 	'ACP_TOPICTAGS_SETTINGS'		=> 'Settings',
 	'ACP_TOPICTAGS_WHITELIST'		=> 'Whitelist',
 	'ACP_TOPICTAGS_BLACKLIST'		=> 'Blacklist',
+	'ACP_TOPICTAGS_MANAGE_TAGS'		=> 'Manage Tags',
 ));
 

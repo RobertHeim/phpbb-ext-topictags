@@ -75,7 +75,6 @@ class main
 	public function show_tag($tags, $mode, $casesensitive)
 	{
 		global $user, $phpbb_container, $config, $phpbb_root_path, $request;
-
 		// validate mode
 		// default == AND
 		$mode = ($mode == 'OR' ? 'OR' : 'AND');

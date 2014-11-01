@@ -61,7 +61,7 @@ class release_0_0_11 extends \phpbb\db\migration\migration
 				'acp', 'ACP_TOPICTAGS_TITLE', array(
 					'module_basename'	=> '\robertheim\topictags\acp\topictags_module',
 					'auth'				=> 'ext_robertheim/topictags && acl_a_board',
-					'modes'				=> array('whitelist', 'blacklist'),
+					'modes'				=> array('whitelist', 'blacklist', 'tags'),
 				))),
 			array('config.update', array(PREFIXES::CONFIG.'_version', $this->version)),
 		);

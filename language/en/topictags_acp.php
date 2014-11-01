@@ -119,5 +119,17 @@ $lang = array_merge($lang, array(
 
 	'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS'		=> 'Explanation for Users',
 	'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS_EXP'	=> 'This text is shown to the users and should explain which tags are allowed and which not.<br/>default: ' . $lang['ACP_RH_TOPICTAGS_REGEX_EXP_FOR_USERS_DEFAULT'],
+	
+	'TOPICTAGS_MANAGE_TAGS_EXP'					=> 'The table shows all existing tags. Here you can delete them (and all their assignments) or edit a tag. You also can merge tags by editing a tag and setting its name so that it equals another tag - they will be merged automatically.',
+	'TOPICTAGS_NO_TAGS'							=> 'There are no tags yet.',
+	'TOPICTAGS_TAG'								=> 'Tag',
+	'TOPICTAGS_ASSIGNMENTS'						=> 'Assignments',
+	'TOPICTAGS_CREATE_TAG'						=> 'Create new tag',
+	'TOPICTAGS_TAG_DELETE_CONFIRM'				=> "Are you sure that you want to delete the tag '%s'?",
+	'TOPICTAGS_TAG_DELETED'						=> 'The tag has been deleted.',
+	'TOPICTAGS_TAG_CHANGED'						=> 'The tag has been changed.',
+	
+	'TOPICTAGS_TAG_INVALID'						=> 'The tag "%s" is invalid, please check your tag-settings.',
+	'TOPICTAGS_TAG_DOES_NOT_EXIST'				=> 'The tag "%s" does not exist.',
 
 ));

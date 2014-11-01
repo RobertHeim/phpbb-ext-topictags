@@ -408,12 +408,12 @@ class tags_manager
 	}
 
 	/**
-	 * Gets the topics which are tagged with any or all of the given $tags from all forums, where tagging is enabled and only those which the user is allowed to read.
+	 * Gets the count of assigned topics to the tag
 	 *
 	 * @param $tags the tag to find the topics for
 	 * @param $mode AND(default)=all tags must be assigned, OR=at least one tag needs to be assigned
 	 * @param $casesensitive search case-sensitive if true, insensitive otherwise (default).
-	 * @return array of topics, each containing all fields from TOPIC_TABLE
+	 * @return int count of topics that are assigned to the tag
 	 */
 	public function count_topics_by_tags($tags, $mode = 'AND', $casesensitive = false)
 	{
@@ -736,5 +736,62 @@ class tags_manager
 		$this->db->sql_query($sql);
 	}
 
-}
+	/**
+	 * Merges two tags, by assigning all topics of tag_to_delete to the tag_to_keep and then delet the tag_to_delete.
+	 * NOTE: Both tags must exist and this is not checked again!
+	 * 
+	 * @param string $tag_to_delete must be valid
+	 * @param int $tag_to_delete_id the id of the tag to delete
+	 * @param string $tag_to_keep must be valid
+	 * @param int $tag_to_keep_id the id of the tag to keep
+	 * @return the new count of assignments of the kept tag
+	 */
+	public function merge($tag_to_delete, $tag_to_delete_id, $tag_to_keep, $tag_to_keep_id)
+	{
+		$tag_to_delete_id = (int) $tag_to_delete_id;
+		$tag_to_keep_id = (int) $tag_to_keep_id;
 
+		// re-assign topics to tag_to_keep
+		$sql_ary = array(
+			'tt.tag_id'	=> $tag_to_keep_id,
+		);
+		$sql = 'UPDATE ' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
+			SET  ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
+			WHERE tt.tag_id = ' . $this->db->escape($tag_to_delete_id);
+		$this->db->sql_query($sql);
+		$this->delete_tag($tag_to_delete_id);
+
+		$this->calc_count_tags();
+		return $this->count_topics_by_tags($tag_to_keep);
+	}
+	
+	/**
+	 * Deletes the given tag (but not its assignments).
+	 * 
+	 * @param int $tag_id
+	 */
+	private function delete_tag($tag_id)
+	{
+		$sql = 'DELETE t
+			FROM ' . $this->table_prefix . TABLES::TAGS . ' t
+			WHERE t.tag_id = ' . ((int) $tag_id);
+		$this->db->sql_query($sql);
+	}
+	
+	/**
+	 * Renames the tag
+	 * 
+	 * @param int $tag_id the id of the tag
+	 * @param string $new_name_clean the new name of the tag already cleaned
+	 */
+	public function rename($tag_id, $new_name_clean)
+	{
+		$sql_ary = array(
+			't.tag'	=> $new_name_clean,
+		);
+		$sql = 'UPDATE ' . $this->table_prefix . TABLES::TAGS . ' t
+			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
+			WHERE t.id = ' . ((int) $tag_id);
+		$this->db->sql_query($sql);
+	}
+}

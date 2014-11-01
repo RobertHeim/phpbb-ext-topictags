@@ -14,6 +14,7 @@ namespace robertheim\topictags\acp;
 */
 use robertheim\topictags\TABLES;
 use robertheim\topictags\PREFIXES;
+use \phpbb\json_response;
 
 class topictags_module
 {
@@ -21,6 +22,14 @@ class topictags_module
 	/** @var string */
 	public $u_action;
 
+	protected $tags_manager;
+	
+	public function __construct()
+	{
+		global $phpbb_container;
+		$this->tags_manager		= $phpbb_container->get('robertheim.topictags.tags_manager');
+	}
+	
 	public function main($id, $mode)
 	{
 		global $config, $request, $template, $user, $cache, $phpbb_container;
@@ -40,6 +49,100 @@ class topictags_module
 		{
 			$this->tpl_name = 'topictags_blacklist';
 			$this->page_title = 'ACP_TOPICTAGS_BLACKLIST';
+		}
+		else if ('tags' == $mode)
+		{
+			$action = $request->variable('action', '');
+			$this->tpl_name = 'topictags_manage_tags';
+			$this->page_title = 'ACP_TOPICTAGS_MANAGE_TAGS';
+			if ('delete' == $action)
+			{
+				if (confirm_box(true))
+				{
+					
+					// TODO delete the tag here
+					
+					if ($request->is_ajax())
+					{
+						trigger_error('TOPICTAGS_TAG_DELETED');
+					}
+					//trigger_error($user->lang['YES'] . adm_back_link($this->u_action));
+					trigger_error('TOPICTAGS_TAG_DELETED' . adm_back_link($this->u_action));
+				}
+				else
+				{
+					$tag_id = 1;
+					$tag = "TODO the tag name";
+					$confirm_text = $user->lang('TOPICTAGS_TAG_DELETE_CONFIRM', $tag);
+					confirm_box(false, $confirm_text, build_hidden_fields(array(
+						'i'			=> $id,
+						'mode'		=> $mode,
+						'action'	=> $action,
+						'tag_id'	=> $tag_id,
+					)));
+				}
+			}
+			if ('edit' == $action) {
+				$old_tag_name = $request->variable('old_tag_name', '');
+				$new_tag_name = $request->variable('new_tag_name', '');
+				if (!empty($old_tag_name) && !empty($new_tag_name))
+				{
+					$response = new json_response();
+					$old_ids = $this->tags_manager->get_existing_tags(array($old_tag_name), true);
+					if (empty($old_ids))
+					{
+						// TODO error message in lang file
+						$response->send(array(
+							'success'	=> false,
+							'error_msg'	=> $user->lang('TOPICTAGS_TAG_DOES_NOT_EXIST', $old_tag_name),
+							'old_tag'	=> $old_tag_name,							
+						));
+						die('Error: we should never be here');
+					}
+					// if we reach here, we know that we got a valid old tag
+					$old_id = $old_ids[0];
+
+					$new_tag_name_clean = $this->tags_manager->clean_tag($new_tag_name);
+					$is_valid = $this->tags_manager->is_valid_tag($new_tag_name_clean, true);
+					if (!$is_valid)
+					{
+						// TODO error message in lang file
+						$response->send(array(
+							'success'	=> false,
+							'error_msg'	=> $user->lang('TOPICTAGS_TAG_INVALID', $old_tag_name),
+							'old_tag'	=> $old_tag_name,							
+						));
+						die('Error: we should never be here');
+					}
+
+					// old tag exist and new tag is valid
+					$new_ids = $this->tags_manager->get_existing_tags(array($new_tag_name), true);
+					if (!empty($new_ids)) {
+						$tag_count = $this->tags_manager->merge($old_tag_name, $old_id, $new_tag_name, $new_id);
+						$response->send(array(
+							'success'	=> true,
+							'tag_count'	=> $tag_count,
+							'msg'		=> $user->lang('TOPICTAGS_TAG_CHANGED'),
+						));
+						die('Error: we should never be here');
+					}
+					// old tag exist and new tag is valid and does not exist -> rename it
+					$this->tags_manager->rename($old_id, $new_tag_name_clean);
+					$tag_count = 1;
+					$response->send(array(
+						'success'	=> true,
+						'msg'		=> $user->lang('TOPICTAGS_TAG_CHANGED'),
+					));
+					die('Error: we should never be here');
+					//TODO handle "no ajax"
+					// trigger_error('TOPICTAGS_TAG_CHANGED' . adm_back_link($this->u_action));
+				}
+			}
+			$tag_id = 1;
+			$template->assign_vars(array(
+				'U_DELETE_TAG'		=> $this->get_tag_link($mode, $tag_id) . '&amp;action=delete',
+				'U_EDIT_TAG_URL'	=> $this->u_action . '&amp;action=edit',
+			));
 		}
 		else
 		{
@@ -236,4 +339,9 @@ class topictags_module
 			));
 		}
 	}
+
+	private function get_tag_link($mode, $tag_id) {
+		return $this->u_action . (($tag_id) ? '&amp;tag_id=' . $tag_id : '');
+	}
+	
 }

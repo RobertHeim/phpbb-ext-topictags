@@ -32,6 +32,11 @@ class topictags_info
 					'auth' => 'ext_robertheim/topictags && acl_a_board',
 					'cat' => array('ACP_TOPICTAGS_TITLE')
 				),
+				'tags'	=> array(
+					'title' => 'ACP_TOPICTAGS_MANAGE_TAGS',
+					'auth' => 'ext_robertheim/topictags && acl_a_board',
+					'cat' => array('ACP_TOPICTAGS_TITLE')
+				),
 			),
 		);
 	}

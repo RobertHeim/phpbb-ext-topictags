@@ -1,0 +1,63 @@
+<!-- INCLUDE overall_header.html -->
+
+<!-- INCLUDEJS jquery.jeditable.mini.js -->
+<!-- INCLUDEJS manage_tags.js -->
+
+<a id="maincontent"></a>
+
+<h1>{L_TOPICTAGS_TITLE}</h1>
+<p>{TOPICTAGS_VERSION}</p>
+
+<h2>{L_ACP_TOPICTAGS_MANAGE_TAGS}</h2>
+<p>{L_TOPICTAGS_MANAGE_TAGS_EXP}</p>
+
+<!-- IF S_ERROR -->
+	<div class="errorbox">
+		<h3>{L_WARNING}</h3>
+		<p>{ERROR_MSG}</p>
+	</div>
+<!-- ENDIF -->
+
+<form id="acp_board" method="post" action="{U_ACTION}">
+<table class="table1 zebra-table">
+	<colgroup>
+		<col class="col1"></col>
+		<col class="col1"></col>
+		<col class="col1"></col>
+	</colgroup>
+	<thead>
+		<tr>
+			<th>{L_TAG}</th>
+			<th>{L_TOPICTAGS_ASSIGNMENTS}</th>
+			<th>{L_ACTIONS}</th>
+		</tr>
+	</thead>
+	<tbody>
+		<!-- BEGIN tags -->
+		<tr>
+			<td>{tags.NAME}</td>
+			<td>{tags.ASSIGNMENTS}</td>
+			<td><a href="{tags.EDIT_LINK}">edit</a> <a href="{tags.DELETE_LINK}" onclick="alert('{L_TOPICTAGS_PRUNE_INVALID_TAGS_CONFIRM}');">delete</a></td>
+		</tr>
+		<!-- BEGINELSE -->
+		<tr>
+			<td><span class="topictags_editable_tag">TODO-Tag</span></td>
+			<td><span class="tag_count">100</span></td>
+			<td><a href="#" class="topictags_edit_tag">{ICON_EDIT}</a> 
+			 <a href="{U_DELETE_TAG}" data-ajax="topictags.delete_tag">{ICON_DELETE}</a>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3" style="text-align: center;">{L_TOPICTAGS_NO_TAGS}</td>
+		</tr>
+		<!-- END tags -->
+	</tbody>
+</table>
+<fieldset class="quick">{L_TOPICTAGS_CREATE_TAG}: <input type="text" name="tag_name" value=""> <input class="button2" type="submit" name="submit" value="{L_SUBMIT}">
+			<input type="hidden" name="add" value="1">
+				<input type="hidden" name="creation_time" value="1414853134">
+	{S_FORM_TOKEN}
+	</fieldset>
+</form>
+
+<!-- INCLUDE overall_footer.html -->

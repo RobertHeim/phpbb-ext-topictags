@@ -69,6 +69,7 @@ class release_0_0_8 extends \phpbb\db\migration\migration
 	public function calc_count_tags()
 	{
 		global $auth, $db;
+		// TODO custom service in migrations https://www.phpbb.com/community/viewtopic.php?f=461&t=2264646
 		$tags_manager = new tags_manager($db, $this->config, $auth, $this->table_prefix);
 		$tags_manager->calc_count_tags();
 	}
