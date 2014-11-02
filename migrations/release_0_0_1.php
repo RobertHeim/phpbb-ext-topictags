@@ -32,20 +32,20 @@ class release_0_0_1 extends \phpbb\db\migration\migration
 			'add_tables' => array(
 				$this->table_prefix . TABLES::TOPICTAGS	=> array(
 					'COLUMNS'		=> array(
-						'id'				=> array('UINT', NULL, 'auto_increment'),
-						'topic_id'			=> array('UINT', 0),
-						'tag_id'			=> array('UINT', 1),
+						'id'			=> array('UINT', NULL, 'auto_increment'),
+						'topic_id'		=> array('UINT', 0),
+						'tag_id'		=> array('UINT', 1),
 					),
-					'PRIMARY_KEY'			=> 'id',
-					'KEYS'					=> array(
-						'idx_topic'			=> array('INDEX', array('topic_id')),
-						'idx_tag'	=> array('INDEX', array('tag_id')),
+					'PRIMARY_KEY'	=> 'id',
+					'KEYS'			=> array(
+						'idx_topic'		=> array('INDEX', array('topic_id')),
+						'idx_tag'		=> array('INDEX', array('tag_id')),
 		               ),
 				),
 				$this->table_prefix . TABLES::TAGS => array(
-					'COLUMNS'	=> array(
-						'id'		=> array('UINT', NULL, 'auto_increment'),
-	                    'tag'		=> array('VCHAR:30', ''),
+					'COLUMNS'		=> array(
+						'id'			=> array('UINT', NULL, 'auto_increment'),
+	                    'tag'			=> array('VCHAR:30', ''),
 					),
 					'PRIMARY_KEY'	=> 'id',
 					'KEYS'			=> array(
