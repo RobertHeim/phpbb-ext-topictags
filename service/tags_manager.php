@@ -406,20 +406,23 @@ class tags_manager
 		$this->db->sql_freeresult($result);
 		return $topics;
 	}
-
+	
 	/**
-	 * Gets the count of assigned topics to the tag
+	 * Counts the topics which are tagged with any or all of the given $tags from all forums, where tagging is enabled and only those which the user is allowed to read.
 	 *
-	 * @param $tags the tag to find the topics for
+	 * @param array $tags the tags to find the topics for
 	 * @param $mode AND(default)=all tags must be assigned, OR=at least one tag needs to be assigned
 	 * @param $casesensitive search case-sensitive if true, insensitive otherwise (default).
-	 * @return int count of topics that are assigned to the tag
+	 * @return int count of topics found
 	 */
-	public function count_topics_by_tags($tags, $mode = 'AND', $casesensitive = false)
+	public function count_topics_by_tags(array $tags, $mode = 'AND', $casesensitive = false)
 	{
+		if (empty($tag)) {
+			return 0;
+		}
 		$sql = $this->get_topics_build_query($tags, $mode, $casesensitive);
 		$sql = "SELECT COUNT(*) as total_results
-			FROM ($sql) a";
+		FROM ($sql) a";
 		$result = $this->db->sql_query($sql);
 		$count = (int) $this->db->sql_fetchfield('total_results');
 		$this->db->sql_freeresult($result);
@@ -433,7 +436,7 @@ class tags_manager
 	 * @param $casesensitive false or true
 	 * @return string 'SELECT topics.* FROM ' . TOPICS_TABLE . ' topics WHERE ' . [calculated where]
 	 */
-	private function get_topics_build_query($tags, $mode = 'AND', $casesensitive = false)
+	private function get_topics_build_query(array $tags, $mode = 'AND', $casesensitive = false)
 	{
 		if (empty($tags))
 		{
@@ -762,7 +765,7 @@ class tags_manager
 		$this->delete_tag($tag_to_delete_id);
 
 		$this->calc_count_tags();
-		return $this->count_topics_by_tags($tag_to_keep);
+		return $this->count_topics_by_tags(array($tag_to_keep), 'AND', true);
 	}
 	
 	/**
@@ -788,6 +791,7 @@ class tags_manager
 	 * 
 	 * @param int $tag_id the id of the tag
 	 * @param string $new_name_clean the new name of the tag already cleaned
+	 * @return int the count of topics that are assigned to the tag
 	 */
 	public function rename($tag_id, $new_name_clean)
 	{
@@ -798,6 +802,7 @@ class tags_manager
 			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
 			WHERE t.id = ' . ((int) $tag_id);
 		$this->db->sql_query($sql);
+		return $this->count_topics_by_tags(array($new_name_clean), 'AND', true);
 	}
 	
 	/**
@@ -819,6 +824,5 @@ class tags_manager
 		$tag = $this->db->sql_fetchfield('tag');
 		$this->db->sql_freeresult($result);
 		return $tag;
-				
 	}
 }

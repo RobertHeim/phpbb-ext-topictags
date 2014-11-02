@@ -89,7 +89,7 @@ class topictags_module
 						'tag_id'	=> $tag_id,
 					)));
 				}
-			}
+			} // delete
 			if ('edit' == $action) {
 				$old_tag_name = $request->variable('old_tag_name', '');
 				$new_tag_name = $request->variable('new_tag_name', '');
@@ -99,13 +99,15 @@ class topictags_module
 					$old_ids = $this->tags_manager->get_existing_tags(array($old_tag_name), true);
 					if (empty($old_ids))
 					{
-						// TODO error message in lang file
-						$response->send(array(
-							'success'	=> false,
-							'error_msg'	=> $user->lang('TOPICTAGS_TAG_DOES_NOT_EXIST', $old_tag_name),
-							'old_tag'	=> $old_tag_name,							
-						));
-						die('Error: we should never be here');
+						$error_msg = $user->lang('TOPICTAGS_TAG_DOES_NOT_EXIST', $old_tag_name);
+						if ($request->is_ajax()) {
+							$response->send(array(
+								'success'	=> false,
+								'error_msg'	=> $error_msg,
+								'old_tag'	=> $old_tag_name,							
+							));
+						}
+						trigger_error($error_msg . adm_back_link($this->u_action), E_USER_WARNING);
 					}
 					// if we reach here, we know that we got a valid old tag
 					$old_id = $old_ids[0];
@@ -114,25 +116,29 @@ class topictags_module
 					$is_valid = $this->tags_manager->is_valid_tag($new_tag_name_clean, true);
 					if (!$is_valid)
 					{
-						// TODO error message in lang file
-						$response->send(array(
-							'success'	=> false,
-							'error_msg'	=> $user->lang('TOPICTAGS_TAG_INVALID', $old_tag_name),
-							'old_tag'	=> $old_tag_name,							
-						));
-						die('Error: we should never be here');
+						$error_msg = $user->lang('TOPICTAGS_TAG_INVALID', $old_tag_name);
+						if ($request->is_ajax()) {
+							$response->send(array(
+								'success'	=> false,
+								'error_msg'	=> $error_msg,
+								'old_tag'	=> $old_tag_name,							
+							));
+						}
+						trigger_error($error_msg . adm_back_link($this->u_action), E_USER_WARNING);
 					}
 
 					// old tag exist and new tag is valid
 					$new_ids = $this->tags_manager->get_existing_tags(array($new_tag_name), true);
 					if (!empty($new_ids)) {
 						$tag_count = $this->tags_manager->merge($old_tag_name, $old_id, $new_tag_name, $new_id);
-						$response->send(array(
-							'success'	=> true,
-							'tag_count'	=> $tag_count,
-							'msg'		=> $user->lang('TOPICTAGS_TAG_CHANGED'),
-						));
-						die('Error: we should never be here');
+						if ($request->is_ajax()) {
+							$response->send(array(
+								'success'	=> true,
+								'tag_count'	=> $tag_count,
+								'msg'		=> $user->lang('TOPICTAGS_TAG_CHANGED'),
+							));
+						}
+						trigger_error($user->lang('TOPICTAGS_TAG_CHANGED') . adm_back_link($this->u_action));
 					}
 					// old tag exist and new tag is valid and does not exist -> rename it
 					$this->tags_manager->rename($old_id, $new_tag_name_clean);
@@ -145,7 +151,7 @@ class topictags_module
 					//TODO handle "no ajax"
 					// trigger_error($user->lang('TOPICTAGS_TAG_CHANGED') . adm_back_link($this->u_action));
 				}
-			}
+			} // edit
 			$tag_id = 1;
 			$template->assign_vars(array(
 				'U_DELETE_TAG'		=> $this->get_tag_link($mode, $tag_id) . '&amp;action=delete',
