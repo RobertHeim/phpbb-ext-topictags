@@ -27,7 +27,7 @@ class topictags_module
 	public function __construct()
 	{
 		global $phpbb_container;
-		$this->tags_manager		= $phpbb_container->get('robertheim.topictags.tags_manager');
+		$this->tags_manager = $phpbb_container->get('robertheim.topictags.tags_manager');
 	}
 	
 	public function main($id, $mode)
@@ -57,22 +57,30 @@ class topictags_module
 			$this->page_title = 'ACP_TOPICTAGS_MANAGE_TAGS';
 			if ('delete' == $action)
 			{
+				$tag_id = $request->variable('tag_id', -1);
+				if ($tag_id < 1) {
+					if ($request->is_ajax())
+					{
+						trigger_error('TOPICTAGS_MISSING_TAG_ID', E_USER_WARNING);
+					}
+					trigger_error($user->lang('TOPICTAGS_MISSING_TAG_ID') . adm_back_link($this->u_action), E_USER_WARNING);
+				}
+
+				$tag = $this->tags_manager->get_tag_by_id($tag_id);
+				
 				if (confirm_box(true))
 				{
-					
-					// TODO delete the tag here
+					$this->tags_manager->delete_tag($tag_id);
 					
 					if ($request->is_ajax())
 					{
 						trigger_error('TOPICTAGS_TAG_DELETED');
 					}
 					//trigger_error($user->lang['YES'] . adm_back_link($this->u_action));
-					trigger_error('TOPICTAGS_TAG_DELETED' . adm_back_link($this->u_action));
+					trigger_error($user->lang('TOPICTAGS_TAG_DELETED') . adm_back_link($this->u_action));
 				}
 				else
 				{
-					$tag_id = 1;
-					$tag = "TODO the tag name";
 					$confirm_text = $user->lang('TOPICTAGS_TAG_DELETE_CONFIRM', $tag);
 					confirm_box(false, $confirm_text, build_hidden_fields(array(
 						'i'			=> $id,
@@ -135,7 +143,7 @@ class topictags_module
 					));
 					die('Error: we should never be here');
 					//TODO handle "no ajax"
-					// trigger_error('TOPICTAGS_TAG_CHANGED' . adm_back_link($this->u_action));
+					// trigger_error($user->lang('TOPICTAGS_TAG_CHANGED') . adm_back_link($this->u_action));
 				}
 			}
 			$tag_id = 1;

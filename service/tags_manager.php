@@ -766,15 +766,20 @@ class tags_manager
 	}
 	
 	/**
-	 * Deletes the given tag (but not its assignments).
+	 * Deletes the given tag and all its assignments.
 	 * 
 	 * @param int $tag_id
 	 */
-	private function delete_tag($tag_id)
+	public function delete_tag($tag_id)
 	{
+		$sql = 'DELETE tt
+			FROM ' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
+			WHERE tt.tag_id = ' . ((int) $tag_id);
+		$this->db->sql_query($sql);
+		
 		$sql = 'DELETE t
 			FROM ' . $this->table_prefix . TABLES::TAGS . ' t
-			WHERE t.tag_id = ' . ((int) $tag_id);
+			WHERE t.id = ' . ((int) $tag_id);
 		$this->db->sql_query($sql);
 	}
 	
@@ -793,5 +798,27 @@ class tags_manager
 			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
 			WHERE t.id = ' . ((int) $tag_id);
 		$this->db->sql_query($sql);
+	}
+	
+	/**
+	 * Gets the corresponding tag by its id
+	 * 
+	 * @param int $tag_id the id of the tag
+	 * @return string the tag name
+	 */
+	public function get_tag_by_id($tag_id) {
+		$sql_array = array(
+			'SELECT'	=> 't.tag',
+			'FROM'		=> array(
+				$this->table_prefix . TABLES::TAGS		=> 't',
+			),
+			'WHERE'		=> 't.id = ' . ((int) $tag_id),
+		);
+		$sql = $this->db->sql_build_query('SELECT_DISTINCT', $sql_array);
+		$result = $this->db->sql_query_limit($sql, 1);
+		$tag = $this->db->sql_fetchfield('tag');
+		$this->db->sql_freeresult($result);
+		return $tag;
+				
 	}
 }
