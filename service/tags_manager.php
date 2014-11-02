@@ -387,7 +387,7 @@ class tags_manager
 	 * @param $limit limit for sql query
 	 * @param $tags the tag to find the topics for
 	 * @param $mode AND=all tags must be assigned, OR=at least one tag needs to be assigned
-	 * @return array of topics, each containing all fields from TOPIC_TABLE
+	 * @return array of topics, each containing all fields from TOPICS_TABLE
 	 */
 	public function get_topics_by_tags($tags, $start, $limit, $mode = 'AND', $casesensitive = false)
 	{
@@ -422,7 +422,7 @@ class tags_manager
 		}
 		$sql = $this->get_topics_build_query($tags, $mode, $casesensitive);
 		$sql = "SELECT COUNT(*) as total_results
-		FROM ($sql) a";
+			FROM ($sql) a";
 		$result = $this->db->sql_query($sql);
 		$count = (int) $this->db->sql_fetchfield('total_results');
 		$this->db->sql_freeresult($result);
@@ -738,7 +738,32 @@ class tags_manager
 			)';
 		$this->db->sql_query($sql);
 	}
-
+	
+	/**
+	 * Gets the topic-ids that the given tag-id is assigned to.
+	 * 
+	 * @param int $tag_id the id of the tag
+	 * @return array array of ints (the topic-ids)
+	 */
+	private function get_topic_ids_by_tag_id($tag_id) {
+		$sql_array = array(
+			'SELECT'	=> 'tt.topic_id',
+			'FROM'		=> array(
+				$this->table_prefix . TABLES::TOPICTAGS	=> 'tt',
+			),
+			'WHERE'		=> 'tt.tag_id = ' . ((int) $tag_id),
+		);
+		$sql = $this->db->sql_build_query('SELECT_DISTINCT', $sql_array);
+		$result = $this->db->sql_query($sql);
+		$ids = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$ids[] = (int) $row['topic_id'];
+		}
+		$this->db->sql_freeresult($result);
+		return $ids;
+	}
+	
 	/**
 	 * Merges two tags, by assigning all topics of tag_to_delete to the tag_to_keep and then delet the tag_to_delete.
 	 * NOTE: Both tags must exist and this is not checked again!
@@ -747,25 +772,30 @@ class tags_manager
 	 * @param int $tag_to_delete_id the id of the tag to delete
 	 * @param string $tag_to_keep must be valid
 	 * @param int $tag_to_keep_id the id of the tag to keep
-	 * @return the new count of assignments of the kept tag
 	 */
 	public function merge($tag_to_delete, $tag_to_delete_id, $tag_to_keep, $tag_to_keep_id)
 	{
 		$tag_to_delete_id = (int) $tag_to_delete_id;
 		$tag_to_keep_id = (int) $tag_to_keep_id;
+		
+		// delete assignments where the new tag is already assigned
+		$topic_ids_already_assigned = $this->get_topic_ids_by_tag_id($tag_to_keep_id);
+		$sql = 'DELETE tt FROM ' . $this->table_prefix . TABLES::TOPICTAGS. ' tt
+			WHERE ' . $this->db->sql_in_set('tt.topic_id', $topic_ids_already_assigned) . '
+				AND tt.tag_id = ' . (int) $tag_to_delete_id;
+		$this->db->sql_query($sql);
 
-		// re-assign topics to tag_to_keep
+		// renew assignments where the new tag is not assigned, yet
 		$sql_ary = array(
 			'tt.tag_id'	=> $tag_to_keep_id,
 		);
 		$sql = 'UPDATE ' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
 			SET  ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
-			WHERE tt.tag_id = ' . $this->db->escape($tag_to_delete_id);
+			WHERE tt.tag_id = ' . (int) $tag_to_delete_id;
 		$this->db->sql_query($sql);
+		
 		$this->delete_tag($tag_to_delete_id);
-
 		$this->calc_count_tags();
-		return $this->count_topics_by_tags(array($tag_to_keep), 'AND', true);
 	}
 	
 	/**
