@@ -105,8 +105,10 @@ class main
 		$pagination		= $phpbb_container->get('pagination');
 
 		$start			= $request->variable('start', 0);
+		// FIXME ensure usage of $limit in further code
 		$limit			= $config['topics_per_page'];
 
+		// FIXME this method does expect other parameters
 		$topics_count	= $this->tags_manager->count_topics_by_tags($tags, $start, $limit, $mode, $casesensitive);
 		$start			= $pagination->validate_start($start, $config['topics_per_page'], $topics_count);
 

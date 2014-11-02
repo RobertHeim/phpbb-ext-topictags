@@ -13,10 +13,11 @@ $('.topictags_editable_tag').editable(function(value, settings) {
 	var url = window.location.href.split("#")[0] + '&action=edit';
 	var phpbb_indicator = $('#loading_indicator');
 	var old_tag = this.revert;
+	var new_tag = value;
 	phpbb_indicator.show();
 	$.post(url, {
 		old_tag_name : old_tag,
-		new_tag_name : value,
+		new_tag_name : new_tag,
 	}).done(function(data) {
 		if (!(data instanceof Object)) {
 			console.log(data);
@@ -28,9 +29,20 @@ $('.topictags_editable_tag').editable(function(value, settings) {
 				tag_count.text(data.tag_count);
 			}
 			if (undefined !== data.merged && data.merged) {
+				// update tag-count of the kept tag if it is on this page
+				var new_tag_item = tag.parent().parent().parent().find('.topictags_editable_tag').filter(function() {
+				    return $(this).text() === new_tag;
+				});
+				if (undefined !== new_tag_item) {
+					// the tag is on this page -> update its count
+					new_tag_item.parent().parent().find('.tag_count').text(data.new_tag_count);
+				}
+				// remove the old tag row
 				tag.parent().parent().remove();
 			}
-			alert("success");
+			if (undefined !== data.msg) {
+				alert(data.msg);
+			}
 		} else {
 			if (undefined == data.error_msg) {
 				data.error_msg = 'Unknown error. See javascript-console for server response.';

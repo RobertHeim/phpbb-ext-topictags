@@ -417,7 +417,8 @@ class tags_manager
 	 */
 	public function count_topics_by_tags(array $tags, $mode = 'AND', $casesensitive = false)
 	{
-		if (empty($tag)) {
+		if (empty($tags))
+		{
 			return 0;
 		}
 		$sql = $this->get_topics_build_query($tags, $mode, $casesensitive);
@@ -745,7 +746,8 @@ class tags_manager
 	 * @param int $tag_id the id of the tag
 	 * @return array array of ints (the topic-ids)
 	 */
-	private function get_topic_ids_by_tag_id($tag_id) {
+	private function get_topic_ids_by_tag_id($tag_id)
+	{
 		$sql_array = array(
 			'SELECT'	=> 'tt.topic_id',
 			'FROM'		=> array(
@@ -772,6 +774,7 @@ class tags_manager
 	 * @param int $tag_to_delete_id the id of the tag to delete
 	 * @param string $tag_to_keep must be valid
 	 * @param int $tag_to_keep_id the id of the tag to keep
+	 * @return the new count of assignments of the kept tag
 	 */
 	public function merge($tag_to_delete, $tag_to_delete_id, $tag_to_keep, $tag_to_keep_id)
 	{
@@ -796,6 +799,7 @@ class tags_manager
 		
 		$this->delete_tag($tag_to_delete_id);
 		$this->calc_count_tags();
+		return $this->count_topics_by_tags(array($tag_to_keep), 'AND', true);
 	}
 	
 	/**
@@ -841,7 +845,8 @@ class tags_manager
 	 * @param int $tag_id the id of the tag
 	 * @return string the tag name
 	 */
-	public function get_tag_by_id($tag_id) {
+	public function get_tag_by_id($tag_id)
+	{
 		$sql_array = array(
 			'SELECT'	=> 't.tag',
 			'FROM'		=> array(
@@ -854,5 +859,52 @@ class tags_manager
 		$tag = $this->db->sql_fetchfield('tag');
 		$this->db->sql_freeresult($result);
 		return $tag;
+	}
+	
+	/**
+	 * Gets all tags.
+	 * 
+	 * @param $start start for sql query
+	 * @param $limit limit for sql query
+	 * @param $sort_field the db field to order by
+	 * @param $asc order direction (true == asc, false == desc)
+	 * @return array array of tags
+	 */
+	public function get_all_tags($start, $limit, $sort_field = 'tag', $asc = true)
+	{
+		switch ($sort_field)
+		{
+			case 'count':
+				$sort_field = 'count';
+				break;
+			case 'tag':
+				// no break
+			default:
+				$sort_field = 'tag';
+		}
+		$direction = $asc ? 'ASC' : 'DESC';
+		$sql = 'SELECT * FROM ' . $this->table_prefix . TABLES::TAGS . '
+			ORDER BY ' . $sort_field . ' ' . $direction;
+		$result = $this->db->sql_query_limit($sql, $limit, $start);
+		$tags = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$tags[] = $row;
+		}
+		$this->db->sql_freeresult($result);
+		return $tags;
+	}
+	
+	/**
+	 * Gets the count of all tags.
+	 * 
+	 * @return int the count of all tags
+	 */
+	public function count_tags() {
+		$sql = 'SELECT COUNT(*) as count_tags FROM ' . $this->table_prefix . TABLES::TAGS;
+		$result = $this->db->sql_query($sql);
+		$count = (int) $this->db->sql_fetchfield('count_tags');
+		$this->db->sql_freeresult($result);
+		return $count;		
 	}
 }

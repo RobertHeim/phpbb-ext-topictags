@@ -18,6 +18,16 @@
 	</div>
 <!-- ENDIF -->
 
+<!-- IF .pagination -->
+	<div class="pagination top-pagination">
+		<!-- IF .pagination -->
+			<!-- INCLUDE pagination.html -->
+		<!-- ELSE -->
+			&bull; {PAGE_NUMBER}
+		<!-- ENDIF -->
+	</div>
+<!-- ENDIF -->
+
 <form id="acp_board" method="post" action="{U_ACTION}">
 <table class="table1 zebra-table">
 	<colgroup>
@@ -35,18 +45,14 @@
 	<tbody>
 		<!-- BEGIN tags -->
 		<tr>
-			<td>{tags.NAME}</td>
-			<td>{tags.ASSIGNMENTS}</td>
-			<td><a href="{tags.EDIT_LINK}">edit</a> <a href="{tags.DELETE_LINK}" onclick="alert('{L_TOPICTAGS_PRUNE_INVALID_TAGS_CONFIRM}');">delete</a></td>
-		</tr>
-		<!-- BEGINELSE -->
-		<tr>
-			<td><span class="topictags_editable_tag">megaman</span></td>
-			<td><span class="tag_count">100</span></td>
-			<td><a href="#" class="topictags_edit_tag">{ICON_EDIT}</a> 
-			 <a href="{U_DELETE_TAG}" data-ajax="topictags.delete_tag">{ICON_DELETE}</a>
+			<td><span class="topictags_editable_tag">{tags.NAME}</span></td>
+			<td><span class="tag_count">{tags.ASSIGNMENTS}</span></td>
+			<td>
+				<a href="#" class="topictags_edit_tag">{ICON_EDIT}</a> 
+				<a href="{tags.U_DELETE_TAG}" data-ajax="topictags.delete_tag">{ICON_DELETE}</a>
 			</td>
 		</tr>
+		<!-- BEGINELSE -->
 		<tr>
 			<td colspan="3" style="text-align: center;">{L_TOPICTAGS_NO_TAGS}</td>
 		</tr>

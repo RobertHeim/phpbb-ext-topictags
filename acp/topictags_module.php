@@ -58,7 +58,8 @@ class topictags_module
 			if ('delete' == $action)
 			{
 				$tag_id = $request->variable('tag_id', -1);
-				if ($tag_id < 1) {
+				if ($tag_id < 1)
+				{
 					if ($request->is_ajax())
 					{
 						trigger_error('TOPICTAGS_MISSING_TAG_ID', E_USER_WARNING);
@@ -105,7 +106,8 @@ class topictags_module
 					if (empty($old_ids))
 					{
 						$error_msg = $user->lang('TOPICTAGS_TAG_DOES_NOT_EXIST', $old_tag_name);
-						if ($request->is_ajax()) {
+						if ($request->is_ajax())
+						{
 							$response = new json_response();
 							$response->send(array(
 								'success'	=> false,
@@ -121,8 +123,9 @@ class topictags_module
 					$is_valid = $this->tags_manager->is_valid_tag($new_tag_name_clean, true);
 					if (!$is_valid)
 					{
-						$error_msg = $user->lang('TOPICTAGS_TAG_INVALID', $old_tag_name);
-						if ($request->is_ajax()) {
+						$error_msg = $user->lang('TOPICTAGS_TAG_INVALID', $new_tag_name);
+						if ($request->is_ajax())
+						{
 							$response = new json_response();
 							$response->send(array(
 								'success'	=> false,
@@ -134,24 +137,28 @@ class topictags_module
 
 					// old tag exist and new tag is valid
 					$new_ids = $this->tags_manager->get_existing_tags(array($new_tag_name), true);
-					if (!empty($new_ids)) {
+					if (!empty($new_ids))
+					{
 						// new tag exist -> merge
 						$new_id = $new_ids[0];
-						$this->tags_manager->merge($old_tag_name, $old_id, $new_tag_name, $new_id);
-						if ($request->is_ajax()) {
+						$new_tag_count = $this->tags_manager->merge($old_tag_name, $old_id, $new_tag_name, $new_id);
+						if ($request->is_ajax())
+						{
 							$response = new json_response();
 							$response->send(array(
-								'success'	=> true,
-								'merged'	=> true,
-								'msg'		=> $user->lang('TOPICTAGS_TAG_CHANGED'),
+								'success'		=> true,
+								'merged'		=> true,
+								'new_tag_count'	=> $new_tag_count,
+								'msg'			=> $user->lang('TOPICTAGS_TAG_MERGED', $new_tag_name_clean),
 							));
 						}
-						trigger_error($user->lang('TOPICTAGS_TAG_CHANGED') . adm_back_link($this->u_action));
+						trigger_error($user->lang('TOPICTAGS_TAG_MERGED', $new_tag_name_clean) . adm_back_link($this->u_action));
 					}
 
 					// old tag exist and new tag is valid and does not exist -> rename it
 					$tag_count = $this->tags_manager->rename($old_id, $new_tag_name_clean);
-					if ($request->is_ajax()) {
+					if ($request->is_ajax())
+					{
 						$response = new json_response();
 						$response->send(array(
 							'success'	=> true,
@@ -161,12 +168,28 @@ class topictags_module
 					trigger_error($user->lang('TOPICTAGS_TAG_CHANGED') . adm_back_link($this->u_action));
 				}
 			} // edit
-			// TODO show all
-			$tag_id = 1;
-			$template->assign_vars(array(
-				'U_DELETE_TAG'		=> $this->get_tag_link($mode, $tag_id) . '&amp;action=delete',
-				'U_EDIT_TAG_URL'	=> $this->u_action . '&amp;action=edit',
-			));
+
+			// show all tags
+			$pagination		= $phpbb_container->get('pagination');
+			
+			$start			= $request->variable('start', 0);
+			$limit			= $config['topics_per_page'];
+			$tags_count		= $this->tags_manager->count_tags();
+			$start			= $pagination->validate_start($start, $limit, $tags_count);
+				
+			$tags = $this->tags_manager->get_all_tags($start, $limit, 'tag', true);
+			$base_url		= $this->u_action;
+
+			$pagination->generate_template_pagination($base_url, 'pagination', 'start', $tags_count, $limit, $start);
+			
+			foreach ($tags as $tag) {
+				$template->assign_block_vars('tags', array(
+					'NAME'			=> $tag['tag'],
+					'ASSIGNMENTS'	=> $tag['count'],
+					'U_DELETE_TAG'	=> $this->get_tag_link($mode, $tag['id']) . '&amp;action=delete',
+					// TODO none-ajax 'U_EDIT_TAG_URL'	=> $this->get_tag_link($mode, $tag['id']) . '&amp;action=edit',
+				));
+			}
 		}
 		else
 		{
@@ -364,7 +387,8 @@ class topictags_module
 		}
 	}
 
-	private function get_tag_link($mode, $tag_id) {
+	private function get_tag_link($mode, $tag_id)
+	{
 		return $this->u_action . (($tag_id) ? '&amp;tag_id=' . $tag_id : '');
 	}
 	

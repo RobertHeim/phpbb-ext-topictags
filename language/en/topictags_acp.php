@@ -129,6 +129,7 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_TAG_DELETED'						=> 'The tag has been deleted.',
 	'TOPICTAGS_MISSING_TAG_ID'					=> 'Missing tag-id.',
 	'TOPICTAGS_TAG_CHANGED'						=> 'The tag has been changed.',
+	'TOPICTAGS_TAG_MERGED'						=> 'The tag has been merged with tag <em>%s</em>.',
 	'TOPICTAGS_MISSING_TAG_NAMES'				=> 'Missing tag-names.',
 	'TOPICTAGS_TAG_INVALID'						=> 'The tag "%s" is invalid, please check your tag-settings.',
 	'TOPICTAGS_TAG_DOES_NOT_EXIST'				=> 'The tag "%s" does not exist.',
