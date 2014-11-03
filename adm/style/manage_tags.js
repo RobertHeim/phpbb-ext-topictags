@@ -57,9 +57,9 @@ $('.topictags_editable_tag').editable(function(value, settings) {
 			}
 		} else {
 			if (undefined == data.error_msg) {
-				data.error_msg = 'Unknown error. See javascript-console for server response.';
+				data.error_msg = utf8_to_b64('Unknown error. See javascript-console for server response.');
 			}
-			alert(data.error_msg);
+			alert(b64_to_utf8(data.error_msg));
 			tag.text(old_tag);
 		}
 	}).fail(function() {
