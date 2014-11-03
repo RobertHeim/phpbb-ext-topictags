@@ -102,6 +102,8 @@ class topictags_module
 				}
 				else
 				{
+					$old_tag_name = rawurldecode(base64_decode($old_tag_name));
+					$new_tag_name = rawurldecode(base64_decode($new_tag_name));
 					$old_ids = $this->tags_manager->get_existing_tags(array($old_tag_name), true);
 					if (empty($old_ids))
 					{
@@ -111,7 +113,7 @@ class topictags_module
 							$response = new json_response();
 							$response->send(array(
 								'success'	=> false,
-								'error_msg'	=> $error_msg,
+								'error_msg'	=> rawurlencode(base64_encode($error_msg)),
 							));
 						}
 						trigger_error($error_msg . adm_back_link($this->u_action), E_USER_WARNING);
@@ -129,7 +131,7 @@ class topictags_module
 							$response = new json_response();
 							$response->send(array(
 								'success'	=> false,
-								'error_msg'	=> $error_msg,
+								'error_msg'	=> rawurlencode(base64_encode($error_msg)),
 							));
 						}
 						trigger_error($error_msg . adm_back_link($this->u_action), E_USER_WARNING);
@@ -149,7 +151,7 @@ class topictags_module
 								'success'		=> true,
 								'merged'		=> true,
 								'new_tag_count'	=> $new_tag_count,
-								'msg'			=> $user->lang('TOPICTAGS_TAG_MERGED', $new_tag_name_clean),
+								'msg'			=> rawurlencode(base64_encode($user->lang('TOPICTAGS_TAG_MERGED', $new_tag_name_clean))),
 							));
 						}
 						trigger_error($user->lang('TOPICTAGS_TAG_MERGED', $new_tag_name_clean) . adm_back_link($this->u_action));
@@ -162,7 +164,7 @@ class topictags_module
 						$response = new json_response();
 						$response->send(array(
 							'success'	=> true,
-							'msg'		=> $user->lang('TOPICTAGS_TAG_CHANGED'),
+							'msg'		=> rawurlencode(base64_encode($user->lang('TOPICTAGS_TAG_CHANGED'))),
 						));
 					}
 					trigger_error($user->lang('TOPICTAGS_TAG_CHANGED') . adm_back_link($this->u_action));

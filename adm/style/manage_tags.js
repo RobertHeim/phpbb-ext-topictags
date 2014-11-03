@@ -7,6 +7,18 @@ $('.topictags_edit_tag').click(function(e) {
 	$(this).parent().parent().find('.topictags_editable_tag').trigger("click");
 });
 
+
+/**
+ * btoa() is not utf8 safe by default
+ */
+function utf8_to_b64( str ) {
+    return window.btoa(encodeURIComponent(str));
+}
+
+function b64_to_utf8( str ) {
+    return decodeURIComponent(window.atob(str));
+}
+
 $('.topictags_editable_tag').editable(function(value, settings) {
 	var tag = $(this);
 	var tag_count = tag.parent().parent().find('.tag_count');
@@ -16,8 +28,8 @@ $('.topictags_editable_tag').editable(function(value, settings) {
 	var new_tag = value;
 	phpbb_indicator.show();
 	$.post(url, {
-		old_tag_name : old_tag,
-		new_tag_name : new_tag,
+		old_tag_name : utf8_to_b64(old_tag),
+		new_tag_name : utf8_to_b64(new_tag),
 	}).done(function(data) {
 		if (!(data instanceof Object)) {
 			console.log(data);
@@ -41,7 +53,7 @@ $('.topictags_editable_tag').editable(function(value, settings) {
 				tag.parent().parent().remove();
 			}
 			if (undefined !== data.msg) {
-				alert(data.msg);
+				alert(b64_to_utf8(data.msg));
 			}
 		} else {
 			if (undefined == data.error_msg) {
