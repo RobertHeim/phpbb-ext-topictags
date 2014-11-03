@@ -218,10 +218,10 @@ class topictags_module
 			if ('whitelist' == $mode)
 			{
 				$config->set($conf_prefix.'_whitelist_enabled', $request->variable($conf_prefix.'_whitelist_enabled', 0));
-				$whitelist = base64_decode($request->variable($conf_prefix.'_whitelist', ''));
+				$whitelist = rawurldecode(base64_decode($request->variable($conf_prefix.'_whitelist', '')));
 				if (!empty($whitelist))
 				{
-					$whitelist = json_decode(utf8_encode($whitelist), true);
+					$whitelist = json_decode($whitelist, true);
 					$tags = array();
 					for ($i = 0, $size = sizeof($whitelist); $i < $size; $i++)
 					{
@@ -235,10 +235,10 @@ class topictags_module
 			if ('blacklist' == $mode)
 			{
 				$config->set($conf_prefix.'_blacklist_enabled', $request->variable($conf_prefix.'_blacklist_enabled', 0));
-				$blacklist = base64_decode($request->variable($conf_prefix.'_blacklist', ''));
+				$blacklist = rawurldecode(base64_decode($request->variable($conf_prefix.'_blacklist', '')));
 				if (!empty($blacklist))
 				{
-					$blacklist = json_decode(utf8_encode($blacklist), true);
+					$blacklist = json_decode($blacklist, true);
 					$tags = array();
 					for ($i = 0, $size = sizeof($blacklist); $i < $size; $i++)
 					{
@@ -338,7 +338,7 @@ class topictags_module
 		if ('whitelist' == $mode)
 		{
 			$whitelist = $config[$conf_prefix.'_whitelist'];
-			$whitelist = base64_encode($whitelist);
+			$whitelist = base64_encode(rawurlencode($whitelist));
 			$template->assign_vars(array(
 				'TOPICTAGS_VERSION'							=> $user->lang('TOPICTAGS_INSTALLED', $config[$conf_prefix.'_version']),
 				'TOPICTAGS_WHITELIST_ENABLED'				=> $config[$conf_prefix.'_whitelist_enabled'],
@@ -353,7 +353,7 @@ class topictags_module
 		else if ('blacklist' == $mode)
 		{
 			$blacklist = $config[$conf_prefix.'_blacklist'];
-			$blacklist = base64_encode($blacklist);
+			$blacklist = base64_encode(rawurlencode($blacklist));
 			$template->assign_vars(array(
 				'TOPICTAGS_VERSION'							=> $user->lang('TOPICTAGS_INSTALLED', $config[$conf_prefix.'_version']),
 				'TOPICTAGS_BLACKLIST_ENABLED'				=> $config[$conf_prefix.'_blacklist_enabled'],

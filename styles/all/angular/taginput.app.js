@@ -9,6 +9,17 @@ $.fn.flash = function(duration, iterations) {
     return this;
 }
 
+/**
+ * btoa() is not utf8 safe by default
+ */
+function utf8_to_b64( str ) {
+    return window.btoa(encodeURIComponent(str));
+}
+
+function b64_to_utf8( str ) {
+    return decodeURIComponent(window.atob(str));
+}
+
 angular.module('rhTopicTagsInputApp', ['ngTagsInput'])
 	.config(function($interpolateProvider, $httpProvider) {
 		$interpolateProvider.startSymbol('{[{').endSymbol('}]}');
@@ -18,7 +29,7 @@ angular.module('rhTopicTagsInputApp', ['ngTagsInput'])
 		$scope.tags = [];
 		$scope.init = function (initTags) {
 			if ('' != initTags) {
-				initTags = JSON.parse(atob(initTags));
+				initTags = JSON.parse(b64_to_utf8(initTags));
 				for (var i = 0; i < initTags.length; i++) {
 					this.tags.push(initTags[i]);
 				}
@@ -55,6 +66,6 @@ angular.module('rhTopicTagsInputApp', ['ngTagsInput'])
 		}
 		$scope.jsonRep = '';
 		$scope.$watch('tags', function(t) {
-			$scope.jsonRep = btoa(JSON.stringify(t));
+			$scope.jsonRep = utf8_to_b64(JSON.stringify(t));
 		}, true);
 	});

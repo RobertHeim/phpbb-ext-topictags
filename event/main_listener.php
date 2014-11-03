@@ -84,14 +84,16 @@ class main_listener implements EventSubscriberInterface
 	private function get_tags_from_post_request()
 	{
 		$tags_string = utf8_normalize_nfc($this->request->variable('rh_topictags', '', true));
-		$tags_string = base64_decode($tags_string);
-		$tags_string = utf8_encode($tags_string);
+		$tags_string = rawurldecode(base64_decode($tags_string));
+		//$tags_string = utf8_encode($tags_string);
+	
 		if ('' === $tags_string) {
 			return array();
 		}
 
 		$tagsJson = json_decode($tags_string, true);
 		$tags = array();
+		
 		for ($i = 0, $count = sizeof($tagsJson); $i<$count; $i++)
 		{
 			$tags[] = trim($tagsJson[$i]['text']);
@@ -233,7 +235,7 @@ class main_listener implements EventSubscriberInterface
 					$tags = $this->tags_manager->get_assigned_tags($topic_id);
 				}
 
-				$data['page_data']['RH_TOPICTAGS'] = base64_encode(json_encode($tags));
+				$data['page_data']['RH_TOPICTAGS'] = base64_encode(rawurlencode(json_encode($tags)));
 
 				$data['page_data']['RH_TOPICTAGS_ALLOWED_TAGS_REGEX'] = $this->config[PREFIXES::CONFIG.'_allowed_tags_regex'];
 				$data['page_data']['RH_TOPICTAGS_CONVERT_SPACE_TO_MINUS'] = $this->config[PREFIXES::CONFIG.'_convert_space_to_minus'] ? 'true' : 'false';
