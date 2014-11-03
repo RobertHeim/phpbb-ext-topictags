@@ -105,12 +105,10 @@ class main
 		$pagination		= $phpbb_container->get('pagination');
 
 		$start			= $request->variable('start', 0);
-		// FIXME ensure usage of $limit in further code
 		$limit			= $config['topics_per_page'];
 
-		// FIXME this method does expect other parameters
-		$topics_count	= $this->tags_manager->count_topics_by_tags($tags, $start, $limit, $mode, $casesensitive);
-		$start			= $pagination->validate_start($start, $config['topics_per_page'], $topics_count);
+		$topics_count	= $this->tags_manager->count_topics_by_tags($tags, $mode, $casesensitive);
+		$start			= $pagination->validate_start($start, $limit, $topics_count);
 
 		$topics			= $this->tags_manager->get_topics_by_tags($tags, $start, $limit, $mode, $casesensitive);
 
@@ -119,7 +117,7 @@ class main
 							));
 		$base_url		= append_sid($base_url);
 
-		$pagination->generate_template_pagination($base_url, 'pagination', 'start', $topics_count, $config['topics_per_page'], $start);
+		$pagination->generate_template_pagination($base_url, 'pagination', 'start', $topics_count, $limit, $start);
 
 		$user->add_lang('viewforum');
 		$this->template->assign_var('TOTAL_TOPICS', $user->lang('VIEW_FORUM_TOPICS', $topics_count));
