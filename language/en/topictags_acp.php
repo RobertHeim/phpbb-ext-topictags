@@ -124,7 +124,6 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_NO_TAGS'							=> 'There are no tags yet.',
 	'TOPICTAGS_TAG'								=> 'Tag',
 	'TOPICTAGS_ASSIGNMENTS'						=> 'Assignments',
-	'TOPICTAGS_CREATE_TAG'						=> 'Create new tag',
 	'TOPICTAGS_TAG_DELETE_CONFIRM'				=> "Are you sure that you want to delete the tag <em>%s</em>? This will delete the tag from <b>all topics</b> where it is assigned. This can not be reverted.",
 	'TOPICTAGS_TAG_DELETED'						=> 'The tag has been deleted.',
 	'TOPICTAGS_MISSING_TAG_ID'					=> 'Missing tag-id.',
@@ -133,5 +132,6 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_MISSING_TAG_NAMES'				=> 'Missing tag-names.',
 	'TOPICTAGS_TAG_INVALID'						=> 'The tag "%s" is invalid, please check your tag-settings.',
 	'TOPICTAGS_TAG_DOES_NOT_EXIST'				=> 'The tag "%s" does not exist.',
+	'TOPICTAGS_NO_MODIFICATION'					=> 'The tag was not changed.',
 
 ));

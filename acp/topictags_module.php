@@ -104,6 +104,15 @@ class topictags_module
 				{
 					$old_tag_name = rawurldecode(base64_decode($old_tag_name));
 					$new_tag_name = rawurldecode(base64_decode($new_tag_name));
+					if ($old_tag_name == $new_tag_name) {
+						$error_msg = $user->lang('TOPICTAGS_NO_MODIFICATION', $old_tag_name);
+						$response = new json_response();
+						$response->send(array(
+							'success'	=> false,
+							'error_msg'	=> rawurlencode(base64_encode($error_msg)),
+						));
+						trigger_error($error_msg . adm_back_link($this->u_action), E_USER_WARNING);
+					}
 					$old_ids = $this->tags_manager->get_existing_tags(array($old_tag_name), true);
 					if (empty($old_ids))
 					{
