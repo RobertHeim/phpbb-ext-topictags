@@ -59,7 +59,7 @@ class main_listener implements EventSubscriberInterface
 							\robertheim\topictags\service\tags_manager $tags_manager,
 							\phpbb\controller\helper $helper,
 							\phpbb\request\request $request, 
-							\phpbb\user $user, 
+							\phpbb\user $user,
 							\phpbb\template\template $template,
 							\phpbb\auth\auth $auth,
 							\robertheim\topictags\service\tagcloud_manager $tagcloud_manager

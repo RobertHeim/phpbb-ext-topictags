@@ -44,4 +44,21 @@ services:
             - @template
             - @controller.helper
             - %core.table_prefix%
+    robertheim.topictags.acp.manage_tags_controller:
+        class: robertheim\topictags\acp\manage_tags_controller
+        arguments:
+            - @config
+            - @request
+            - @user
+            - @template
+            - @pagination
+            - @robertheim.topictags.tags_manager
+    robertheim.topictags.acp.white_and_blacklist_controller:
+        class: robertheim\topictags\acp\white_and_blacklist_controller
+        arguments:
+            - @config
+            - @request
+            - @user
+            - @template
+            - @robertheim.topictags.tags_manager
 

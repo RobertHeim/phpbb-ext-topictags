@@ -39,8 +39,8 @@ class main
 						\phpbb\config\config $config,
 						\phpbb\template\template $template,
 						\phpbb\controller\helper $helper,
-						\phpbb\request\request $request, 
-						\phpbb\user $user, 
+						\phpbb\request\request $request,
+						\phpbb\user $user,
 						\robertheim\topictags\service\tags_manager $tags_manager,
 						\robertheim\topictags\service\tagcloud_manager $tagcloud_manager
 	)

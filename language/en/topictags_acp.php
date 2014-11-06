@@ -44,7 +44,9 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_MAINTENANCE'				=> 'Maintenance',
 	'TOPICTAGS_TITLE'					=> 'RH Topic Tags',
 	'TOPICTAGS_SETTINGS_SAVED'			=> 'Configuration updated successfully.',
-
+	'TOPICTAGS_WHITELIST_SAVED'			=> 'Whitelist updated successfully.',
+	'TOPICTAGS_BLACKLIST_SAVED'			=> 'Blacklist updated successfully.',
+	
 	'TOPICTAGS_DISPLAY_TAGCLOUD_ON_INDEX'		=> 'Display tag cloud on index',
 	'TOPICTAGS_DISPLAY_TAGCLOUD_ON_INDEX_EXP'	=> 'When enabled a tag cloud is displayed on the bottom of the index page',
 
