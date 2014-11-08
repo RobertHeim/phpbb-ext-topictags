@@ -13,6 +13,7 @@ phpBB 3.1 extension, that adds the ability to tag topics with key words.
 * tags are shown in viewforum (can be disabled in acp)
 * enable tagging of topics on a per forum basis
 * Responsive layout
+* Full UTF-8 support
 
 ### Search
 * search topics by tag(s)
@@ -36,6 +37,10 @@ phpBB 3.1 extension, that adds the ability to tag topics with key words.
 * Blacklist
 * User and Mod+Admin permission for who can add/edit RH topic tags
 * spaces in tags are converted to "-" by default (you can disable it in ACP)
+* Manage existing tags in ACP
+  * Delete tag
+  * Rename tag
+  * Merge tags (rename one tag to the same name as another tag and they will automatically be merged )
 
 ## Installation
 
