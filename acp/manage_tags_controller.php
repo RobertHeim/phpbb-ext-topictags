@@ -28,6 +28,12 @@ class manage_tags_controller
 	
 	private $tags_manager;
 
+	const SORT_ASC = 0;
+	const SORT_NAME_ASC = 0;
+	const SORT_NAME_DESC = 1;
+	const SORT_COUNT_ASC = 2;
+	const SORT_COUNT_DESC = 3;
+
 	public function __construct(
 		\phpbb\config\config $config,
 		\phpbb\request\request $request,
@@ -63,16 +69,35 @@ class manage_tags_controller
 			break;
 			default:
 				// show all tags
+				$sort_key = request_var('sort_key', self::SORT_NAME_ASC);
+				$sort_field = 'tag';
+				switch ($sort_key)
+				{
+					case self::SORT_COUNT_ASC:
+					// no break
+					case self::SORT_COUNT_DESC:
+						$sort_field = 'count';
+					break;
+					case self::SORT_NAME_ASC:
+					// no break
+					case self::SORT_NAME_DESC:
+					// no break
+					default:
+						$sort_field = 'tag';
+					break;
+				}
+				
+				$ordering		= (($sort_key % 2) == self::SORT_ASC);
 				$start			= $this->request->variable('start', 0);
-				$limit			= $this->config['topics_per_page'];
+				$limit			= 2;//$this->config['topics_per_page'];
 				$tags_count		= $this->tags_manager->count_tags();
 				$start			= $this->pagination->validate_start($start, $limit, $tags_count);
+				$base_url		= $u_action . "&amp;sort_key=$sort_key";
+
+				$tags = $this->tags_manager->get_all_tags($start, $limit, $sort_field, $ordering);
 				
-				$tags = $this->tags_manager->get_all_tags($start, $limit, 'tag', true);
-				$base_url		= $u_action;
 				
 				$this->pagination->generate_template_pagination($base_url, 'pagination', 'start', $tags_count, $limit, $start);
-					
 				foreach ($tags as $tag) {
 					$this->template->assign_block_vars('tags', array(
 						'NAME'			=> $tag['tag'],
@@ -81,6 +106,11 @@ class manage_tags_controller
 						// TODO none-ajax 'U_EDIT_TAG_URL'	=> $this->get_tag_link($u_action, $tag['id']) . '&amp;action=edit',
 					));
 				}
+				$this->template->assign_vars(array(
+					'SELECT_SORT_KEY'	=> $this->create_sort_selects($sort_key),
+					'U_ACTION'			=> $u_action . "&amp;sort_key=$sort_key&amp;start=$start",
+				));
+			break;
 		}
 	}
 
@@ -223,6 +253,23 @@ class manage_tags_controller
 	private function get_tag_link($u_action, $tag_id)
 	{
 		return $u_action . (($tag_id) ? '&amp;tag_id=' . $tag_id : '');
+	}
+	
+	private function create_sort_selects($selected_sort_key) {
+		$sort_selects = '<select name="sort_key" id="sort_key">';
+		
+		$sort_keys = array(
+			self::SORT_NAME_ASC		=> $this->user->lang('TOPICTAGS_SORT_NAME_ASC'),
+			self::SORT_NAME_DESC	=> $this->user->lang('TOPICTAGS_SORT_NAME_DESC'),
+			self::SORT_COUNT_ASC	=> $this->user->lang('TOPICTAGS_SORT_COUNT_ASC'),
+			self::SORT_COUNT_DESC	=> $this->user->lang('TOPICTAGS_SORT_COUNT_DESC'),
+		);
+
+		foreach ($sort_keys as $key => $text) {
+			$sort_selects .= '<option value="' . $key . '"' . (($selected_sort_key == $key) ? ' selected="selected"' : '') . '>' . $text . '</option>';
+		}
+		$sort_selects .= '</select>';
+		return $sort_selects;
 	}
 	
 }

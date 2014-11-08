@@ -135,5 +135,10 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_TAG_INVALID'						=> 'The tag "%s" is invalid, please check your tag-settings.',
 	'TOPICTAGS_TAG_DOES_NOT_EXIST'				=> 'The tag "%s" does not exist.',
 	'TOPICTAGS_NO_MODIFICATION'					=> 'The tag was not changed.',
+	
+	'TOPICTAGS_SORT_NAME_ASC'					=> 'Tag name A&rArr;Z', // &rArr; is a right-arrow (=>)
+	'TOPICTAGS_SORT_NAME_DESC'					=> 'Tag name Z&rArr;A', // &rArr; is a right-arrow (=>)
+	'TOPICTAGS_SORT_COUNT_ASC'					=> 'Assignments count ascending',
+	'TOPICTAGS_SORT_COUNT_DESC'					=> 'Assignments count descending',
 
 ));
