@@ -22,6 +22,7 @@ $lang = array_merge($lang, array(
 
 	'RH_TOPICTAGS_TAGCLOUD'				=> 'Облако тегов',
 
+	'RH_TOPICTAGS_EXP'					=> 'Теги, разделенные запятой (",")',
 	'RH_TOPICTAGS_ALLOWED_TAGS'			=> 'Разрешенные теги:',
 	'RH_TOPICTAGS_WHITELIST_EXP'		=> 'Разрешены только эти теги:',
 
@@ -38,8 +39,8 @@ $lang = array_merge($lang, array(
 
 	'RH_TOPICTAGS_DISPLAYING_TOTAL'	=> array(
 		0 => 'Теги еще не созданы.',
-		1 => 'Показан популярный %d тег.',
-		2 => 'Покозаны популярные %d теги.',
+		1 => 'Самый популярный тег: %d.',
+		2 => 'Самые популярные теги: %d.',
 	),
 
 ));
