@@ -18,8 +18,7 @@
 
 <div ng-app="rhTopicTagsInputApp" ng-controller="rhTopicTagsInputCtrl" data-ng-init="init('{RH_TOPICTAGS}')">
 	<div id="rhTopicTagsInputAppScope"></div>
-	<!-- allowed-tags-pattern="{RH_TOPICTAGS_ALLOWED_TAGS_REGEX}" -->
-	<tags-input ng-model="tags" add-on-comma="true" replace-spaces-with-dashes="{RH_TOPICTAGS_CONVERT_SPACE_TO_MINUS}" placeholder="..." tabindex="2" enable-editing-last-tag="true" min-length="1">
+	<tags-input ng-model="tags" add-on-comma="true" replace-spaces-with-dashes="{RH_TOPICTAGS_CONVERT_SPACE_TO_MINUS}" placeholder="..." tabindex="2" enable-editing-last-tag="true" min-length="1" allowed-tags-pattern="{RH_TOPICTAGS_ALLOWED_TAGS_REGEX}">
 		<auto-complete source="loadTags($query)"></auto-complete>
 	</tags-input>
 	<input type="hidden" name="rh_topictags" id="rh_topictags" value="{[{ jsonRep }]}" />

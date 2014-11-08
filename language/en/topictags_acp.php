@@ -114,7 +114,7 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_BLACKLIST_EXP'					=> 'List of forbidden tags.<br/>NOTE: All tags that are not conform with the regex are always rejected.',
 
 	'TOPICTAGS_ALLOWED_TAGS_REGEX'				=> 'Regular Expression for allowed tags',
-	'TOPICTAGS_ALLOWED_TAGS_REGEX_EXP'			=> 'WARNING: Do not change this, if you don\'t know what you are doing. <strong>Tags can be 30 characters at maximum</strong>, please consider this during regex design.<br/>Note that afterwards invalid tags are not searchable, but are still displayed in the topics.<br/>Consider pruning the invalid tags (see maintenance-section).<br/>default: ' . $lang['ACP_RH_TOPICTAGS_REGEX_DEFAULT'],
+	'TOPICTAGS_ALLOWED_TAGS_REGEX_EXP'			=> 'WARNING: Do not change this, if you don\'t know what you are doing. <strong>Tags can be 30 characters at maximum and delimiter must be "/"</strong>, please consider this during regex design.<br/>Note that afterwards invalid tags are not searchable, but are still displayed in the topics.<br/>Consider pruning the invalid tags (see maintenance-section).<br/>default: ' . $lang['ACP_RH_TOPICTAGS_REGEX_DEFAULT'],
 
 	'TOPICTAGS_CONVERT_SPACE_TO_MINUS'			=> 'Convert " " to "-"',
 	'TOPICTAGS_CONVERT_SPACE_TO_MINUS_EXP'		=> 'If set to yes, all spaces (" ") are automatically converted to minus ("-").<br/>NOTE 1: In the regex you must allow "-"; otherwise tags with whitespaces will be rejected.<br/>NOTE 2: Existing tags with spaces will NOT be converted automatically.',
