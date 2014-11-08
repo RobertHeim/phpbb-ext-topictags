@@ -166,9 +166,16 @@ class manage_tags_controller
 		// TODO none-ajax
 		$old_tag_name = $this->request->variable('old_tag_name', '');
 		$new_tag_name = $this->request->variable('new_tag_name', '');
+	
 		if (empty($old_tag_name) || empty($new_tag_name))
 		{
-			trigger_error($this->user->lang('TOPICTAGS_MISSING_TAG_NAMES') . adm_back_link($u_action), E_USER_WARNING);
+			$error_msg = $this->user->lang('TOPICTAGS_MISSING_TAG_NAMES');
+			$response = new json_response();
+			$response->send(array(
+				'success'	=> false,
+				'error_msg'	=> base64_encode(rawurlencode($error_msg)),
+			));
+			trigger_error($error_msg . adm_back_link($u_action), E_USER_WARNING);
 		}
 		else
 		{
@@ -179,7 +186,7 @@ class manage_tags_controller
 				$response = new json_response();
 				$response->send(array(
 					'success'	=> false,
-					'error_msg'	=> rawurlencode(base64_encode($error_msg)),
+					'error_msg'	=> base64_encode(rawurlencode($error_msg)),
 				));
 				trigger_error($error_msg . adm_back_link($u_action), E_USER_WARNING);
 			}
@@ -192,7 +199,7 @@ class manage_tags_controller
 					$response = new json_response();
 					$response->send(array(
 						'success'	=> false,
-						'error_msg'	=> rawurlencode(base64_encode($error_msg)),
+						'error_msg'	=> base64_encode(rawurlencode($error_msg)),
 					));
 				}
 				trigger_error($error_msg . adm_back_link($u_action), E_USER_WARNING);
@@ -210,7 +217,7 @@ class manage_tags_controller
 					$response = new json_response();
 					$response->send(array(
 						'success'	=> false,
-						'error_msg'	=> rawurlencode(base64_encode($error_msg)),
+						'error_msg'	=> base64_encode(rawurlencode($error_msg)),
 					));
 				}
 				trigger_error($error_msg . adm_back_link($u_action), E_USER_WARNING);
@@ -230,7 +237,7 @@ class manage_tags_controller
 						'success'		=> true,
 						'merged'		=> true,
 						'new_tag_count'	=> $new_tag_count,
-						'msg'			=> rawurlencode(base64_encode($this->user->lang('TOPICTAGS_TAG_MERGED', $new_tag_name_clean))),
+						'msg'			=> base64_encode(rawurlencode($this->user->lang('TOPICTAGS_TAG_MERGED', $new_tag_name_clean))),
 					));
 				}
 				trigger_error($this->user->lang('TOPICTAGS_TAG_MERGED', $new_tag_name_clean) . adm_back_link($u_action));
@@ -243,7 +250,7 @@ class manage_tags_controller
 				$response = new json_response();
 				$response->send(array(
 					'success'	=> true,
-					'msg'		=> rawurlencode(base64_encode($this->user->lang('TOPICTAGS_TAG_CHANGED'))),
+					'msg'		=> base64_encode(rawurlencode($this->user->lang('TOPICTAGS_TAG_CHANGED'))),
 				));
 			}
 			trigger_error($this->user->lang('TOPICTAGS_TAG_CHANGED') . adm_back_link($u_action));
@@ -255,7 +262,8 @@ class manage_tags_controller
 		return $u_action . (($tag_id) ? '&amp;tag_id=' . $tag_id : '');
 	}
 	
-	private function create_sort_selects($selected_sort_key) {
+	private function create_sort_selects($selected_sort_key)
+	{
 		$sort_selects = '<select name="sort_key" id="sort_key">';
 		
 		$sort_keys = array(
