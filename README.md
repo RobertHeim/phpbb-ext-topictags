@@ -8,6 +8,7 @@ phpBB 3.1 extension, that adds the ability to tag topics with key words.
 ### Common
 
 * add tags when posting a new topic
+* Tag suggestions based on existing tags
 * edit tags when editing first post of topic
 * SEO-optimization: tags are added to meta-content keywords in viewtopic
 * tags are shown in viewforum (can be disabled in acp)
