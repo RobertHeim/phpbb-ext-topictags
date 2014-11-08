@@ -89,7 +89,7 @@ class manage_tags_controller
 				
 				$ordering		= (($sort_key % 2) == self::SORT_ASC);
 				$start			= $this->request->variable('start', 0);
-				$limit			= 2;//$this->config['topics_per_page'];
+				$limit			= $this->config['topics_per_page'];
 				$tags_count		= $this->tags_manager->count_tags();
 				$start			= $this->pagination->validate_start($start, $limit, $tags_count);
 				$base_url		= $u_action . "&amp;sort_key=$sort_key";
