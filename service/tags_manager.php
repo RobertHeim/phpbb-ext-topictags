@@ -727,7 +727,7 @@ class tags_manager
 	public function calc_count_tags()
 	{
 		$sql = 'UPDATE ' . $this->table_prefix . TABLES::TAGS . ' t
-			SET t.count = (
+			SET count = (
 				SELECT COUNT(tt.id)
 				FROM ' . TOPICS_TABLE . ' topics,
 					' . FORUMS_TABLE . ' f,
