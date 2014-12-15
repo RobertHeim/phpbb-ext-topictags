@@ -70,7 +70,7 @@ class tags_manager
 		// https://www.phpbb.com/community/viewtopic.php?f=461&t=2263646
 		// so we would need 2 queries, but this is slow... so we use subqueries and hope - yeah! :D
 
-		$sql = 'DELETE t
+		$sql = 'DELETE
 			FROM ' . $this->table_prefix . TABLES::TAGS . ' t
 			WHERE NOT EXISTS (
 				SELECT 1
@@ -101,7 +101,7 @@ class tags_manager
 			}
 		}
 		// delete all tag-assignments where the tag is not valid
-		$sql = 'DELETE tt
+		$sql = 'DELETE
 			FROM ' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
 			WHERE ' . $this->db->sql_in_set('tt.tag_id', $ids_of_invalid_tags);
 		$this->db->sql_query($sql);
@@ -120,7 +120,7 @@ class tags_manager
 	public function delete_assignments_where_topic_does_not_exist()
 	{
 		// delete all tag-assignments where the topic does not exist anymore
-		$sql = 'DELETE tt
+		$sql = 'DELETE
 			FROM ' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
 			WHERE NOT EXISTS (
 				SELECT 1
@@ -161,7 +161,7 @@ class tags_manager
 			$forums_sql_where = ' AND ' . $this->db->sql_in_set('f.forum_id', $int_ids);
 		}
 		// Deletes all topic-assignments to topics that reside in a forum with tagging disabled.
-		$sql = 'DELETE tt
+		$sql = 'DELETE
 			FROM ' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
 			WHERE EXISTS (
 				SELECT 1
@@ -783,7 +783,7 @@ class tags_manager
 		
 		// delete assignments where the new tag is already assigned
 		$topic_ids_already_assigned = $this->get_topic_ids_by_tag_id($tag_to_keep_id);
-		$sql = 'DELETE tt FROM ' . $this->table_prefix . TABLES::TOPICTAGS. ' tt
+		$sql = 'DELETE FROM ' . $this->table_prefix . TABLES::TOPICTAGS. ' tt
 			WHERE ' . $this->db->sql_in_set('tt.topic_id', $topic_ids_already_assigned) . '
 				AND tt.tag_id = ' . (int) $tag_to_delete_id;
 		$this->db->sql_query($sql);
@@ -809,12 +809,12 @@ class tags_manager
 	 */
 	public function delete_tag($tag_id)
 	{
-		$sql = 'DELETE tt
+		$sql = 'DELETE
 			FROM ' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
 			WHERE tt.tag_id = ' . ((int) $tag_id);
 		$this->db->sql_query($sql);
 		
-		$sql = 'DELETE t
+		$sql = 'DELETE
 			FROM ' . $this->table_prefix . TABLES::TAGS . ' t
 			WHERE t.id = ' . ((int) $tag_id);
 		$this->db->sql_query($sql);
