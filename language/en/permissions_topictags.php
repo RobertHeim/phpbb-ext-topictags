@@ -40,8 +40,8 @@ if (empty($lang) || !is_array($lang))
 use robertheim\topictags\PERMISSIONS;
 
 $lang = array_merge($lang, array(
-	'ACL_'.mb_strtoupper(PERMISSIONS::ADMIN_EDIT_TAGS)	=> 'Can edit RH topic tags',
-	'ACL_'.mb_strtoupper(PERMISSIONS::MOD_EDIT_TAGS)	=> 'Can edit RH topic tags',
-	'ACL_'.mb_strtoupper(PERMISSIONS::USE_TAGS)			=> 'Can use RH topic tags',
+	'ACL_'.utf8_strtoupper(PERMISSIONS::ADMIN_EDIT_TAGS)	=> 'Can edit RH topic tags',
+	'ACL_'.utf8_strtoupper(PERMISSIONS::MOD_EDIT_TAGS)	=> 'Can edit RH topic tags',
+	'ACL_'.utf8_strtoupper(PERMISSIONS::USE_TAGS)			=> 'Can use RH topic tags',
 ));
 

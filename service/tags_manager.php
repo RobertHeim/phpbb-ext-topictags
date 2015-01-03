@@ -216,7 +216,7 @@ class tags_manager
 	 */
 	public function get_tag_suggestions($query, $exclude, $count)
 	{
-		if (mb_strlen($query, 'UTF-8') < 3)
+		if (utf8_strlen($query, 'UTF-8') < 3)
 		{
 			return array();
 		}
@@ -452,7 +452,7 @@ class tags_manager
 		{
 			for ($i = 0; $i < $tag_count; $i++)
  			{
-				$tags[$i] = mb_strtolower($tags[$i]);
+				$tags[$i] = utf8_strtolower($tags[$i]);
 			}
 		}
 
