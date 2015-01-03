@@ -771,7 +771,7 @@ class tags_manager
 				AND forum_type = ' . FORUM_POST,
 		);
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
-		$this->db->sql_query($sql);
+		$result = $this->db->sql_query($sql);
 		$enabled = ((int) $this->db->sql_fetchfield('all_enabled')) == 0;
 		$this->db->sql_freeresult($result);
 		return $enabled;
@@ -794,7 +794,7 @@ class tags_manager
 				AND forum_type = ' . FORUM_POST,
 		);
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
-		$this->db->sql_query($sql);
+		$result = $this->db->sql_query($sql);
 		$disabled = ((int) $this->db->sql_fetchfield('all_disabled')) == 0;
 		$this->db->sql_freeresult($result);
 		return $disabled;
