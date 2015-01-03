@@ -216,7 +216,7 @@ class tags_manager
 	 */
 	public function get_tag_suggestions($query, $exclude, $count)
 	{
-		if (utf8_strlen($query, 'UTF-8') < 3)
+		if (utf8_strlen($query) < 3)
 		{
 			return array();
 		}
