@@ -53,17 +53,17 @@ $('.topictags_editable_tag').editable(function(value, settings) {
 				tag.parent().parent().remove();
 			}
 			if (undefined !== data.msg) {
-				alert(b64_to_utf8(data.msg));
+				phpbb.alert('', b64_to_utf8(data.msg));
 			}
 		} else {
 			if (undefined == data.error_msg) {
 				data.error_msg = utf8_to_b64('Unknown error. See javascript-console for server response.');
 			}
-			alert(b64_to_utf8(data.error_msg));
+			phpbb.alert('', b64_to_utf8(data.error_msg));
 			tag.text(old_tag);
 		}
 	}).fail(function() {
-		alert('Unknown error. See javascript-console for server response.');
+		phpbb.alert('Error', 'Unknown error. See javascript-console for server response.');
 		tag.text(old_tag);
 	}).always(function() {
 		phpbb_indicator.hide();
