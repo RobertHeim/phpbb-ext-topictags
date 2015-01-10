@@ -69,7 +69,7 @@ class manage_tags_controller
 			break;
 			default:
 				// show all tags
-				$sort_key = request_var('sort_key', self::SORT_NAME_ASC);
+				$sort_key = $this->request->variable('sort_key', self::SORT_NAME_ASC);
 				$sort_field = 'tag';
 				switch ($sort_key)
 				{
