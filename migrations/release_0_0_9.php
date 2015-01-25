@@ -72,8 +72,8 @@ class release_0_0_9 extends \phpbb\db\migration\migration
 	protected function role_exists($role)
 	{
 		$sql = 'SELECT role_id
-        	FROM ' . ACL_ROLES_TABLE . '
-	        WHERE ' . $this->db->sql_in_set('role_name', $role);
+			FROM ' . ACL_ROLES_TABLE . '
+			WHERE ' . $this->db->sql_in_set('role_name', $role);
 		$result = $this->db->sql_query_limit($sql, 1);
 		$role_id = $this->db->sql_fetchfield('role_id');
 		$this->db->sql_freeresult($result);

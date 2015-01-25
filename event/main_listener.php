@@ -103,35 +103,35 @@ class main_listener implements EventSubscriberInterface
 	}
 
 	/**
-     * Event: core.load_language_on_setup
+	 * Event: core.load_language_on_setup
 	 */
-    public function load_language_on_setup($event)
-    {
-        $lang_set_ext = $event['lang_set_ext'];
-        $lang_set_ext[] = array(
-            'ext_name' => 'robertheim/topictags',
-            'lang_set' => 'topictags',
-        );
-        $event['lang_set_ext'] = $lang_set_ext;
-    }
+	public function load_language_on_setup($event)
+	{
+		$lang_set_ext = $event['lang_set_ext'];
+		$lang_set_ext[] = array(
+			'ext_name' => 'robertheim/topictags',
+			'lang_set' => 'topictags',
+		);
+		$event['lang_set_ext'] = $lang_set_ext;
+	}
 
 	/**
-     * Event: core.index_modify_page_title
+	 * Event: core.index_modify_page_title
 	 */
-    public function index_modify_page_title($event)
-    {
+	public function index_modify_page_title($event)
+	{
 		if ($this->config[PREFIXES::CONFIG . '_display_tagcloud_on_index'])
 		{
-        	$this->template->assign_vars(array(
+			$this->template->assign_vars(array(
 				'RH_TOPICTAGS_DISPLAY_TAGCLOUD_ON_INDEX'	=> true,
 			));
 			$this->tagcloud_manager->assign_tagcloud_to_template();
 		}
-    }
+	}
 
 	/**
-     * Event: core.modify_posting_parameters
-     * 
+	 * Event: core.modify_posting_parameters
+	 * 
 	 * Validate the tags and create an error if any tag is invalid.
 	 */
 	public function modify_posting_parameters($event)
@@ -150,22 +150,22 @@ class main_listener implements EventSubscriberInterface
 				$this->user->add_lang_ext('robertheim/topictags', 'topictags');
 				$data['error'][] = $this->user->lang('RH_TOPICTAGS_TAGS_INVALID', join(', ', $invalid_tags));
 			}
-
+			
 			$event->set_data($data);
 		}
 	}
 
 	/**
-     * Event: core.postingsubmit_post_end
-     * 
+	 * Event: core.postingsubmit_post_end
+	 * 
 	 * After a posting we assign the tags to the topic
 	 */
 	public function submit_post_end($event)
 	{
 		if ($this->auth->acl_get(PERMISSIONS::USE_TAGS, PERMISSIONS::ADMIN_EDIT_TAGS, PERMISSIONS::MOD_EDIT_TAGS))
 		{
-	        $event_data = $event->get_data();
-        	$data = $event_data['data'];
+			$event_data = $event->get_data();
+			$data = $event_data['data'];
 
 			$tags = $this->get_tags_from_post_request();
 			$all_tags = $this->tags_manager->split_valid_tags($tags);
@@ -173,19 +173,19 @@ class main_listener implements EventSubscriberInterface
 			if (!empty($valid_tags))
 			{
 				$this->tags_manager->assign_tags_to_topic($data['topic_id'], $valid_tags);
-		        $event->set_data($event_data);
+				$event->set_data($event_data);
 			}
 		}
-    }
+	}
 
-    /**
-     * Event: core.posting_modify_template_vars
-     *
-     * Send the tags on edits or preview to the template
-     *
-     * @param $event
-     */
-    public function posting_modify_template_vars($event)
+	/**
+	 * Event: core.posting_modify_template_vars
+	 *
+	 * Send the tags on edits or preview to the template
+	 *
+	 * @param $event
+	 */
+	public function posting_modify_template_vars($event)
 	{
 		if ($this->auth->acl_get(PERMISSIONS::USE_TAGS, PERMISSIONS::ADMIN_EDIT_TAGS, PERMISSIONS::MOD_EDIT_TAGS))
 		{
@@ -197,33 +197,33 @@ class main_listener implements EventSubscriberInterface
 				return;
 			}
 
-	        $mode = $enable_trader = $topic_id = $post_id = $topic_first_post_id = false;
+			$mode = $enable_trader = $topic_id = $post_id = $topic_first_post_id = false;
 
-	        if (!empty($data['mode'])) {
-            	$mode = $data['mode'];
-	        }
+			if (!empty($data['mode'])) {
+				$mode = $data['mode'];
+			}
 
-    	    if ($mode == 'reply') {
-	            return;
-	        }
+			if ($mode == 'reply') {
+				return;
+			}
 
-    	    if (!empty($data['post_data']['topic_id'])) {
-	            $topic_id = $data['post_data']['topic_id'];
-	        }
+			if (!empty($data['post_data']['topic_id'])) {
+				$topic_id = $data['post_data']['topic_id'];
+			}
 
-	        if (!empty($data['post_data']['post_id'])) {
-	            $post_id = $data['post_data']['post_id'];
-    	    }
+			if (!empty($data['post_data']['post_id'])) {
+				$post_id = $data['post_data']['post_id'];
+			}
 
-    	    if (!empty($data['post_data']['topic_first_post_id'])) {
-    	        $topic_first_post_id = $data['post_data']['topic_first_post_id'];
-			    }
+			if (!empty($data['post_data']['topic_first_post_id'])) {
+				$topic_first_post_id = $data['post_data']['topic_first_post_id'];
+			}
 
 			$is_new_topic = $mode == 'post';
 			$is_edit_first_post = $mode == 'edit' && $topic_id && $post_id && $post_id == $topic_first_post_id;
 			if ($is_new_topic || $is_edit_first_post) {
 
-		        $data['page_data']['RH_TOPICTAGS_SHOW_FIELD'] = true;
+				$data['page_data']['RH_TOPICTAGS_SHOW_FIELD'] = true;
 
 				// do we got some preview-data?
 				$tags = array();
@@ -242,7 +242,7 @@ class main_listener implements EventSubscriberInterface
 
 				$data['page_data']['S_RH_TOPICTAGS_WHITELIST_ENABLED'] = $this->config[PREFIXES::CONFIG.'_whitelist_enabled'];
 
-		        if ($this->config[PREFIXES::CONFIG.'_whitelist_enabled'])
+				if ($this->config[PREFIXES::CONFIG.'_whitelist_enabled'])
 				{
 					$data['page_data']['S_RH_TOPICTAGS_WHITELIST_ENABLED'] = true;
 					$tags = json_decode($this->config[PREFIXES::CONFIG.'_whitelist'], true);
@@ -264,7 +264,7 @@ class main_listener implements EventSubscriberInterface
 				$event->set_data($data);
 			}
 		}
-    }
+	}
 
 	/**
 	 * Event: core.viewforum_modify_topicrow
@@ -281,7 +281,7 @@ class main_listener implements EventSubscriberInterface
 	{
 		if ($this->config[PREFIXES::CONFIG.'_display_tags_in_viewforum'])
 		{
-	        $data = $event->get_data();
+			$data = $event->get_data();
 			$topic_id = (int) $data['row']['topic_id'];
 			$forum_id = (int) $data['row']['forum_id'];
 
@@ -329,7 +329,7 @@ class main_listener implements EventSubscriberInterface
 	 */
 	public function viewtopic_assign_template_vars_before($event)
 	{
-        $data = $event->get_data();
+		$data = $event->get_data();
 		$topic_id = (int) $data['topic_id'];
 		$forum_id = (int) $data['forum_id'];
 
@@ -339,7 +339,7 @@ class main_listener implements EventSubscriberInterface
 			if (!empty($tags))
 			{
 				foreach ($tags as $tag) {
-			        $this->template->assign_block_vars('rh_topic_tags', array(
+					$this->template->assign_block_vars('rh_topic_tags', array(
 						'NAME' => $tag,
 						'LINK' => $this->helper->route('robertheim_topictags_show_tag_controller', array(
 							'tags'	=> urlencode($tag)

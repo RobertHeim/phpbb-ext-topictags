@@ -130,7 +130,7 @@ class tagcloud_manager
 			$result = $this->db->sql_query($sql);
 		}
 		$tags = array();
-        while ($row = $this->db->sql_fetchrow($result))
+		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$tags[] = array(
 				'tag'	=> $row['tag'],

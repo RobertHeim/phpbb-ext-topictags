@@ -40,8 +40,8 @@ class tags_manager
 		$this->table_prefix	= $table_prefix;
 	}
 
-    /**
-     * Remove all tags from the given topic
+	/**
+	 * Remove all tags from the given topic
 	 *
 	 * @param $topic_id
 	 * @param $delete_unused_tags if set to true unsued tags are removed from the db.
@@ -252,7 +252,7 @@ class tags_manager
 				AND t.id = tt.tag_id";
 		$result = $this->db->sql_query($sql);
 		$tags = array();
-        while ($row = $this->db->sql_fetchrow($result))
+		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$tags[] = $row['tag'];
 		}
@@ -300,8 +300,8 @@ class tags_manager
 		return $tags;
 	}
 
-    /**
-     * Assigns exactly the given valid tags to the topic (all other tags are removed from the topic and if a tag does not exist yet, it will be created).
+	/**
+	 * Assigns exactly the given valid tags to the topic (all other tags are removed from the topic and if a tag does not exist yet, it will be created).
 	 *
 	 * @param $topic_id
 	 * @param $valid_tags			array containing valid tag-names
@@ -330,7 +330,7 @@ class tags_manager
 		$this->delete_unused_tags();
 
 		$this->calc_count_tags();
-    }
+	}
 
 	/**
 	 * Finds whether the given tags already exist and if not creates them in the db.
@@ -405,14 +405,14 @@ class tags_manager
 		$existing_tags = array();
 		if ($only_ids)
 		{
-	        while ($row = $this->db->sql_fetchrow($result))
+			while ($row = $this->db->sql_fetchrow($result))
 			{
 				$existing_tags[] = $row['id'];
 			}
 		}
 		else
 		{
-	        while ($row = $this->db->sql_fetchrow($result))
+			while ($row = $this->db->sql_fetchrow($result))
 			{
 				$existing_tags[] = array(
 					'id'	=> $row['id'],
@@ -435,7 +435,7 @@ class tags_manager
 			FROM ' . $this->table_prefix . TABLES::TOPICTAGS;
 		$result = $this->db->sql_query($sql);
 		$ids = array();
-        while ($row = $this->db->sql_fetchrow($result))
+		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$ids[] = $row['tag_id'];
 		}
@@ -462,7 +462,7 @@ class tags_manager
 		$result = $this->db->sql_query_limit($sql, $limit, $start);
 
 		$topics = array();
-        while ($row = $this->db->sql_fetchrow($result))
+		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$topics[] = $row;
 		}
