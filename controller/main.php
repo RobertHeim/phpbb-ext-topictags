@@ -245,6 +245,7 @@ class main
 				* @event robertheim.topictags.viewforum_modify_topicrow
 				* @var	array	row			Array with topic data
 				* @var	array	topic_row	Template array with topic data
+				* @since 0.0.13-BETA
 				*/
 				$vars = array('row', 'topic_row');
 				extract($phpbb_dispatcher->trigger_event('robertheim.topictags.viewforum_modify_topicrow', compact($vars)));
