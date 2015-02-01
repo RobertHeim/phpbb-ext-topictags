@@ -242,10 +242,9 @@ class main
 				/**
 				* Modify the topic data before it is assigned to the template
 				*
-				* @event core.viewforum_modify_topicrow
+				* @event robertheim.topictags.viewforum_modify_topicrow
 				* @var	array	row			Array with topic data
 				* @var	array	topic_row	Template array with topic data
-				* @since 3.1.0-a1
 				*/
 				$vars = array('row', 'topic_row');
 				extract($phpbb_dispatcher->trigger_event('robertheim.topictags.viewforum_modify_topicrow', compact($vars)));
