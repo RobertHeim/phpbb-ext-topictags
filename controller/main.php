@@ -248,7 +248,7 @@ class main
 				* @since 3.1.0-a1
 				*/
 				$vars = array('row', 'topic_row');
-				extract($phpbb_dispatcher->trigger_event('core.viewforum_modify_topicrow', compact($vars)));
+				extract($phpbb_dispatcher->trigger_event('robertheim.topictags.viewforum_modify_topicrow', compact($vars)));
 
 				$template->assign_block_vars('topicrow', $topic_row);
 		

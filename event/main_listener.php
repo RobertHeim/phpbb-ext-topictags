@@ -25,13 +25,14 @@ class main_listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.user_setup'								=> 'load_language_on_setup',
-			'core.index_modify_page_title'					=> 'index_modify_page_title',
-			'core.modify_posting_parameters'				=> 'modify_posting_parameters',
-			'core.posting_modify_template_vars'				=> 'posting_modify_template_vars',
-			'core.viewforum_modify_topicrow'				=> 'viewforum_modify_topicrow',
-			'core.viewtopic_assign_template_vars_before'	=> 'viewtopic_assign_template_vars_before',
-			'core.submit_post_end'							=> 'submit_post_end',
+			'core.user_setup'                                => 'load_language_on_setup',
+			'core.index_modify_page_title'                   => 'index_modify_page_title',
+			'core.modify_posting_parameters'                 => 'modify_posting_parameters',
+			'core.posting_modify_template_vars'              => 'posting_modify_template_vars',
+			'core.viewforum_modify_topicrow'                 => 'viewforum_modify_topicrow',
+			'robertheim.topictags.viewforum_modify_topicrow' => 'viewforum_modify_topicrow',
+			'core.viewtopic_assign_template_vars_before'     => 'viewtopic_assign_template_vars_before',
+			'core.submit_post_end'                           => 'submit_post_end',
 		);
 	}
 
