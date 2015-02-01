@@ -9,6 +9,8 @@
 
 namespace robertheim\topictags\tests\service;
 
+use robertheim\topictags\TABLES;
+
 class tags_manager_test extends \phpbb_database_test_case
 {
 	
@@ -27,11 +29,15 @@ class tags_manager_test extends \phpbb_database_test_case
 
 	public function test_calc_count_tags()
 	{
+		global $table_prefix;
+		$auth = new \phpbb\auth\auth();
+		$config = new \phpbb\config\config(array());
 		$this->db = $this->new_dbal();
-		$tags_manager = new \robertheim\topictags\service\tags_manager($this->db, null, null, 'phpbb_');
+		$tags_manager = new \robertheim\topictags\service\tags_manager($this->db, $config, $auth, $table_prefix);
 		$tags_manager->calc_count_tags();
-		$result = $db->sql_query('SELECT count FROM phpbb_rh_topictags_tags WHERE id=1');
-		$count = $db->sql_fetchfield('count');
+
+		$result = $this->db->sql_query('SELECT count FROM ' . $table_prefix . TABLES::TAGS . ' WHERE id=1');
+		$count = $this->db->sql_fetchfield('count');
 		$this->assertEquals($count, 1);
 	}
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <dataset>
 	<table name="phpbb_forums">
-		<column>id</column>
+		<column>forum_id</column>
 		<column>rh_topictags_enabled</column>
 		<row>
 			<value>1</value>
@@ -13,21 +13,18 @@
 		</row>
 	</table>
 	<table name="phpbb_topics">
-		<column>id</column>
 		<column>topic_id</column>
 		<column>forum_id</column>
-		<column>tag_id</column>
+		<column>topic_title</column>
 		<row>
 			<value>1</value>
 			<value>1</value>
-			<value>1</value>
-			<value>1</value>
+			<value>Topic1</value>
 		</row>
 		<row>
 			<value>2</value>
-			<value>3</value>
 			<value>2</value>
-			<value>1</value>
+			<value>Topic2</value>
 		</row>
 	</table>
 	<table name="phpbb_rh_topictags">
@@ -40,12 +37,12 @@
 			<value>1</value>
 		</row>
 		<row>
-			<value>1</value>
+			<value>2</value>
 			<value>2</value>
 			<value>1</value>
 		</row>
 	</table>
-	<table name="phpbb_rh_topictags_tags">
+	<table name="phpbb_rh_topictags_tag">
 		<column>id</column>
 		<column>tag</column>
 		<column>count</column>
