@@ -23,6 +23,9 @@ use robertheim\topictags\prefixes;
 class tags_manager
 {
 
+	/**
+	 * @var \phpbb\db\driver\driver_interface
+	 */
 	private $db;
 	private $config;
 	private $auth;
@@ -821,7 +824,7 @@ class tags_manager
 
 	/**
 	 * Gets the topic-ids that the given tag-id is assigned to.
-	 * 
+	 *
 	 * @param int $tag_id the id of the tag
 	 * @return array array of ints (the topic-ids)
 	 */
@@ -848,7 +851,7 @@ class tags_manager
 	/**
 	 * Merges two tags, by assigning all topics of tag_to_delete to the tag_to_keep and then delet the tag_to_delete.
 	 * NOTE: Both tags must exist and this is not checked again!
-	 * 
+	 *
 	 * @param string $tag_to_delete must be valid
 	 * @param int $tag_to_delete_id the id of the tag to delete
 	 * @param string $tag_to_keep must be valid
@@ -885,7 +888,7 @@ class tags_manager
 
 	/**
 	 * Deletes the given tag and all its assignments.
-	 * 
+	 *
 	 * @param int $tag_id
 	 */
 	public function delete_tag($tag_id)
@@ -901,7 +904,7 @@ class tags_manager
 
 	/**
 	 * Renames the tag
-	 * 
+	 *
 	 * @param int $tag_id the id of the tag
 	 * @param string $new_name_clean the new name of the tag already cleaned
 	 * @return int the count of topics that are assigned to the tag
@@ -920,7 +923,7 @@ class tags_manager
 
 	/**
 	 * Gets the corresponding tag by its id
-	 * 
+	 *
 	 * @param int $tag_id the id of the tag
 	 * @return string the tag name
 	 */
@@ -942,7 +945,7 @@ class tags_manager
 
 	/**
 	 * Gets all tags.
-	 * 
+	 *
 	 * @param $start start for sql query
 	 * @param $limit limit for sql query
 	 * @param $sort_field the db field to order by
@@ -976,7 +979,7 @@ class tags_manager
 
 	/**
 	 * Gets the count of all tags.
-	 * 
+	 *
 	 * @return int the count of all tags
 	 */
 	public function count_tags()

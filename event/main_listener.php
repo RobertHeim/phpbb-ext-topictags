@@ -79,7 +79,7 @@ class main_listener implements EventSubscriberInterface
 	/**
 	 * Reads all tags from request variable 'rh_topictags' and splits them by the separator (default: comma (',')) and trims them.
 	 * NOTE: These tags might be dirty!
-	 * 
+	 *
 	 * @return array of dirty tags
 	 */
 	private function get_tags_from_post_request()
@@ -132,7 +132,7 @@ class main_listener implements EventSubscriberInterface
 
 	/**
 	 * Event: core.modify_posting_parameters
-	 * 
+	 *
 	 * Validate the tags and create an error if any tag is invalid.
 	 */
 	public function modify_posting_parameters($event)
@@ -158,7 +158,7 @@ class main_listener implements EventSubscriberInterface
 
 	/**
 	 * Event: core.postingsubmit_post_end
-	 * 
+	 *
 	 * After a posting we assign the tags to the topic
 	 */
 	public function submit_post_end($event)
