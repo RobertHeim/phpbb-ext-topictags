@@ -9,12 +9,12 @@
 
 if (!defined('IN_PHPBB'))
 {
-    exit;
+	exit;
 }
 
 if (empty($lang) || !is_array($lang))
 {
-    $lang = array();
+	$lang = array();
 }
 
 // these will be re-used in the definitions below - that is why we need to define and merge them first.
@@ -37,7 +37,7 @@ $lang = array_merge($lang, array(
 
 	'ACP_RH_TOPICTAGS_REGEX_EMPTY'			=> 'La expresión regular no se puede dejar vacía.',
 	'ACP_RH_TOPICTAGS_EXP_FOR_USERS_EMPTY'	=> 'La explicación de las etiquetas que están permitidas no se puede dejar vacía.',
-	
+
 	'TOPICTAGS_CONFIG'					=> 'Configuración',
 	'TOPICTAGS_CONFIG_TAGCLOUD'			=> 'Ajustes de nube de etiquetas',
 	'TOPICTAGS_CONFIG_TAGS'				=> 'Ajustes de etiquetas',
@@ -121,4 +121,3 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS_EXP'	=> 'Este texto se muestra a los usuarios y debe explicar qué etiquetas se permiten, y cuáles no.<br/>Por defecto: ' . $lang['ACP_RH_TOPICTAGS_REGEX_EXP_FOR_USERS_DEFAULT'],
 
 ));
-

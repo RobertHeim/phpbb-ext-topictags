@@ -175,19 +175,19 @@ class topictags_module
 		$all_enabled = $this->tags_manager->is_enabled_in_all_forums();
 		$all_disabled = ($all_enabled ? false : $this->tags_manager->is_disabled_in_all_forums());
 		$template->assign_vars(array(
-		   'TOPICTAGS_VERSION'                      => $user->lang('TOPICTAGS_INSTALLED', $config[prefixes::CONFIG . '_version']),
-		   'TOPICTAGS_DISPLAY_TAGS_IN_VIEWFORUM'    => $config[prefixes::CONFIG . '_display_tags_in_viewforum'],
-		   'TOPICTAGS_DISPLAY_TAGCLOUD_ON_INDEX'    => $config[prefixes::CONFIG . '_display_tagcloud_on_index'],
-		   'TOPICTAGS_DISPLAY_TAGCOUNT_IN_TAGCLOUD' => $config[prefixes::CONFIG . '_display_tagcount_in_tagcloud'],
-		   'TOPICTAGS_MAX_TAGS_IN_TAGCLOUD'         => $config[prefixes::CONFIG . '_max_tags_in_tagcloud'],
-		   'TOPICTAGS_ALLOWED_TAGS_REGEX'           => $config[prefixes::CONFIG . '_allowed_tags_regex'],
-		   'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS'   => $config[prefixes::CONFIG . '_allowed_tags_exp_for_users'],
-		   'TOPICTAGS_CONVERT_SPACE_TO_MINUS'       => $config[prefixes::CONFIG . '_convert_space_to_minus'],
-		   'TOPICTAGS_IS_ENABLED_IN_ALL_FORUMS'     => $all_enabled,
-		   'TOPICTAGS_IS_DISABLED_IN_ALL_FORUMS'    => $all_disabled,
-		   'S_ERROR'                                => (sizeof($errors)) ? true : false,
-		   'ERROR_MSG'                              => implode('<br />', $errors),
-		   'U_ACTION'                               => $this->u_action,
+			'TOPICTAGS_VERSION'                      => $user->lang('TOPICTAGS_INSTALLED', $config[prefixes::CONFIG . '_version']),
+			'TOPICTAGS_DISPLAY_TAGS_IN_VIEWFORUM'    => $config[prefixes::CONFIG . '_display_tags_in_viewforum'],
+			'TOPICTAGS_DISPLAY_TAGCLOUD_ON_INDEX'    => $config[prefixes::CONFIG . '_display_tagcloud_on_index'],
+			'TOPICTAGS_DISPLAY_TAGCOUNT_IN_TAGCLOUD' => $config[prefixes::CONFIG . '_display_tagcount_in_tagcloud'],
+			'TOPICTAGS_MAX_TAGS_IN_TAGCLOUD'         => $config[prefixes::CONFIG . '_max_tags_in_tagcloud'],
+			'TOPICTAGS_ALLOWED_TAGS_REGEX'           => $config[prefixes::CONFIG . '_allowed_tags_regex'],
+			'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS'   => $config[prefixes::CONFIG . '_allowed_tags_exp_for_users'],
+			'TOPICTAGS_CONVERT_SPACE_TO_MINUS'       => $config[prefixes::CONFIG . '_convert_space_to_minus'],
+			'TOPICTAGS_IS_ENABLED_IN_ALL_FORUMS'     => $all_enabled,
+			'TOPICTAGS_IS_DISABLED_IN_ALL_FORUMS'    => $all_disabled,
+			'S_ERROR'                                => (sizeof($errors)) ? true : false,
+			'ERROR_MSG'                              => implode('<br />', $errors),
+			'U_ACTION'                               => $this->u_action,
 		));
 	}
 }

@@ -514,7 +514,7 @@ class tags_manager
 		if (!$casesensitive)
 		{
 			for ($i = 0; $i < $tag_count; $i++)
- 			{
+			{
 				$tags[$i] = utf8_strtolower($tags[$i]);
 			}
 		}

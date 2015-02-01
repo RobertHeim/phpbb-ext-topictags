@@ -28,9 +28,10 @@ class white_and_blacklist_controller
 
 	private $tags_manager;
 
-	public function __construct(\phpbb\config\config $config, 
+	public function __construct(
+		\phpbb\config\config $config,
 		\phpbb\request\request $request,
-		\phpbb\user $user, 
+		\phpbb\user $user,
 		\phpbb\template\template $template,
 		\robertheim\topictags\service\tags_manager $tags_manager)
 	{

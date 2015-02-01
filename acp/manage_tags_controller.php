@@ -91,7 +91,6 @@ class manage_tags_controller
 
 				$tags = $this->tags_manager->get_all_tags($start, $limit, $sort_field, $ordering);
 
-
 				$this->pagination->generate_template_pagination($base_url, 'pagination', 'start', $tags_count, $limit, $start);
 				foreach ($tags as $tag)
 				{
@@ -106,7 +105,7 @@ class manage_tags_controller
 					'SELECT_SORT_KEY' => $this->create_sort_selects($sort_key),
 					'U_ACTION'        => $u_action . "&amp;sort_key=$sort_key&amp;start=$start",
 				));
-				break;
+			break;
 		}
 	}
 
