@@ -12,8 +12,8 @@ namespace robertheim\topictags\service;
 /**
  * @ignore
  */
-use robertheim\topictags\TABLES;
-use robertheim\topictags\PREFIXES;
+use robertheim\topictags\tables;
+use robertheim\topictags\prefixes;
 
 /**
 * Handles all operations regarding the tag cloud.
@@ -50,7 +50,7 @@ class tagcloud_manager
 		global $user;
 		if (0 == $limit)
 		{
-			$limit = $this->config[PREFIXES::CONFIG . '_max_tags_in_tagcloud'];
+			$limit = $this->config[prefixes::CONFIG . '_max_tags_in_tagcloud'];
 		}
 
 		// get the data
@@ -76,7 +76,7 @@ class tagcloud_manager
 		// ensure that the css for the tag cloud will be included
         $this->template->assign_vars(array(
 			'S_RH_TOPICTAGS_INCLUDE_CSS'		=> true,
-			'RH_TOPICTAGS_TAGCLOUD_SHOW_COUNT'	=> $this->config[PREFIXES::CONFIG . '_display_tagcount_in_tagcloud'],
+			'RH_TOPICTAGS_TAGCLOUD_SHOW_COUNT'	=> $this->config[prefixes::CONFIG . '_display_tagcount_in_tagcloud'],
 			'RH_TOPICTAGS_TAGCLOUD_TAG_COUNT'	=> $show_count,
 		));
 
@@ -114,7 +114,7 @@ class tagcloud_manager
 		$sql_array = array(
 			'SELECT'	=> 't.tag, t.count',
 			'FROM'		=> array(
-				$this->table_prefix . TABLES::TAGS  => 't'
+				$this->table_prefix . tables::TAGS  => 't'
 			),
 			'WHERE'		=> $where,
 			'ORDER_BY'	=> 't.count DESC',
@@ -150,7 +150,7 @@ class tagcloud_manager
 		$sql_array = array(
 			'SELECT'	=> 't.count',
 			'FROM'		=> array(
-				$this->table_prefix . TABLES::TAGS  => 't'
+				$this->table_prefix . tables::TAGS  => 't'
 			),
 			'WHERE'		=> 't.count > 0',
 			'ORDER_BY'	=> 't.count DESC',

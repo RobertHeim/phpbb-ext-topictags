@@ -9,8 +9,7 @@
 
 namespace robertheim\topictags;
 
-class TABLES
+abstract class prefixes
 {
-	const TAGS = 'rh_topictags_tag';
-	const TOPICTAGS = 'rh_topictags';
+	const CONFIG = 'robertheim_topictags';
 }

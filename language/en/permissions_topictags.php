@@ -37,11 +37,11 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-use robertheim\topictags\PERMISSIONS;
+use robertheim\topictags\permissions;
 
 $lang = array_merge($lang, array(
-	'ACL_'.utf8_strtoupper(PERMISSIONS::ADMIN_EDIT_TAGS)	=> 'Can edit RH topic tags',
-	'ACL_'.utf8_strtoupper(PERMISSIONS::MOD_EDIT_TAGS)	=> 'Can edit RH topic tags',
-	'ACL_'.utf8_strtoupper(PERMISSIONS::USE_TAGS)			=> 'Can use RH topic tags',
+	'ACL_'.utf8_strtoupper(permissions::ADMIN_EDIT_TAGS)	=> 'Can edit RH topic tags',
+	'ACL_'.utf8_strtoupper(permissions::MOD_EDIT_TAGS)	=> 'Can edit RH topic tags',
+	'ACL_'.utf8_strtoupper(permissions::USE_TAGS)			=> 'Can use RH topic tags',
 ));
 

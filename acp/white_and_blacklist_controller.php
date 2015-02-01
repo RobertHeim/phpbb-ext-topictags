@@ -10,7 +10,7 @@ namespace robertheim\topictags\acp;
 /**
 * @ignore
 */
-use robertheim\topictags\PREFIXES;
+use robertheim\topictags\prefixes;
 
 /**
  * Handles the "whitelist" and "blacklist" page of the ACP.
@@ -63,8 +63,8 @@ class white_and_blacklist_controller
 				trigger_error('FORM_INVALID');
 			}
 			
-			$this->config->set(PREFIXES::CONFIG . '_whitelist_enabled', $this->request->variable(PREFIXES::CONFIG . '_whitelist_enabled', 0));
-			$whitelist = rawurldecode(base64_decode($this->request->variable(PREFIXES::CONFIG . '_whitelist', '')));
+			$this->config->set(prefixes::CONFIG . '_whitelist_enabled', $this->request->variable(prefixes::CONFIG . '_whitelist_enabled', 0));
+			$whitelist = rawurldecode(base64_decode($this->request->variable(prefixes::CONFIG . '_whitelist', '')));
 			if (! empty($whitelist))
 			{
 				$whitelist = json_decode($whitelist, true);
@@ -75,15 +75,15 @@ class white_and_blacklist_controller
 				}
 				$whitelist = json_encode($tags);
 			}
-			$this->config->set(PREFIXES::CONFIG . '_whitelist', $whitelist);
+			$this->config->set(prefixes::CONFIG . '_whitelist', $whitelist);
 			trigger_error($this->user->lang('TOPICTAGS_WHITELIST_SAVED') . adm_back_link($u_action));
 		}
-		$whitelist = $this->config[PREFIXES::CONFIG . '_whitelist'];
+		$whitelist = $this->config[prefixes::CONFIG . '_whitelist'];
 		$whitelist = base64_encode(rawurlencode($whitelist));
 		$this->template->assign_vars(
 			array(
-				'TOPICTAGS_VERSION'						=> $this->user->lang('TOPICTAGS_INSTALLED', $this->config[PREFIXES::CONFIG . '_version']),
-				'TOPICTAGS_WHITELIST_ENABLED'			=> $this->config[PREFIXES::CONFIG . '_whitelist_enabled'],
+				'TOPICTAGS_VERSION'						=> $this->user->lang('TOPICTAGS_INSTALLED', $this->config[prefixes::CONFIG . '_version']),
+				'TOPICTAGS_WHITELIST_ENABLED'			=> $this->config[prefixes::CONFIG . '_whitelist_enabled'],
 				'TOPICTAGS_WHITELIST'					=> $whitelist,
 				'S_RH_TOPICTAGS_INCLUDE_NG_TAGS_INPUT'	=> true,
 				'S_RH_TOPICTAGS_INCLUDE_CSS'			=> true,
@@ -116,8 +116,8 @@ class white_and_blacklist_controller
 				trigger_error('FORM_INVALID');
 			}
 				
-			$this->config->set(PREFIXES::CONFIG . '_blacklist_enabled', $this->request->variable(PREFIXES::CONFIG . '_blacklist_enabled', 0));
-			$blacklist = rawurldecode(base64_decode($this->request->variable(PREFIXES::CONFIG . '_blacklist', '')));
+			$this->config->set(prefixes::CONFIG . '_blacklist_enabled', $this->request->variable(prefixes::CONFIG . '_blacklist_enabled', 0));
+			$blacklist = rawurldecode(base64_decode($this->request->variable(prefixes::CONFIG . '_blacklist', '')));
 			if (! empty($blacklist))
 			{
 				$blacklist = json_decode($blacklist, true);
@@ -128,15 +128,15 @@ class white_and_blacklist_controller
 				}
 				$blacklist = json_encode($tags);
 			}
-			$this->config->set(PREFIXES::CONFIG . '_blacklist', $blacklist);
+			$this->config->set(prefixes::CONFIG . '_blacklist', $blacklist);
 			trigger_error($this->user->lang('TOPICTAGS_BLACKLIST_SAVED') . adm_back_link($u_action));
 		}
-		$blacklist = $this->config[PREFIXES::CONFIG . '_blacklist'];
+		$blacklist = $this->config[prefixes::CONFIG . '_blacklist'];
 		$blacklist = base64_encode(rawurlencode($blacklist));
 			$this->template->assign_vars(
 				array(
-					'TOPICTAGS_VERSION'						=> $this->user->lang('TOPICTAGS_INSTALLED', $this->config[PREFIXES::CONFIG . '_version']),
-					'TOPICTAGS_BLACKLIST_ENABLED'			=> $this->config[PREFIXES::CONFIG . '_blacklist_enabled'],
+					'TOPICTAGS_VERSION'						=> $this->user->lang('TOPICTAGS_INSTALLED', $this->config[prefixes::CONFIG . '_version']),
+					'TOPICTAGS_BLACKLIST_ENABLED'			=> $this->config[prefixes::CONFIG . '_blacklist_enabled'],
 					'TOPICTAGS_BLACKLIST'					=> $blacklist,
 					'S_RH_TOPICTAGS_INCLUDE_NG_TAGS_INPUT'	=> true,
 					'S_RH_TOPICTAGS_INCLUDE_CSS'			=> true,

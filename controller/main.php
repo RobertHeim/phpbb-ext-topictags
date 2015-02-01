@@ -12,7 +12,7 @@ namespace robertheim\topictags\controller;
 /**
  * @ignore
  */
-use robertheim\topictags\PREFIXES;
+use robertheim\topictags\prefixes;
 use phpbb\json_response;
 
 class main

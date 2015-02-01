@@ -9,14 +9,8 @@
 
 namespace robertheim\topictags;
 
-/**
-* @ignore
-*/
-
-abstract class PERMISSIONS
+class tables
 {
-	const ADMIN_EDIT_TAGS = 'a_rhtopictags_edit_tags';
-	const MOD_EDIT_TAGS = 'm_rhtopictags_edit_tags';
-	const USE_TAGS = 'u_rhtopictags_use_tags';
+	const TAGS = 'rh_topictags_tag';
+	const TOPICTAGS = 'rh_topictags';
 }
-

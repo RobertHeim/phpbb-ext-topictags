@@ -8,7 +8,7 @@
 */
 
 namespace robertheim\topictags\migrations;
-use robertheim\topictags\PREFIXES;
+use robertheim\topictags\prefixes;
 
 class release_0_0_12 extends \phpbb\db\migration\migration
 {
@@ -16,7 +16,7 @@ class release_0_0_12 extends \phpbb\db\migration\migration
 
 	public function effectively_installed()
 	{
-		return version_compare($this->config[PREFIXES::CONFIG.'_version'], $this->version, '>=');
+		return version_compare($this->config[prefixes::CONFIG.'_version'], $this->version, '>=');
 	}
 
 	static public function depends_on()
@@ -31,7 +31,7 @@ class release_0_0_12 extends \phpbb\db\migration\migration
 		global $config;
 
 		// convert whitelist to json
-		$whitelist = $config[PREFIXES::CONFIG.'_whitelist'];
+		$whitelist = $config[prefixes::CONFIG.'_whitelist'];
 		if (empty($whitelist))
 		{
 			$whitelist = array();
@@ -43,7 +43,7 @@ class release_0_0_12 extends \phpbb\db\migration\migration
 		$whitelist = json_encode($whitelist);
 
 		// convert blacklist to json
-		$blacklist = $config[PREFIXES::CONFIG.'_blacklist'];
+		$blacklist = $config[prefixes::CONFIG.'_blacklist'];
 		if (empty($blacklist))
 		{
 			$blacklist = array();
@@ -55,15 +55,15 @@ class release_0_0_12 extends \phpbb\db\migration\migration
 		$blacklist = json_encode($blacklist);
 
 		return array(
-			array('config.update', array(PREFIXES::CONFIG.'_whitelist', $whitelist)),
-			array('config.update', array(PREFIXES::CONFIG.'_blacklist', $blacklist)),
+			array('config.update', array(prefixes::CONFIG.'_whitelist', $whitelist)),
+			array('config.update', array(prefixes::CONFIG.'_blacklist', $blacklist)),
 			array('module.add', array(
 				'acp', 'ACP_TOPICTAGS_TITLE', array(
 					'module_basename'	=> '\robertheim\topictags\acp\topictags_module',
 					'auth'				=> 'ext_robertheim/topictags && acl_a_board',
 					'modes'				=> array('whitelist', 'blacklist', 'tags'),
 				))),
-			array('config.update', array(PREFIXES::CONFIG.'_version', $this->version)),
+			array('config.update', array(prefixes::CONFIG.'_version', $this->version)),
 		);
 	}
 }

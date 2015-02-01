@@ -13,8 +13,8 @@ namespace robertheim\topictags\event;
 * @ignore
 */
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use robertheim\topictags\PREFIXES;
-use robertheim\topictags\PERMISSIONS;
+use robertheim\topictags\prefixes;
+use robertheim\topictags\permissions;
 
 /**
 * Event listener
@@ -121,7 +121,7 @@ class main_listener implements EventSubscriberInterface
 	 */
 	public function index_modify_page_title($event)
 	{
-		if ($this->config[PREFIXES::CONFIG . '_display_tagcloud_on_index'])
+		if ($this->config[prefixes::CONFIG . '_display_tagcloud_on_index'])
 		{
 			$this->template->assign_vars(array(
 				'RH_TOPICTAGS_DISPLAY_TAGCLOUD_ON_INDEX'	=> true,
@@ -137,7 +137,7 @@ class main_listener implements EventSubscriberInterface
 	 */
 	public function modify_posting_parameters($event)
 	{
-		if ($this->auth->acl_get(PERMISSIONS::USE_TAGS, PERMISSIONS::ADMIN_EDIT_TAGS, PERMISSIONS::MOD_EDIT_TAGS))
+		if ($this->auth->acl_get(permissions::USE_TAGS, permissions::ADMIN_EDIT_TAGS, permissions::MOD_EDIT_TAGS))
 		{
 
 			$data = $event->get_data();
@@ -163,7 +163,7 @@ class main_listener implements EventSubscriberInterface
 	 */
 	public function submit_post_end($event)
 	{
-		if ($this->auth->acl_get(PERMISSIONS::USE_TAGS, PERMISSIONS::ADMIN_EDIT_TAGS, PERMISSIONS::MOD_EDIT_TAGS))
+		if ($this->auth->acl_get(permissions::USE_TAGS, permissions::ADMIN_EDIT_TAGS, permissions::MOD_EDIT_TAGS))
 		{
 			$event_data = $event->get_data();
 			$data = $event_data['data'];
@@ -188,7 +188,7 @@ class main_listener implements EventSubscriberInterface
 	 */
 	public function posting_modify_template_vars($event)
 	{
-		if ($this->auth->acl_get(PERMISSIONS::USE_TAGS, PERMISSIONS::ADMIN_EDIT_TAGS, PERMISSIONS::MOD_EDIT_TAGS))
+		if ($this->auth->acl_get(permissions::USE_TAGS, permissions::ADMIN_EDIT_TAGS, permissions::MOD_EDIT_TAGS))
 		{
 			$data = $event->get_data();
 			$forum_id = $data['forum_id'];
@@ -238,15 +238,15 @@ class main_listener implements EventSubscriberInterface
 
 				$data['page_data']['RH_TOPICTAGS'] = base64_encode(rawurlencode(json_encode($tags)));
 
-				$data['page_data']['RH_TOPICTAGS_ALLOWED_TAGS_REGEX'] = $this->config[PREFIXES::CONFIG.'_allowed_tags_regex'];
-				$data['page_data']['RH_TOPICTAGS_CONVERT_SPACE_TO_MINUS'] = $this->config[PREFIXES::CONFIG.'_convert_space_to_minus'] ? 'true' : 'false';
+				$data['page_data']['RH_TOPICTAGS_ALLOWED_TAGS_REGEX'] = $this->config[prefixes::CONFIG.'_allowed_tags_regex'];
+				$data['page_data']['RH_TOPICTAGS_CONVERT_SPACE_TO_MINUS'] = $this->config[prefixes::CONFIG.'_convert_space_to_minus'] ? 'true' : 'false';
 
-				$data['page_data']['S_RH_TOPICTAGS_WHITELIST_ENABLED'] = $this->config[PREFIXES::CONFIG.'_whitelist_enabled'];
+				$data['page_data']['S_RH_TOPICTAGS_WHITELIST_ENABLED'] = $this->config[prefixes::CONFIG.'_whitelist_enabled'];
 
-				if ($this->config[PREFIXES::CONFIG.'_whitelist_enabled'])
+				if ($this->config[prefixes::CONFIG.'_whitelist_enabled'])
 				{
 					$data['page_data']['S_RH_TOPICTAGS_WHITELIST_ENABLED'] = true;
-					$tags = json_decode($this->config[PREFIXES::CONFIG.'_whitelist'], true);
+					$tags = json_decode($this->config[prefixes::CONFIG.'_whitelist'], true);
 					for ($i = 0, $size = sizeof($tags); $i < $size; $i++)
 					{
 						$this->template->assign_block_vars('rh_topictags_whitelist', array(
@@ -257,7 +257,7 @@ class main_listener implements EventSubscriberInterface
 				}
 				else
 				{
-					$data['page_data']['RH_TOPICTAGS_ALLOWED_TAGS_EXP'] = $this->config[PREFIXES::CONFIG.'_allowed_tags_exp_for_users'];
+					$data['page_data']['RH_TOPICTAGS_ALLOWED_TAGS_EXP'] = $this->config[prefixes::CONFIG.'_allowed_tags_exp_for_users'];
 				}
 				$data['page_data']['S_RH_TOPICTAGS_INCLUDE_NG_TAGS_INPUT'] = true;
 				$data['page_data']['S_RH_TOPICTAGS_INCLUDE_CSS'] = true;
@@ -280,7 +280,7 @@ class main_listener implements EventSubscriberInterface
 	 */
 	public function viewforum_modify_topicrow($event)
 	{
-		if ($this->config[PREFIXES::CONFIG.'_display_tags_in_viewforum'])
+		if ($this->config[prefixes::CONFIG.'_display_tags_in_viewforum'])
 		{
 			$data = $event->get_data();
 			$topic_id = (int) $data['row']['topic_id'];

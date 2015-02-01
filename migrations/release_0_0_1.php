@@ -8,14 +8,14 @@
 */
 
 namespace robertheim\topictags\migrations;
-use robertheim\topictags\TABLES;
-use robertheim\topictags\PREFIXES;
+use robertheim\topictags\tables;
+use robertheim\topictags\prefixes;
 
 class release_0_0_1 extends \phpbb\db\migration\migration
 {
 	protected $version = '0.0.1-DEV';
 
-	protected $config_prefix = PREFIXES::CONFIG;
+	protected $config_prefix = prefixes::CONFIG;
 
 	public function effectively_installed() {
 		$installed_version = $this->config[$this->config_prefix.'_version'];
@@ -30,7 +30,7 @@ class release_0_0_1 extends \phpbb\db\migration\migration
 	public function update_schema() {
 		return array(
 			'add_tables' => array(
-				$this->table_prefix . TABLES::TOPICTAGS	=> array(
+				$this->table_prefix . tables::TOPICTAGS	=> array(
 					'COLUMNS'		=> array(
 						'id'			=> array('UINT', NULL, 'auto_increment'),
 						'topic_id'		=> array('UINT', 0),
@@ -42,7 +42,7 @@ class release_0_0_1 extends \phpbb\db\migration\migration
 						'idx_tag'		=> array('INDEX', array('tag_id')),
 					),
 				),
-				$this->table_prefix . TABLES::TAGS => array(
+				$this->table_prefix . tables::TAGS => array(
 					'COLUMNS'		=> array(
 						'id'			=> array('UINT', NULL, 'auto_increment'),
 						'tag'			=> array('VCHAR:30', ''),
@@ -60,8 +60,8 @@ class release_0_0_1 extends \phpbb\db\migration\migration
 	{
 		return array(
 			'drop_tables'    => array(
-				$this->table_prefix . TABLES::TOPICTAGS,
-				$this->table_prefix . TABLES::TAGS,
+				$this->table_prefix . tables::TOPICTAGS,
+				$this->table_prefix . tables::TAGS,
 			),
 		);
 	}

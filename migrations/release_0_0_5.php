@@ -8,7 +8,7 @@
 */
 
 namespace robertheim\topictags\migrations;
-use robertheim\topictags\PREFIXES;
+use robertheim\topictags\prefixes;
 
 class release_0_0_5 extends \phpbb\db\migration\migration
 {
@@ -16,7 +16,7 @@ class release_0_0_5 extends \phpbb\db\migration\migration
 
 	public function effectively_installed()
 	{
-		return version_compare($this->config[PREFIXES::CONFIG.'_version'], $this->version, '>=');
+		return version_compare($this->config[prefixes::CONFIG.'_version'], $this->version, '>=');
 	}
 
 	static public function depends_on()
@@ -29,8 +29,8 @@ class release_0_0_5 extends \phpbb\db\migration\migration
 	public function update_data()
 	{
 		return array(
-			array('config.add', array(PREFIXES::CONFIG.'_display_tags_in_viewforum', 1)),
-			array('config.update', array(PREFIXES::CONFIG.'_version', $this->version)),
+			array('config.add', array(prefixes::CONFIG.'_display_tags_in_viewforum', 1)),
+			array('config.update', array(prefixes::CONFIG.'_version', $this->version)),
 		);
 	}
 }
