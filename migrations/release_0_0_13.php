@@ -13,7 +13,7 @@ use robertheim\topictags\prefixes;
 
 class release_0_0_13 extends \phpbb\db\migration\migration
 {
-	protected $version = '0.0.13-BETA';
+	protected $version = '0.0.13-b1';
 
 	public function effectively_installed()
 	{
