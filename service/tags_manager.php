@@ -805,13 +805,13 @@ class tags_manager
 	 */
 	public function calc_count_tags()
 	{
-		$sql = 'UPDATE ' . $this->table_prefix . TABLES::TAGS . ' t
+		$sql = 'UPDATE ' . $this->table_prefix . TABLES::TAGS . '
 			SET count = (
 				SELECT COUNT(tt.id)
 				FROM ' . TOPICS_TABLE . ' topics,
 					' . FORUMS_TABLE . ' f,
 					' . $this->table_prefix . TABLES::TOPICTAGS . ' tt
-				WHERE tt.tag_id = t.id
+				WHERE tt.tag_id = id
 					AND topics.topic_id = tt.topic_id
 					AND f.forum_id = topics.forum_id
 					AND f.rh_topictags_enabled = 1
