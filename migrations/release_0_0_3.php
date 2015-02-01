@@ -8,6 +8,7 @@
 */
 
 namespace robertheim\topictags\migrations;
+
 use robertheim\topictags\prefixes;
 
 class release_0_0_3 extends \phpbb\db\migration\migration
@@ -26,7 +27,8 @@ class release_0_0_3 extends \phpbb\db\migration\migration
 		);
 	}
 
-	public function update_schema() {
+	public function update_schema()
+	{
 		return array(
 			'add_columns'	=> array(
 				$this->table_prefix . 'forums'	=> array(
@@ -53,4 +55,3 @@ class release_0_0_3 extends \phpbb\db\migration\migration
 		);
 	}
 }
-

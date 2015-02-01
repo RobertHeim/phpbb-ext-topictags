@@ -9,12 +9,12 @@
 
 if (!defined('IN_PHPBB'))
 {
-    exit;
+	exit;
 }
 
 if (empty($lang) || !is_array($lang))
 {
-    $lang = array();
+	$lang = array();
 }
 
 // these will be re-used in the definitions below - that is why we need to define and merge them first.
@@ -121,7 +121,7 @@ $lang = array_merge($lang, array(
 
 	'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS'		=> 'Объяснение для пользователей',
 	'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS_EXP'	=> 'Этот текст отображается для пользователей и объясняет, какие теги разрешены, а какие нет.<br/>По умолчанию: ' . $lang['ACP_RH_TOPICTAGS_REGEX_EXP_FOR_USERS_DEFAULT'],
-	
+
 	'TOPICTAGS_MANAGE_TAGS_EXP'					=> 'В таблице показаны все существующие теги. Здесь вы можете удалять их (и все их значения) или редактировать. Вы также можете объединять теги, изменив имя одного тега таким образом, что оно станет равным имени другого тега, в этом случае они будут объединены автоматически.',
 	'TOPICTAGS_NO_TAGS'							=> 'Теги еще не были созданы.',
 	'TOPICTAGS_TAG'								=> 'Тег',
@@ -136,10 +136,9 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_TAG_INVALID'						=> 'Данный тег "%s" неверен, проверьте ваши настройки для тегов.',
 	'TOPICTAGS_TAG_DOES_NOT_EXIST'				=> 'Тег "%s" не существует.',
 	'TOPICTAGS_NO_MODIFICATION'					=> 'Тег не был изменен.',
-	
+
 	'TOPICTAGS_SORT_NAME_ASC'					=> 'Имя тега A&rArr;Z', // &rArr; is a right-arrow (=>)
 	'TOPICTAGS_SORT_NAME_DESC'					=> 'Имя тега Z&rArr;A', // &rArr; is a right-arrow (=>)
 	'TOPICTAGS_SORT_COUNT_ASC'					=> 'Значения сортируются по возрастанию',
 	'TOPICTAGS_SORT_COUNT_DESC'					=> 'Значения сортируются по убыванию',
 ));
-

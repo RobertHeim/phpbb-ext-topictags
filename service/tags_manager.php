@@ -80,7 +80,7 @@ class tags_manager
 		$this->db->sql_freeresult($result);
 		return $ids;
 	}
-	
+
 	/**
 	 * Removes all tags that are not assigned to at least one topic (garbage collection).
 	 *
@@ -123,7 +123,7 @@ class tags_manager
 			// nothing to do
 			return 0;
 		}
-		
+
 		// delete all tag-assignments where the tag is not valid
 		$sql = 'DELETE FROM ' . $this->table_prefix . tables::TOPICTAGS . '
 			WHERE ' . $this->db->sql_in_set('tag_id', $ids_of_invalid_tags);
@@ -153,7 +153,7 @@ class tags_manager
 		$this->db->sql_freeresult($result);
 		return $ids;
 	}
-	
+
 	/**
 	 * Removes all topic-tag-assignments where the topic does not exist anymore.
 	 *
@@ -174,7 +174,7 @@ class tags_manager
 		$removed_count = $this->db->sql_affectedrows();
 
 		$this->calc_count_tags();
-		
+
 		return $removed_count;
 	}
 
@@ -197,7 +197,7 @@ class tags_manager
 			}
 			$forums_sql_where = ' AND ' . $this->db->sql_in_set('f.forum_id', $forum_ids);
 		}
-		
+
 		// get ids of all topic-assignments to topics that reside in a forum with tagging disabled.
 		$sql = 'SELECT tt.id
 			FROM ' . $this->table_prefix . tables::TOPICTAGS . ' tt
@@ -217,7 +217,7 @@ class tags_manager
 			$delete_ids[] = $row['id'];
 		}
 		$this->db->sql_freeresult($result);
-		
+
 		if (empty($delete_ids))
 		{
 			// nothing to do
@@ -469,7 +469,7 @@ class tags_manager
 		$this->db->sql_freeresult($result);
 		return $topics;
 	}
-	
+
 	/**
 	 * Counts the topics which are tagged with any or all of the given $tags from all forums, where tagging is enabled and only those which the user is allowed to read.
 	 *
@@ -529,15 +529,15 @@ class tags_manager
 				$forum_ary[] = (int) $forum_id;
 			}
 		}
-		
+
 		// Remove double entries
 		$forum_ary = array_unique($forum_ary);
-		
+
 		// Get sql-source for the topics that reside in forums that the user can read and which are approved.
 		$sql_where_topic_access = '';
 		if (empty($forum_ary))
 		{
-			$sql_where_topic_access = ' 1=0 ';			
+			$sql_where_topic_access = ' 1=0 ';
 		}
 		else
 		{
@@ -818,7 +818,7 @@ class tags_manager
 			)';
 		$this->db->sql_query($sql);
 	}
-	
+
 	/**
 	 * Gets the topic-ids that the given tag-id is assigned to.
 	 * 
@@ -844,7 +844,7 @@ class tags_manager
 		$this->db->sql_freeresult($result);
 		return $ids;
 	}
-	
+
 	/**
 	 * Merges two tags, by assigning all topics of tag_to_delete to the tag_to_keep and then delet the tag_to_delete.
 	 * NOTE: Both tags must exist and this is not checked again!
@@ -859,7 +859,7 @@ class tags_manager
 	{
 		$tag_to_delete_id = (int) $tag_to_delete_id;
 		$tag_to_keep_id = (int) $tag_to_keep_id;
-		
+
 		// delete assignments where the new tag is already assigned
 		$topic_ids_already_assigned = $this->get_topic_ids_by_tag_id($tag_to_keep_id);
 		if (!empty($topic_ids_already_assigned))
@@ -877,12 +877,12 @@ class tags_manager
 			SET  ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
 			WHERE tt.tag_id = ' . (int) $tag_to_delete_id;
 		$this->db->sql_query($sql);
-		
+
 		$this->delete_tag($tag_to_delete_id);
 		$this->calc_count_tags();
 		return $this->count_topics_by_tags(array($tag_to_keep), 'AND', true);
 	}
-	
+
 	/**
 	 * Deletes the given tag and all its assignments.
 	 * 
@@ -893,12 +893,12 @@ class tags_manager
 		$sql = 'DELETE FROM ' . $this->table_prefix . tables::TOPICTAGS . '
 			WHERE tag_id = ' . ((int) $tag_id);
 		$this->db->sql_query($sql);
-		
+
 		$sql = 'DELETE FROM ' . $this->table_prefix . tables::TAGS . '
 			WHERE id = ' . ((int) $tag_id);
 		$this->db->sql_query($sql);
 	}
-	
+
 	/**
 	 * Renames the tag
 	 * 
@@ -917,7 +917,7 @@ class tags_manager
 		$this->db->sql_query($sql);
 		return $this->count_topics_by_tags(array($new_name_clean), 'AND', true);
 	}
-	
+
 	/**
 	 * Gets the corresponding tag by its id
 	 * 
@@ -939,7 +939,7 @@ class tags_manager
 		$this->db->sql_freeresult($result);
 		return $tag;
 	}
-	
+
 	/**
 	 * Gets all tags.
 	 * 
@@ -973,7 +973,7 @@ class tags_manager
 		$this->db->sql_freeresult($result);
 		return $tags;
 	}
-	
+
 	/**
 	 * Gets the count of all tags.
 	 * 

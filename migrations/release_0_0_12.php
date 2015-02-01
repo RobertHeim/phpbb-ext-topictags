@@ -8,6 +8,7 @@
 */
 
 namespace robertheim\topictags\migrations;
+
 use robertheim\topictags\prefixes;
 
 class release_0_0_12 extends \phpbb\db\migration\migration
@@ -67,4 +68,3 @@ class release_0_0_12 extends \phpbb\db\migration\migration
 		);
 	}
 }
-

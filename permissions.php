@@ -19,4 +19,3 @@ abstract class permissions
 	const MOD_EDIT_TAGS = 'm_rhtopictags_edit_tags';
 	const USE_TAGS = 'u_rhtopictags_use_tags';
 }
-

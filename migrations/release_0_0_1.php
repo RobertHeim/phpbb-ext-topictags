@@ -8,6 +8,7 @@
 */
 
 namespace robertheim\topictags\migrations;
+
 use robertheim\topictags\tables;
 use robertheim\topictags\prefixes;
 
@@ -17,7 +18,8 @@ class release_0_0_1 extends \phpbb\db\migration\migration
 
 	protected $config_prefix = prefixes::CONFIG;
 
-	public function effectively_installed() {
+	public function effectively_installed()
+	{
 		$installed_version = $this->config[$this->config_prefix.'_version'];
 		return isset($installed_version) && version_compare($installed_version, $this->version, '>=');
 	}
@@ -27,12 +29,13 @@ class release_0_0_1 extends \phpbb\db\migration\migration
 		return array('\phpbb\db\migration\data\v310\dev');
 	}
 
-	public function update_schema() {
+	public function update_schema()
+	{
 		return array(
 			'add_tables' => array(
 				$this->table_prefix . tables::TOPICTAGS	=> array(
 					'COLUMNS'		=> array(
-						'id'			=> array('UINT', NULL, 'auto_increment'),
+						'id'			=> array('UINT', null, 'auto_increment'),
 						'topic_id'		=> array('UINT', 0),
 						'tag_id'		=> array('UINT', 1),
 					),
@@ -44,7 +47,7 @@ class release_0_0_1 extends \phpbb\db\migration\migration
 				),
 				$this->table_prefix . tables::TAGS => array(
 					'COLUMNS'		=> array(
-						'id'			=> array('UINT', NULL, 'auto_increment'),
+						'id'			=> array('UINT', null, 'auto_increment'),
 						'tag'			=> array('VCHAR:30', ''),
 					),
 					'PRIMARY_KEY'	=> 'id',

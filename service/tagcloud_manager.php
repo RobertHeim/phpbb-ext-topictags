@@ -27,18 +27,18 @@ class tagcloud_manager
 	private $table_prefix;
 
 	public function __construct(
-					\phpbb\db\driver\driver_interface $db,
-					\phpbb\config\config $config,
-					\phpbb\template\template $template,
-					\phpbb\controller\helper $helper,
-					$table_prefix
+		\phpbb\db\driver\driver_interface $db,
+		\phpbb\config\config $config,
+		\phpbb\template\template $template,
+		\phpbb\controller\helper $helper,
+		$table_prefix
 	)
 	{
-		$this->db			= $db;
-		$this->config		= $config;
-		$this->template		= $template;
-		$this->helper		= $helper;
-		$this->table_prefix	= $table_prefix;
+		$this->db = $db;
+		$this->config = $config;
+		$this->template = $template;
+		$this->helper = $helper;
+		$this->table_prefix = $table_prefix;
 	}
 
 	/**
@@ -74,12 +74,11 @@ class tagcloud_manager
 		}
 
 		// ensure that the css for the tag cloud will be included
-        $this->template->assign_vars(array(
+		$this->template->assign_vars(array(
 			'S_RH_TOPICTAGS_INCLUDE_CSS'		=> true,
 			'RH_TOPICTAGS_TAGCLOUD_SHOW_COUNT'	=> $this->config[prefixes::CONFIG . '_display_tagcount_in_tagcloud'],
 			'RH_TOPICTAGS_TAGCLOUD_TAG_COUNT'	=> $show_count,
 		));
-
 
 		// display it
 		foreach ($tags as $tag)
@@ -181,7 +180,7 @@ class tagcloud_manager
 		}
 		else if ($percent >= 20 and $percent < 40)
 		{
-			return 'rh_topictags_small'; 
+			return 'rh_topictags_small';
 		}
 		else if ($percent >= 40 and $percent < 60)
 		{

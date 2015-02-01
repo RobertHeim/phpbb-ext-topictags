@@ -59,7 +59,7 @@ class main_listener implements EventSubscriberInterface
 							\phpbb\config\config $config,
 							\robertheim\topictags\service\tags_manager $tags_manager,
 							\phpbb\controller\helper $helper,
-							\phpbb\request\request $request, 
+							\phpbb\request\request $request,
 							\phpbb\user $user,
 							\phpbb\template\template $template,
 							\phpbb\auth\auth $auth,
@@ -87,14 +87,14 @@ class main_listener implements EventSubscriberInterface
 		$tags_string = utf8_normalize_nfc($this->request->variable('rh_topictags', '', true));
 		$tags_string = rawurldecode(base64_decode($tags_string));
 		//$tags_string = utf8_encode($tags_string);
-	
+
 		if ('' === $tags_string) {
 			return array();
 		}
 
 		$tagsJson = json_decode($tags_string, true);
 		$tags = array();
-		
+
 		for ($i = 0, $count = sizeof($tagsJson); $i<$count; $i++)
 		{
 			$tags[] = trim($tagsJson[$i]['text']);
@@ -151,7 +151,7 @@ class main_listener implements EventSubscriberInterface
 				$this->user->add_lang_ext('robertheim/topictags', 'topictags');
 				$data['error'][] = $this->user->lang('RH_TOPICTAGS_TAGS_INVALID', join(', ', $invalid_tags));
 			}
-			
+
 			$event->set_data($data);
 		}
 	}
@@ -314,7 +314,7 @@ class main_listener implements EventSubscriberInterface
 
 					// assign the template data
 					$data['topic_row']['RH_TOPICTAGS_TAGS'] = $rendered_tags;
-			
+
 					$event->set_data($data);
 				}
 			}
@@ -347,7 +347,7 @@ class main_listener implements EventSubscriberInterface
 						)),
 					));
 				}
-	
+
 				$this->template->assign_vars(array(
 					'RH_TOPICTAGS_SHOW'	=> true,
 					'META'				=> '<meta name="keywords" content="' . join(', ', $tags) . '">',

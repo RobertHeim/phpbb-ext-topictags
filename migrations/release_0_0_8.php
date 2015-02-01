@@ -8,6 +8,7 @@
 */
 
 namespace robertheim\topictags\migrations;
+
 use robertheim\topictags\prefixes;
 use robertheim\topictags\tables;
 use robertheim\topictags\service\tags_manager;
@@ -28,7 +29,8 @@ class release_0_0_8 extends \phpbb\db\migration\migration
 		);
 	}
 
-	public function update_schema() {
+	public function update_schema()
+	{
 		return array(
 			'add_columns'	=> array(
 				$this->table_prefix . tables::TAGS	=> array(
@@ -74,4 +76,3 @@ class release_0_0_8 extends \phpbb\db\migration\migration
 		$tags_manager->calc_count_tags();
 	}
 }
-

@@ -44,4 +44,3 @@ $lang = array_merge($lang, array(
 	'ACL_'.utf8_strtoupper(permissions::MOD_EDIT_TAGS)	=> 'Может редактировать RH topic tags',
 	'ACL_'.utf8_strtoupper(permissions::USE_TAGS)			=> 'Может использовать RH topic tags',
 ));
-

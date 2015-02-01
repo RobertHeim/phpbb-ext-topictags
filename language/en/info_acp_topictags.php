@@ -45,4 +45,3 @@ $lang = array_merge($lang, array(
 	'ACP_TOPICTAGS_BLACKLIST'		=> 'Blacklist',
 	'ACP_TOPICTAGS_MANAGE_TAGS'		=> 'Manage Tags',
 ));
-

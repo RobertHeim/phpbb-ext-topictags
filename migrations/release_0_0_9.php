@@ -8,6 +8,7 @@
 */
 
 namespace robertheim\topictags\migrations;
+
 use robertheim\topictags\prefixes;
 use robertheim\topictags\permissions;
 
@@ -34,7 +35,7 @@ class release_0_0_9 extends \phpbb\db\migration\migration
 		$re[] = array('permission.add', array(permissions::ADMIN_EDIT_TAGS));
 		$re[] = array('permission.add', array(permissions::MOD_EDIT_TAGS));
 		$re[] = array('permission.add', array(permissions::USE_TAGS));
-		
+
 		// Set permissions for the board roles
 		if ($this->role_exists('ROLE_ADMIN_FULL')) {
 			$re[] = array('permission.permission_set', array('ROLE_ADMIN_FULL', permissions::ADMIN_EDIT_TAGS));
@@ -57,12 +58,12 @@ class release_0_0_9 extends \phpbb\db\migration\migration
 		$re[] = array('config.add', array(prefixes::CONFIG.'_whitelist', ''));
 		$re[] = array('config.add', array(prefixes::CONFIG.'_blacklist_enabled', 0));
 		$re[] = array('config.add', array(prefixes::CONFIG.'_blacklist', ''));
-		
+
 		$re[] = array('config.update', array(prefixes::CONFIG.'_version', $this->version));
-				
+
 		return $re;
 	}
-	
+
 	/**
 	 * Checks whether the given role does exist or not.
 	 *
@@ -77,8 +78,8 @@ class release_0_0_9 extends \phpbb\db\migration\migration
 		$result = $this->db->sql_query_limit($sql, 1);
 		$role_id = $this->db->sql_fetchfield('role_id');
 		$this->db->sql_freeresult($result);
+
 		return $role_id > 0;
 	}
 
 }
-

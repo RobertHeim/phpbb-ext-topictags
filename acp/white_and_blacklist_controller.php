@@ -23,7 +23,7 @@ class white_and_blacklist_controller
 	private $request;
 
 	private $user;
-	
+
 	private $template;
 
 	private $tags_manager;
@@ -53,16 +53,16 @@ class white_and_blacklist_controller
 		// Define the name of the form for use as a form key
 		$form_name = 'topictags';
 		add_form_key($form_name);
-		
+
 		$errors = array();
-		
+
 		if ($this->request->is_set_post('submit'))
 		{
 			if (! check_form_key($form_name))
 			{
 				trigger_error('FORM_INVALID');
 			}
-			
+
 			$this->config->set(prefixes::CONFIG . '_whitelist_enabled', $this->request->variable(prefixes::CONFIG . '_whitelist_enabled', 0));
 			$whitelist = rawurldecode(base64_decode($this->request->variable(prefixes::CONFIG . '_whitelist', '')));
 			if (! empty($whitelist))
@@ -92,8 +92,7 @@ class white_and_blacklist_controller
 				'U_ACTION'								=> $u_action
 			));
 	}
-	
-	
+
 	/**
 	 *
 	 * @param string $mode
@@ -106,16 +105,16 @@ class white_and_blacklist_controller
 		// Define the name of the form for use as a form key
 		$form_name = 'topictags';
 		add_form_key($form_name);
-	
+
 		$errors = array();
-	
+
 		if ($this->request->is_set_post('submit'))
 		{
 			if (! check_form_key($form_name))
 			{
 				trigger_error('FORM_INVALID');
 			}
-				
+
 			$this->config->set(prefixes::CONFIG . '_blacklist_enabled', $this->request->variable(prefixes::CONFIG . '_blacklist_enabled', 0));
 			$blacklist = rawurldecode(base64_decode($this->request->variable(prefixes::CONFIG . '_blacklist', '')));
 			if (! empty($blacklist))
