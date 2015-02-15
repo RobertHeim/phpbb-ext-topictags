@@ -891,11 +891,11 @@ class tags_manager
 		}
 		// renew assignments where the new tag is not assigned, yet
 		$sql_ary = array(
-			'tt.tag_id'	=> $tag_to_keep_id,
+			'tag_id'	=> $tag_to_keep_id,
 		);
-		$sql = 'UPDATE ' . $this->table_prefix . tables::TOPICTAGS . ' tt
+		$sql = 'UPDATE ' . $this->table_prefix . tables::TOPICTAGS . '
 			SET  ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
-			WHERE tt.tag_id = ' . (int) $tag_to_delete_id;
+			WHERE tag_id = ' . (int) $tag_to_delete_id;
 		$this->db->sql_query($sql);
 
 		$this->delete_tag($tag_to_delete_id);

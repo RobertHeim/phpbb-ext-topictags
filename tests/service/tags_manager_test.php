@@ -557,4 +557,65 @@ class tags_manager_test extends \phpbb_database_test_case
 		$this->assertEquals(0, $count);
 	}
 
+	public function test_merge()
+	{
+		global $table_prefix;
+		// uses auth, so we set up the mock/stub
+		// to allow reading first forum
+		$this->auth->expects($this->once())
+			->method('acl_getf')
+			->with($this->equalTo('f_read'))
+			->willReturn(array(
+			1 => array(
+				'f_read' => true
+			)
+		));
+
+		$tag_to_delete = "tag1";
+		$tag_to_delete_id = 1;
+		$tag_to_keep = "tag2";
+		$tag_to_keep_id = 2;
+
+		$result = $this->db->sql_query(
+			'SELECT count
+			FROM ' . $table_prefix . tables::TAGS . '
+			WHERE id=' . $tag_to_keep_id);
+		$count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(0, $count);
+
+		$count_of_assignments = $this->tags_manager->merge($tag_to_delete,
+			$tag_to_delete_id, $tag_to_keep, $tag_to_keep_id);
+		$this->assertEquals(1, $count_of_assignments);
+
+		// tag1 must be deleted
+		$result = $this->db->sql_query(
+			'SELECT COUNT(*) as count
+			FROM ' . $table_prefix . tables::TAGS . '
+			WHERE id=' . $tag_to_delete_id);
+		$count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(0, $count);
+
+		// tag2 must be assignet to both topics
+		// but only counted once because of tagging disabled forum
+		$result = $this->db->sql_query(
+			'SELECT count
+			FROM ' . $table_prefix . tables::TAGS . '
+			WHERE id=' . $tag_to_keep_id);
+		$count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(1, $count);
+
+		$result = $this->db->sql_query(
+			'SELECT topic_id
+			FROM ' . $table_prefix . tables::TOPICTAGS . '
+			WHERE tag_id=' . $tag_to_keep_id);
+		$topics = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$topics[] = $row['topic_id'];
+		}
+		$this->assertEquals(array(
+			1,
+			2
+		), $topics);
+	}
 }
