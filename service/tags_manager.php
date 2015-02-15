@@ -290,7 +290,7 @@ class tags_manager
 			),
 			'WHERE'		=> 't.tag ' . $this->db->sql_like_expression($query . $this->db->get_any_char()) . "
 							$exclude_sql",
-			'ORDER BY'	=> 't.count DESC',
+			'ORDER_BY'	=> 't.count DESC',
 		);
 		$sql = $this->db->sql_build_query('SELECT_DISTINCT', $sql_array);
 		$result = $this->db->sql_query_limit($sql, $count);

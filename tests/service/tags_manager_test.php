@@ -288,10 +288,13 @@ class tags_manager_test extends \phpbb_database_test_case
 		$this->assert_array_content_equals($valid_tags, $tags);
 
 		// tag3 must be deleted
+		$sql_array = array(
+			'tag' => 'tag3',
+		);
 		$result = $this->db->sql_query(
 			'SELECT count
 			FROM ' . $table_prefix . tables::TAGS . '
-			WHERE tag="tag3"');
+			WHERE ' . $this->db->sql_build_array('SELECT', $sql_array));
 		$count = $this->db->sql_fetchfield('count');
 		$this->assertEquals(0, $count);
 	}
