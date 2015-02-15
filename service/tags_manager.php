@@ -452,11 +452,12 @@ class tags_manager
 	 *
 	 * @param $start start for sql query
 	 * @param $limit limit for sql query
-	 * @param $tags the tag to find the topics for
+	 * @param $tags array of tags to find the topics for
 	 * @param $mode AND=all tags must be assigned, OR=at least one tag needs to be assigned
+	 * @param $casesensitive wether the search should be casesensitive (true) or not (false).
 	 * @return array of topics, each containing all fields from TOPICS_TABLE
 	 */
-	public function get_topics_by_tags($tags, $start, $limit, $mode = 'AND', $casesensitive = false)
+	public function get_topics_by_tags(array $tags, $start, $limit, $mode = 'AND', $casesensitive = false)
 	{
 		$sql = $this->get_topics_build_query($tags, $mode, $casesensitive);
 
@@ -464,7 +465,6 @@ class tags_manager
 		$sql .= $order_by;
 
 		$result = $this->db->sql_query_limit($sql, $limit, $start);
-
 		$topics = array();
 		while ($row = $this->db->sql_fetchrow($result))
 		{
@@ -547,7 +547,7 @@ class tags_manager
 		{
 			$sql_where_topic_access = $this->db->sql_in_set('topics.forum_id', $forum_ary, false, true);
 		}
-		$sql_where_topic_access .= ' AND topics.topic_visibility = 1';
+		$sql_where_topic_access .= ' AND topics.topic_visibility = ' . ITEM_APPROVED;
 
 		// TODO store a utf8_clean_string string and compare this, instead of LOWER(...) see http://phpcrossref.com/xref/phpbb/_functions/utf8_clean_string.html
 		// tags is not an empty array here
