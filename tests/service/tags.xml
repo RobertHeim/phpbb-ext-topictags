@@ -25,15 +25,19 @@
         <column>topic_id</column>
         <column>forum_id</column>
         <column>topic_title</column>
+        <column>topic_visibility</column>
+        
         <row>
             <value>1</value>
             <value>1</value>
             <value>Topic1</value>
+            <value>1</value>
         </row>
         <row>
             <value>2</value>
             <value>2</value>
             <value>Topic2</value>
+            <value>1</value>
         </row>
     </table>
     <table name="phpbb_rh_topictags">

@@ -13,17 +13,19 @@ use robertheim\topictags\tables;
 class tags_manager_test extends \phpbb_database_test_case
 {
 
+	private $auth;
+
 	protected function setUp()
 	{
 		parent::setUp();
 		global $table_prefix, $user;
 		$this->db = $this->new_dbal();
-		$auth = new \phpbb\auth\auth();
+		$this->auth = $this->getMock('\phpbb\auth\auth');
 		$config = new \phpbb\config\config(array(
 			prefixes::CONFIG.'_allowed_tags_regex' => '/^[a-z]{3,30}$/i',
 		));
 		$this->tags_manager = new \robertheim\topictags\service\tags_manager(
-			$this->db, $config, $auth, $table_prefix);
+			$this->db, $config, $this->auth, $table_prefix);
 	}
 
 	public function getDataSet()
@@ -209,10 +211,10 @@ class tags_manager_test extends \phpbb_database_test_case
 		global $table_prefix;
 		$topic_id = 1;
 		$tags = $this->tags_manager->get_assigned_tags($topic_id);
-		$this->assert_array_content_equals(array('tag1'), $tags);
+		$this->assertEquals(array('tag1'), $tags);
 		$topic_id = 2;
 		$tags = $this->tags_manager->get_assigned_tags($topic_id);
-		$this->assert_array_content_equals(array('tag1'), $tags);
+		$this->assertEquals(array('tag1'), $tags);
 	}
 
 	public function test_get_tag_suggestions()
@@ -272,20 +274,20 @@ class tags_manager_test extends \phpbb_database_test_case
 		global $table_prefix;
 		$topic_id = 2;
 		$tags = $this->tags_manager->get_assigned_tags($topic_id);
-		$this->assert_array_content_equals(array("tag1"), $tags);
+		$this->assertEquals(array("tag1"), $tags);
 
 		$valid_tags = array("tag2", "tag3");
 		$this->tags_manager->assign_tags_to_topic($topic_id, $valid_tags);
 
 		$tags = $this->tags_manager->get_assigned_tags($topic_id);
-		$this->assert_array_content_equals($valid_tags, $tags);
+		$this->assertEquals($valid_tags, $tags);
 
 
 		$valid_tags = array("tag2");
 		$this->tags_manager->assign_tags_to_topic($topic_id, $valid_tags);
 
 		$tags = $this->tags_manager->get_assigned_tags($topic_id);
-		$this->assert_array_content_equals($valid_tags, $tags);
+		$this->assertEquals($valid_tags, $tags);
 
 		// tag3 must be deleted
 		$sql_array = array(
@@ -302,7 +304,7 @@ class tags_manager_test extends \phpbb_database_test_case
 	public function test_get_existing_tags()
 	{
 		$tags = $this->tags_manager->get_existing_tags();
-		$this->assert_array_content_equals(
+		$this->assertEquals(
 			array(
 				array(
 					"id" => 1,
@@ -319,7 +321,7 @@ class tags_manager_test extends \phpbb_database_test_case
 			"tag1",
 			"tag3"
 		));
-		$this->assert_array_content_equals(
+		$this->assertEquals(
 			array(
 				array(
 					"id" => 1,
@@ -329,6 +331,38 @@ class tags_manager_test extends \phpbb_database_test_case
 			, $tags);
 
 		$tag_ids = $this->tags_manager->get_existing_tags(null, true);
-		$this->assert_array_content_equals(array(1, 2), $tag_ids);
+		$this->assertEquals(array(1, 2), $tag_ids);
+	}
+
+	public function test_get_topics_by_tags()
+	{
+		// uses auth, so we set up the mock/stub
+		// to allow reading first forum
+		$this->auth->expects($this->once())
+			->method('acl_getf')
+			->with($this->equalTo('f_read'))
+			->willReturn(array(
+			1 => array(
+				'f_read' => true
+			)
+		));
+		$tags = array(
+			"tag1"
+		);
+		$start = 0;
+		$limit = 10;
+		$mode = 'AND';
+		$casesensitive = false;
+		$topics = $this->tags_manager->get_topics_by_tags($tags, $start, $limit);
+
+		$this->assertEquals(1, sizeof($topics));
+		// check that some values exist in the found topic-array
+		$diff = array_diff_assoc(
+			array(
+				"topic_id" => 1,
+				"forum_id" => 1,
+				"topic_title" => "Topic1"
+			), $topics[0]);
+		$this->assertEquals(0, sizeof($diff));
 	}
 }
