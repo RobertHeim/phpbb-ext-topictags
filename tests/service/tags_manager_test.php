@@ -795,4 +795,13 @@ class tags_manager_test extends \phpbb_database_test_case
 				)
 			), $tags);
 	}
+
+	public function test_count_tags()
+	{
+		$count = $this->tags_manager->count_tags();
+		$this->assertEquals(2, $count);
+		$this->tags_manager->delete_tag(1);
+		$count = $this->tags_manager->count_tags();
+		$this->assertEquals(1, $count);
+	}
 }
