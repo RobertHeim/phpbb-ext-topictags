@@ -167,6 +167,21 @@ class tags_manager_test extends \phpbb_database_test_case
 				 tables::TOPICTAGS);
 		$count = $this->db->sql_fetchfield('count');
 		$this->assertEquals(0, $count);
+
+		// both tags are not assigned to any topic now
+		$result = $this->db->sql_query(
+			'SELECT count
+			FROM ' . $table_prefix . tables::TAGS . '
+			WHERE id=1');
+		$count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(0, $count);
+
+		$result = $this->db->sql_query(
+			'SELECT count
+			FROM ' . $table_prefix . tables::TAGS . '
+			WHERE id=2');
+		$count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(0, $count);
 	}
 
 }
