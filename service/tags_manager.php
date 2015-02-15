@@ -111,7 +111,7 @@ class tags_manager
 	public function delete_assignments_of_invalid_tags()
 	{
 		// get all tags to check them
-		$tags =  $this->get_existing_tags(null);
+		$tags = $this->get_existing_tags(null);
 
 		$ids_of_invalid_tags = array();
 		foreach ($tags as $tag)

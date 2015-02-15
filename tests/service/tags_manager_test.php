@@ -47,6 +47,73 @@ class tags_manager_test extends \phpbb_database_test_case
 	 */
 	protected $tags_manager;
 
+	public function test_remove_all_tags_from_topic()
+	{
+		global $table_prefix;
+
+		$topic_id = 1;
+
+		// there is one tag assigned to the topic
+		$result = $this->db->sql_query(
+			'SELECT COUNT(*) as count
+			FROM ' . $table_prefix .
+				 tables::TOPICTAGS . '
+			WHERE topic_id=' . $topic_id);
+		$assigned_tags_count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(1, $assigned_tags_count);
+
+		// there exists one unused tag
+		$result = $this->db->sql_query(
+			'SELECT COUNT(*) as count
+			FROM ' . $table_prefix . tables::TAGS . '
+			WHERE id=2');
+		$assigned_tags_count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(1, $assigned_tags_count);
+
+		$delete_unused_tags = true;
+		$this->tags_manager->remove_all_tags_from_topic($topic_id,
+			$delete_unused_tags);
+
+		// there is no tag assigned to the topic
+		$result = $this->db->sql_query(
+			'SELECT COUNT(*) as count
+			FROM ' . $table_prefix .
+				 tables::TOPICTAGS . '
+			WHERE topic_id=' . $topic_id);
+		$assigned_tags_count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(0, $assigned_tags_count);
+
+		// the unused tag is deleted
+		$result = $this->db->sql_query(
+			'SELECT COUNT(*) as count
+			FROM ' . $table_prefix . tables::TAGS . '
+			WHERE id=2');
+		$assigned_tags_count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(0, $assigned_tags_count);
+	}
+
+	public function test_delete_unused_tags()
+	{
+		global $table_prefix;
+		$result = $this->db->sql_query(
+			'SELECT COUNT(*) as count
+			FROM ' . $table_prefix . tables::TAGS . '
+			WHERE id=2');
+		$count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(1, $count);
+
+		$removed_count = $this->tags_manager->delete_unused_tags();
+
+		$this->assertEquals(1, $removed_count);
+
+		$result = $this->db->sql_query(
+			'SELECT COUNT(*) as count
+			FROM ' . $table_prefix . tables::TAGS . '
+			WHERE id=2');
+		$count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(0, $count);
+	}
+
 	public function test_calc_count_tags()
 	{
 		global $table_prefix;
@@ -73,71 +140,6 @@ class tags_manager_test extends \phpbb_database_test_case
 			WHERE id=2');
 		$count = $this->db->sql_fetchfield('count');
 		$this->assertEquals(0, $count);
-	}
-
-	public function test_delete_unused_tags()
-	{
-		global $table_prefix;
-		$result = $this->db->sql_query(
-			'SELECT COUNT(*) as count
-			FROM ' . $table_prefix . tables::TAGS . '
-			WHERE id=2');
-		$count = $this->db->sql_fetchfield('count');
-		$this->assertEquals(1, $count);
-
-		$removed_count = $this->tags_manager->delete_unused_tags();
-
-		$this->assertEquals(1, $removed_count);
-
-		$result = $this->db->sql_query(
-			'SELECT COUNT(*) as count
-			FROM ' . $table_prefix . tables::TAGS . '
-			WHERE id=2');
-		$count = $this->db->sql_fetchfield('count');
-		$this->assertEquals(0, $count);
-	}
-
-	public function test_remove_all_tags_from_topic()
-	{
-		global $table_prefix;
-
-		$topic_id = 1;
-
-		// there is one tag assigned to the topic
-		$result = $this->db->sql_query(
-			'SELECT COUNT(*) as count
-			FROM ' . $table_prefix . tables::TOPICTAGS . '
-			WHERE topic_id=' . $topic_id);
-		$assigned_tags_count = $this->db->sql_fetchfield('count');
-		$this->assertEquals(1, $assigned_tags_count);
-
-		// there exists one unused tag
-		$result = $this->db->sql_query(
-			'SELECT COUNT(*) as count
-			FROM ' . $table_prefix . tables::TAGS . '
-			WHERE id=2');
-		$assigned_tags_count = $this->db->sql_fetchfield('count');
-		$this->assertEquals(1, $assigned_tags_count);
-
-		$delete_unused_tags = true;
-		$this->tags_manager->remove_all_tags_from_topic($topic_id,
-			$delete_unused_tags);
-
-		// there is no tag assigned to the topic
-		$result = $this->db->sql_query(
-			'SELECT COUNT(*) as count
-			FROM ' . $table_prefix . tables::TOPICTAGS . '
-			WHERE topic_id=' . $topic_id);
-		$assigned_tags_count = $this->db->sql_fetchfield('count');
-		$this->assertEquals(0, $assigned_tags_count);
-
-		// the unused tag is deleted
-		$result = $this->db->sql_query(
-			'SELECT COUNT(*) as count
-			FROM ' . $table_prefix . tables::TAGS . '
-			WHERE id=2');
-		$assigned_tags_count = $this->db->sql_fetchfield('count');
-		$this->assertEquals(0, $assigned_tags_count);
 	}
 
 }
