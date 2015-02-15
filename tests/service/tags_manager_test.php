@@ -295,4 +295,37 @@ class tags_manager_test extends \phpbb_database_test_case
 		$count = $this->db->sql_fetchfield('count');
 		$this->assertEquals(0, $count);
 	}
+
+	public function test_get_existing_tags()
+	{
+		$tags = $this->tags_manager->get_existing_tags();
+		$this->assert_array_content_equals(
+			array(
+				array(
+					"id" => 1,
+					"tag" => "tag1"
+				),
+				array(
+					"id" => 2,
+					"tag" => "tag2"
+				),
+			)
+			, $tags);
+
+		$tags = $this->tags_manager->get_existing_tags(array(
+			"tag1",
+			"tag3"
+		));
+		$this->assert_array_content_equals(
+			array(
+				array(
+					"id" => 1,
+					"tag" => "tag1"
+				),
+			)
+			, $tags);
+
+		$tag_ids = $this->tags_manager->get_existing_tags(null, true);
+		$this->assert_array_content_equals(array(1, 2), $tag_ids);
+	}
 }
