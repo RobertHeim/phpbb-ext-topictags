@@ -284,7 +284,8 @@ class tags_manager
 			$exclude_sql = ' AND ' . $this->db->sql_in_set('t.tag', $exclude, true, true);
 		}
 		$sql_array = array(
-			'SELECT'	=> 't.tag',
+			// we must fetch count, because postgres needs the context for ordering
+			'SELECT'	=> 't.tag, t.count',
 			'FROM'		=> array(
 				$this->table_prefix . tables::TAGS		=> 't',
 			),
