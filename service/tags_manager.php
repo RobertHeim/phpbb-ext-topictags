@@ -429,25 +429,6 @@ class tags_manager
 	}
 
 	/**
-	 * Gets the ids of all tags that are used.
-	 *
-	 * @return array of ids
-	 */
-	private function get_used_tag_ids()
-	{
-		$sql = 'SELECT DISTINCT tag_id
-			FROM ' . $this->table_prefix . tables::TOPICTAGS;
-		$result = $this->db->sql_query($sql);
-		$ids = array();
-		while ($row = $this->db->sql_fetchrow($result))
-		{
-			$ids[] = $row['tag_id'];
-		}
-		$this->db->sql_freeresult($result);
-		return $ids;
-	}
-
-	/**
 	 * Gets the topics which are tagged with any or all of the given $tags from all forums, where tagging is enabled and only those which the user is allowed to read.
 	 *
 	 * @param $start start for sql query
