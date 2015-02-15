@@ -7,6 +7,7 @@
  */
 namespace robertheim\topictags\tests\service;
 
+use robertheim\topictags\prefixes;
 use robertheim\topictags\tables;
 
 class tags_manager_test extends \phpbb_database_test_case
@@ -15,10 +16,12 @@ class tags_manager_test extends \phpbb_database_test_case
 	protected function setUp()
 	{
 		parent::setUp();
-		global $table_prefix;
+		global $table_prefix, $user;
 		$this->db = $this->new_dbal();
 		$auth = new \phpbb\auth\auth();
-		$config = new \phpbb\config\config(array());
+		$config = new \phpbb\config\config(array(
+			prefixes::CONFIG.'_allowed_tags_regex' => '/^[a-z]{3,30}$/i',
+		));
 		$this->tags_manager = new \robertheim\topictags\service\tags_manager(
 			$this->db, $config, $auth, $table_prefix);
 	}
@@ -138,6 +141,30 @@ class tags_manager_test extends \phpbb_database_test_case
 			'SELECT count
 			FROM ' . $table_prefix . tables::TAGS . '
 			WHERE id=2');
+		$count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(0, $count);
+	}
+
+	public function test_delete_assignments_of_invalid_tags()
+	{
+		global $table_prefix;
+
+		$result = $this->db->sql_query(
+			'SELECT COUNT(*) as count
+			FROM ' . $table_prefix .
+				 tables::TOPICTAGS);
+		$count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(2, $count);
+
+		// none of the tags is valid to the configured regex [a-z]
+		// so all assignments should be deleted.
+		$removed_count = $this->tags_manager->delete_assignments_of_invalid_tags();
+		$this->assertEquals(2, $removed_count);
+
+		$result = $this->db->sql_query(
+			'SELECT COUNT(*) as count
+			FROM ' . $table_prefix .
+				 tables::TOPICTAGS);
 		$count = $this->db->sql_fetchfield('count');
 		$this->assertEquals(0, $count);
 	}
