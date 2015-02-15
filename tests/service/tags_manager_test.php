@@ -338,7 +338,7 @@ class tags_manager_test extends \phpbb_database_test_case
 	{
 		// uses auth, so we set up the mock/stub
 		// to allow reading first forum
-		$this->auth->expects($this->once())
+		$this->auth->expects($this->exactly(4))
 			->method('acl_getf')
 			->with($this->equalTo('f_read'))
 			->willReturn(array(
@@ -346,14 +346,55 @@ class tags_manager_test extends \phpbb_database_test_case
 				'f_read' => true
 			)
 		));
+
 		$tags = array(
 			"tag1"
 		);
 		$start = 0;
 		$limit = 10;
-		$mode = 'AND';
-		$casesensitive = false;
 		$topics = $this->tags_manager->get_topics_by_tags($tags, $start, $limit);
+
+		$this->assertEquals(1, sizeof($topics));
+		// check that some values exist in the found topic-array
+		$diff = array_diff_assoc(
+			array(
+				"topic_id" => 1,
+				"forum_id" => 1,
+				"topic_title" => "Topic1"
+			), $topics[0]);
+		$this->assertEquals(0, sizeof($diff));
+
+		// case sensitive
+		$tags = array(
+			"tAg1"
+		);
+		$start = 0;
+		$limit = 10;
+		$mode = 'AND';
+		$casesensitive = true;
+		$topics = $this->tags_manager->get_topics_by_tags($tags, $start, $limit, $mode, $casesensitive);
+
+		$this->assertEquals(0, sizeof($topics));
+
+		$tags = array(
+			"tag1",
+			"noneExistingTag"
+		);
+		$start = 0;
+		$limit = 10;
+		$topics = $this->tags_manager->get_topics_by_tags($tags, $start, $limit);
+
+		$this->assertEquals(0, sizeof($topics));
+
+		// search with OR
+		$tags = array(
+			"tag1",
+			"noneExistingTag"
+		);
+		$start = 0;
+		$limit = 10;
+		$mode = 'OR';
+		$topics = $this->tags_manager->get_topics_by_tags($tags, $start, $limit, $mode);
 
 		$this->assertEquals(1, sizeof($topics));
 		// check that some values exist in the found topic-array
