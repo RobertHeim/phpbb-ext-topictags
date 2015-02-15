@@ -529,6 +529,20 @@ class tags_manager_test extends \phpbb_database_test_case
 		$this->assertTrue($this->tags_manager->is_tagging_enabled_in_forum(4), 'forum type does not allow for tagging and hence should not be changed');
 	}
 
+	public function test_is_enabled_in_all_forums()
+	{
+		$this->assertFalse($this->tags_manager->is_enabled_in_all_forums());
+		$this->tags_manager->enable_tags_in_all_forums();
+		$this->assertTrue($this->tags_manager->is_enabled_in_all_forums());
+	}
+
+	public function test_is_disabled_in_all_forums()
+	{
+		$this->assertFalse($this->tags_manager->is_disabled_in_all_forums());
+		$this->tags_manager->disable_tags_in_all_forums();
+		$this->assertTrue($this->tags_manager->is_disabled_in_all_forums());
+	}
+
 	public function test_calc_count_tags()
 	{
 		global $table_prefix;
