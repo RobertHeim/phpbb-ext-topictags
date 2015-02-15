@@ -266,4 +266,33 @@ class tags_manager_test extends \phpbb_database_test_case
 			$count);
 		$this->assertEquals(array(), $tags);
 	}
+
+	public function test_assign_tags_to_topic()
+	{
+		global $table_prefix;
+		$topic_id = 2;
+		$tags = $this->tags_manager->get_assigned_tags($topic_id);
+		$this->assert_array_content_equals(array("tag1"), $tags);
+
+		$valid_tags = array("tag2", "tag3");
+		$this->tags_manager->assign_tags_to_topic($topic_id, $valid_tags);
+
+		$tags = $this->tags_manager->get_assigned_tags($topic_id);
+		$this->assert_array_content_equals($valid_tags, $tags);
+
+
+		$valid_tags = array("tag2");
+		$this->tags_manager->assign_tags_to_topic($topic_id, $valid_tags);
+
+		$tags = $this->tags_manager->get_assigned_tags($topic_id);
+		$this->assert_array_content_equals($valid_tags, $tags);
+
+		// tag3 must be deleted
+		$result = $this->db->sql_query(
+			'SELECT count
+			FROM ' . $table_prefix . tables::TAGS . '
+			WHERE tag="tag3"');
+		$count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(0, $count);
+	}
 }
