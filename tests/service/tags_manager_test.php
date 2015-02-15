@@ -198,10 +198,69 @@ class tags_manager_test extends \phpbb_database_test_case
 
 	public function test_delete_tags_from_tagdisabled_forums()
 	{
-		global $table_prefix;
 		$removed_count = $this->tags_manager->delete_tags_from_tagdisabled_forums(array(1));
 		$this->assertEquals(0, $removed_count);
 		$removed_count = $this->tags_manager->delete_tags_from_tagdisabled_forums();
 		$this->assertEquals(1, $removed_count);
+	}
+
+	public function test_get_assigned_tags()
+	{
+		global $table_prefix;
+		$topic_id = 1;
+		$tags = $this->tags_manager->get_assigned_tags($topic_id);
+		$this->assert_array_content_equals(array('tag1'), $tags);
+		$topic_id = 2;
+		$tags = $this->tags_manager->get_assigned_tags($topic_id);
+		$this->assert_array_content_equals(array('tag1'), $tags);
+	}
+
+	public function test_get_tag_suggestions()
+	{
+		$query = "tag";
+		$exclude = array(
+			"tag1",
+		);
+		$count = 5;
+		$tags = $this->tags_manager->get_tag_suggestions($query, $exclude,
+			$count);
+		$this->assertEquals(array(
+			array(
+				"text" => "tag2",
+			)
+		), $tags);
+
+		$query = "tag";
+		$exclude = array();
+		$count = 5;
+		$tags = $this->tags_manager->get_tag_suggestions($query, $exclude,
+			$count);
+		$this->assertEquals(
+			array(
+				array(
+					"text" => "tag1",
+				),
+				array(
+					"text" => "tag2",
+				),
+			), $tags);
+
+		$query = "tag";
+		$exclude = array();
+		$count = 1;
+		$tags = $this->tags_manager->get_tag_suggestions($query, $exclude,
+			$count);
+		$this->assertEquals(array(
+			array(
+				"text" => "tag1",
+			)
+		), $tags);
+
+		$query = "ta";
+		$exclude = array();
+		$count = 5;
+		$tags = $this->tags_manager->get_tag_suggestions($query, $exclude,
+			$count);
+		$this->assertEquals(array(), $tags);
 	}
 }
