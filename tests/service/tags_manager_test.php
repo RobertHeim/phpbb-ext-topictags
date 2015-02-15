@@ -16,12 +16,12 @@ class tags_manager_test extends \phpbb_database_test_case
 
 	protected function setUp()
 	{
-		global $table_prefix;
 		parent::setUp();
+		global $table_prefix;
 		$this->db = $this->new_dbal();
 		$auth = new \phpbb\auth\auth();
 		$config = new \phpbb\config\config(array());
-		$this->tags_manager = new \robertheim\topictags\service\tags_manager($this->db, $config, $auth, $table_prefix);;
+		$this->tags_manager = new \robertheim\topictags\service\tags_manager($this->db, $config, $auth, $table_prefix);
 	}
 
 	public function getDataSet()
@@ -37,10 +37,14 @@ class tags_manager_test extends \phpbb_database_test_case
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
+	/**
+	 * @var \robertheim\topictags\service\tags_manager
+	 */
 	protected $tags_manager;
 
 	public function test_calc_count_tags()
 	{
+		global $table_prefix;
 		$this->tags_manager->calc_count_tags();
 
 		$result = $this->db->sql_query('SELECT count FROM ' . $table_prefix . tables::TAGS . ' WHERE id=1');
@@ -50,6 +54,7 @@ class tags_manager_test extends \phpbb_database_test_case
 
 	public function test_delete_unused_tags()
 	{
+		global $table_prefix;
 		$result = $this->db->sql_query('SELECT COUNT(*) as count FROM ' . $table_prefix . tables::TAGS . ' WHERE id=2');
 		$count = $this->db->sql_fetchfield('count');
 		$this->assertEquals($count, 1);
@@ -62,4 +67,5 @@ class tags_manager_test extends \phpbb_database_test_case
 		$count = $this->db->sql_fetchfield('count');
 		$this->assertEquals($count, 0);
 	}
+
 }
