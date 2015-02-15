@@ -217,6 +217,9 @@ class tags_manager_test extends \phpbb_database_test_case
 
 	public function test_get_tag_suggestions()
 	{
+		// ensure correct counts of tags
+		$this->tags_manager->calc_count_tags();
+
 		$query = "tag";
 		$exclude = array(
 			"tag1",
