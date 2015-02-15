@@ -715,4 +715,84 @@ class tags_manager_test extends \phpbb_database_test_case
 		$count = $this->db->sql_fetchfield('count');
 		$this->assertEquals(1, $count);
 	}
+
+	public function test_get_tag_by_id()
+	{
+		$tag = $this->tags_manager->get_tag_by_id(1);
+		$this->assertEquals('tag1', $tag);
+
+		$tag = $this->tags_manager->get_tag_by_id(2);
+		$this->assertEquals('tag2', $tag);
+	}
+
+	public function test_get_all_tags()
+	{
+		$start = 0;
+		$limit = 1;
+		$sort_field = 'tag';
+		$asc = true;
+		$tags = $this->tags_manager->get_all_tags($start, $limit, $sort_field,
+			$asc);
+		$this->assertEquals(
+			array(
+				array(
+					'id' => 1,
+					'tag' => 'tag1',
+					'count' => 0
+				)
+			), $tags);
+
+		$start = 0;
+		$limit = 1;
+		$sort_field = 'tag';
+		$asc = false;
+		$tags = $this->tags_manager->get_all_tags($start, $limit, $sort_field,
+			$asc);
+		$this->assertEquals(
+			array(
+				array(
+					'id' => 2,
+					'tag' => 'tag2',
+					'count' => 0
+				)
+			), $tags);
+
+		$start = 1;
+		$limit = 1;
+		$sort_field = 'tag';
+		$asc = true;
+		$tags = $this->tags_manager->get_all_tags($start, $limit, $sort_field,
+			$asc);
+		$this->assertEquals(
+			array(
+				array(
+					'id' => 2,
+					'tag' => 'tag2',
+					'count' => 0
+				)
+			), $tags);
+
+		// ensure proper counts
+		$this->tags_manager->calc_count_tags();
+
+		$start = 0;
+		$limit = 2;
+		$sort_field = 'count';
+		$asc = true;
+		$tags = $this->tags_manager->get_all_tags($start, $limit, $sort_field,
+			$asc);
+		$this->assertEquals(
+			array(
+				array(
+					'id' => 2,
+					'tag' => 'tag2',
+					'count' => 0
+				),
+				array(
+					'id' => 1,
+					'tag' => 'tag1',
+					'count' => 1
+				)
+			), $tags);
+	}
 }
