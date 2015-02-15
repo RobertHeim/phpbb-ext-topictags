@@ -196,4 +196,12 @@ class tags_manager_test extends \phpbb_database_test_case
 		$this->assertEquals(1, $removed_count);
 	}
 
+	public function test_delete_tags_from_tagdisabled_forums()
+	{
+		global $table_prefix;
+		$removed_count = $this->tags_manager->delete_tags_from_tagdisabled_forums(array(1));
+		$this->assertEquals(0, $removed_count);
+		$removed_count = $this->tags_manager->delete_tags_from_tagdisabled_forums();
+		$this->assertEquals(1, $removed_count);
+	}
 }
