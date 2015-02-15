@@ -406,4 +406,84 @@ class tags_manager_test extends \phpbb_database_test_case
 			), $topics[0]);
 		$this->assertEquals(0, sizeof($diff));
 	}
+
+	public function test_count_topics_by_tags()
+	{
+		$count = $this->tags_manager->count_topics_by_tags(array());
+		$this->assertEquals(0, $count);
+
+		// uses auth, so we set up the mock/stub
+		// to allow reading first forum
+		$this->auth->expects($this->exactly(4))
+		->method('acl_getf')
+		->with($this->equalTo('f_read'))
+		->willReturn(array(
+			1 => array(
+				'f_read' => true
+			)
+		));
+
+		$tags = array(
+			"tag1"
+		);
+		$count = $this->tags_manager->count_topics_by_tags($tags);
+		$this->assertEquals(1, $count);
+
+
+		// case sensitive
+		$tags = array(
+			"tAg1"
+		);
+		$mode = 'AND';
+		$casesensitive = true;
+		$count = $this->tags_manager->count_topics_by_tags($tags, $mode, $casesensitive);
+		$this->assertEquals(0, $count);
+
+		$tags = array(
+			"tag1",
+			"noneExistingTag"
+		);
+		$count = $this->tags_manager->count_topics_by_tags($tags);
+
+		$this->assertEquals(0, $count);
+
+		// search with OR
+		$tags = array(
+			"tag1",
+			"noneExistingTag"
+		);
+		$mode = 'OR';
+		$count = $this->tags_manager->count_topics_by_tags($tags, $mode);
+		$this->assertEquals(1, $count);
+	}
+
+	public function test_is_valid_tag()
+	{
+		$this->assertTrue($this->tags_manager->is_valid_tag("tag"));
+
+		// clean tags must be trimed (note the trailing space)
+		$this->assertFalse($this->tags_manager->is_valid_tag("tag ", true));
+		$this->assertFalse($this->tags_manager->is_valid_tag("ta"), 'tag is too short');
+		$this->assertFalse($this->tags_manager->is_valid_tag("abcdefghijabcdefghijabcdefghija", true), 'tag is too long');
+
+		// will be cleaned and thereby trimmed to 30 chars
+		$this->assertTrue($this->tags_manager->is_valid_tag("abcdefghijabcdefghijabcdefghija", false));
+
+		// enable blacklist and whitelist
+		global $table_prefix, $user;
+		$config = new \phpbb\config\config(array(
+			prefixes::CONFIG.'_allowed_tags_regex' => '/^[a-z]{3,30}$/i',
+			prefixes::CONFIG.'_whitelist_enabled' => true,
+			prefixes::CONFIG.'_blacklist_enabled' => true,
+			prefixes::CONFIG.'_blacklist' => json_encode(array("blacktag", "blackwhitetag")),
+			prefixes::CONFIG.'_whitelist' => json_encode(array("whitetag", "blackwhitetag")),
+		));
+		$this->tags_manager = new \robertheim\topictags\service\tags_manager(
+			$this->db, $config, $this->auth, $table_prefix);
+
+		$this->assertFalse($this->tags_manager->is_valid_tag("blacktag", true), 'tag is on blacklist');
+		$this->assertFalse($this->tags_manager->is_valid_tag("notwhitetag", true), 'tag is not on whitelist');
+		$this->assertFalse($this->tags_manager->is_valid_tag("blackwhitetag", true), 'blacklist must be given priority');
+	}
+
 }
