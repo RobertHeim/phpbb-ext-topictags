@@ -187,7 +187,7 @@ class tags_manager_test extends \phpbb_database_test_case
 	public function test_delete_assignments_where_topic_does_not_exist()
 	{
 		global $table_prefix;
-		$none_existing_topic_id = -1;
+		$none_existing_topic_id = 999;
 		$result = $this->db->sql_query(
 			'UPDATE ' . $table_prefix . tables::TOPICTAGS . '
 			SET topic_id = ' . $none_existing_topic_id . '
