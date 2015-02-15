@@ -808,18 +808,34 @@ class tags_manager
 	 */
 	public function calc_count_tags()
 	{
-		$sql = 'UPDATE ' . $this->table_prefix . tables::TAGS . '
-			SET count = (
-				SELECT COUNT(tt.id)
+		$sql_array = array(
+			'SELECT'	=> 'id',
+			'FROM'		=> array(
+				$this->table_prefix . tables::TAGS		=> 't',
+			),
+		);
+		$sql = $this->db->sql_build_query('SELECT_DISTINCT', $sql_array);
+		$tag_ids = $this->db->sql_query($sql);
+
+		while ($tag = $this->db->sql_fetchrow($tag_ids))
+		{
+			$tag_id = $tag['id'];
+			$sql = 'SELECT COUNT(tt.id) as count
 				FROM ' . TOPICS_TABLE . ' topics,
 					' . FORUMS_TABLE . ' f,
 					' . $this->table_prefix . tables::TOPICTAGS . ' tt
-				WHERE tt.tag_id = id
+				WHERE tt.tag_id = ' . $tag_id . '
 					AND topics.topic_id = tt.topic_id
 					AND f.forum_id = topics.forum_id
-					AND f.rh_topictags_enabled = 1
-			)';
-		$this->db->sql_query($sql);
+					AND f.rh_topictags_enabled = 1';
+			$this->db->sql_query($sql);
+			$count = $this->db->sql_fetchfield('count');
+
+			$sql = 'UPDATE ' . $this->table_prefix . tables::TAGS . '
+				SET count = ' . $count . '
+				WHERE id = ' . $tag_id;
+			$this->db->sql_query($sql);
+		}
 	}
 
 	/**
