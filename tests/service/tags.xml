@@ -3,12 +3,14 @@
     <table name="phpbb_forums">
         <column>forum_id</column>
         <column>forum_parents</column>
+        <column>forum_type</column>
         <column>forum_desc</column>
         <column>forum_rules</column>
         <column>rh_topictags_enabled</column>
         <row>
             <value>1</value>
             <value>0</value>
+            <value>1</value>
             <value></value>
             <value></value>
             <value>1</value>
@@ -16,9 +18,26 @@
         <row>
             <value>2</value>
             <value>0</value>
+            <value>1</value>
             <value></value>
             <value></value>
             <value>0</value>
+        </row>
+        <row>
+            <value>3</value>
+            <value>0</value>
+            <value>0</value>
+            <value></value>
+            <value></value>
+            <value>0</value>
+        </row>
+        <row>
+            <value>4</value>
+            <value>0</value>
+            <value>0</value>
+            <value></value>
+            <value></value>
+            <value>1</value>
         </row>
     </table>
     <table name="phpbb_topics">

@@ -9,6 +9,7 @@ namespace robertheim\topictags\tests\service;
 
 use robertheim\topictags\prefixes;
 use robertheim\topictags\tables;
+use robertheim\topictags\service\tags_manager;
 
 class tags_manager_test extends \phpbb_database_test_case
 {
@@ -113,34 +114,6 @@ class tags_manager_test extends \phpbb_database_test_case
 
 		$result = $this->db->sql_query(
 			'SELECT COUNT(*) as count
-			FROM ' . $table_prefix . tables::TAGS . '
-			WHERE id=2');
-		$count = $this->db->sql_fetchfield('count');
-		$this->assertEquals(0, $count);
-	}
-
-	public function test_calc_count_tags()
-	{
-		global $table_prefix;
-
-		$result = $this->db->sql_query(
-			'SELECT count
-			FROM ' . $table_prefix . tables::TAGS . '
-			WHERE id=2');
-		$count = $this->db->sql_fetchfield('count');
-		$this->assertEquals(0, $count);
-
-		$this->tags_manager->calc_count_tags();
-
-		$result = $this->db->sql_query(
-			'SELECT count
-			FROM ' . $table_prefix . tables::TAGS . '
-			WHERE id=1');
-		$count = $this->db->sql_fetchfield('count');
-		$this->assertEquals(1, $count);
-
-		$result = $this->db->sql_query(
-			'SELECT count
 			FROM ' . $table_prefix . tables::TAGS . '
 			WHERE id=2');
 		$count = $this->db->sql_fetchfield('count');
@@ -484,6 +457,104 @@ class tags_manager_test extends \phpbb_database_test_case
 		$this->assertFalse($this->tags_manager->is_valid_tag("blacktag", true), 'tag is on blacklist');
 		$this->assertFalse($this->tags_manager->is_valid_tag("notwhitetag", true), 'tag is not on whitelist');
 		$this->assertFalse($this->tags_manager->is_valid_tag("blackwhitetag", true), 'blacklist must be given priority');
+	}
+
+	public function test_split_valid_tags()
+	{
+		$tags = array(
+			'tag',
+			'ta',
+			'tag1',
+			'validtag'
+		);
+		$tags = $this->tags_manager->split_valid_tags($tags);
+		$this->assertEquals(
+			array(
+				'valid' => array(
+					'tag',
+					'validtag'
+				),
+				'invalid' => array(
+					'ta',
+					'tag1'
+				)
+			), $tags);
+	}
+
+	public function test_clean_tag()
+	{
+		$this->assertEquals("tag", $this->tags_manager->clean_tag(" tag "));
+
+		// limiting the string to 30 characters will result in the last one beeing a space, which
+		// must be trimed
+		$this->assertEquals('abcdefghijabcdefghijabcdefghi',
+			$this->tags_manager->clean_tag("abcdefghijabcdefghijabcdefghi j"));
+
+		$this->assertEquals("t ag", $this->tags_manager->clean_tag("t ag"));
+
+		// auto convert space to minus
+		global $table_prefix, $user;
+		$config = new \phpbb\config\config(array(
+			prefixes::CONFIG.'_allowed_tags_regex' => '/^[a-z]{3,30}$/i',
+			prefixes::CONFIG.'_convert_space_to_minus' => true,
+		));
+		$this->tags_manager = new \robertheim\topictags\service\tags_manager(
+			$this->db, $config, $this->auth, $table_prefix);
+		$this->assertEquals("t-ag", $this->tags_manager->clean_tag("t ag"));
+	}
+
+	public function test_is_tagging_enabled_in_forum()
+	{
+		$this->assertTrue($this->tags_manager->is_tagging_enabled_in_forum(1));
+		$this->assertFalse($this->tags_manager->is_tagging_enabled_in_forum(2));
+	}
+
+	public function test_enable_tags_in_all_forums()
+	{
+		$affected = $this->tags_manager->enable_tags_in_all_forums();
+		$this->assertEquals(1, $affected);
+		$this->assertTrue($this->tags_manager->is_tagging_enabled_in_forum(1));
+		$this->assertTrue($this->tags_manager->is_tagging_enabled_in_forum(2));
+		$this->assertFalse($this->tags_manager->is_tagging_enabled_in_forum(3), 'forum type does not allow for tagging and hence should not be changed');
+		$this->assertTrue($this->tags_manager->is_tagging_enabled_in_forum(4));
+	}
+
+	public function test_disable_tags_in_all_forums()
+	{
+		$affected = $this->tags_manager->disable_tags_in_all_forums();
+		$this->assertEquals(1, $affected);
+		$this->assertFalse($this->tags_manager->is_tagging_enabled_in_forum(1));
+		$this->assertFalse($this->tags_manager->is_tagging_enabled_in_forum(2));
+		$this->assertFalse($this->tags_manager->is_tagging_enabled_in_forum(3), 'forum type does not allow for tagging');
+		$this->assertTrue($this->tags_manager->is_tagging_enabled_in_forum(4), 'forum type does not allow for tagging and hence should not be changed');
+	}
+
+	public function test_calc_count_tags()
+	{
+		global $table_prefix;
+
+		$result = $this->db->sql_query(
+			'SELECT count
+			FROM ' . $table_prefix . tables::TAGS . '
+			WHERE id=2');
+		$count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(0, $count);
+
+		$this->tags_manager->calc_count_tags();
+
+		$result = $this->db->sql_query(
+			'SELECT count
+			FROM ' . $table_prefix . tables::TAGS . '
+			WHERE id=1');
+		$count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(1, $count);
+
+		$result = $this->db->sql_query(
+			'SELECT count
+			FROM ' . $table_prefix . tables::TAGS . '
+			WHERE id=2');
+		$count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(0, $count);
 	}
 
 }
