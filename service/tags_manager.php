@@ -929,11 +929,11 @@ class tags_manager
 	public function rename($tag_id, $new_name_clean)
 	{
 		$sql_ary = array(
-			't.tag'	=> $new_name_clean,
+			'tag'	=> $new_name_clean,
 		);
-		$sql = 'UPDATE ' . $this->table_prefix . tables::TAGS . ' t
+		$sql = 'UPDATE ' . $this->table_prefix . tables::TAGS . '
 			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
-			WHERE t.id = ' . ((int) $tag_id);
+			WHERE id = ' . ((int) $tag_id);
 		$this->db->sql_query($sql);
 		return $this->count_topics_by_tags(array($new_name_clean), 'AND', true);
 	}

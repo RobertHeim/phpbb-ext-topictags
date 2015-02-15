@@ -267,7 +267,7 @@ class tags_manager_test extends \phpbb_database_test_case
 			'tag' => 'tag3',
 		);
 		$result = $this->db->sql_query(
-			'SELECT count
+			'SELECT COUNT(*) as count
 			FROM ' . $table_prefix . tables::TAGS . '
 			WHERE ' . $this->db->sql_build_array('SELECT', $sql_array));
 		$count = $this->db->sql_fetchfield('count');
@@ -617,5 +617,102 @@ class tags_manager_test extends \phpbb_database_test_case
 			1,
 			2
 		), $topics);
+	}
+
+	public function test_delete_tag()
+	{
+		global $table_prefix;
+
+		$result = $this->db->sql_query(
+			'SELECT COUNT(*) as count
+			FROM ' . $table_prefix . tables::TAGS . '
+			WHERE id=1');
+		$count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(1, $count);
+
+		$this->tags_manager->delete_tag(1);
+
+		$result = $this->db->sql_query(
+			'SELECT COUNT(*) as count
+			FROM ' . $table_prefix . tables::TAGS . '
+			WHERE id=1');
+		$count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(0, $count);
+
+		$result = $this->db->sql_query(
+			'SELECT COUNT(*) as count
+			FROM ' . $table_prefix . tables::TAGS . '
+			WHERE id=2');
+		$count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(1, $count);
+
+		$this->tags_manager->delete_tag(2);
+
+		$result = $this->db->sql_query(
+			'SELECT COUNT(*) as count
+			FROM ' . $table_prefix . tables::TAGS . '
+			WHERE id=2');
+		$count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(0, $count);
+	}
+
+	public function test_rename()
+	{
+		global $table_prefix;
+		// uses auth, so we set up the mock/stub
+		// to allow reading first forum
+		$this->auth->expects($this->once())
+		->method('acl_getf')
+		->with($this->equalTo('f_read'))
+		->willReturn(array(
+			1 => array(
+				'f_read' => true
+			)
+		));
+
+		$sql_array = array(
+			'tag' => 'tag1',
+		);
+		$result = $this->db->sql_query(
+			'SELECT COUNT(*) as count
+			FROM ' . $table_prefix . tables::TAGS . '
+			WHERE ' . $this->db->sql_build_array('SELECT', $sql_array));
+		$count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(1, $count);
+
+		$sql_array = array(
+			'tag' => 'newtagname',
+		);
+		$result = $this->db->sql_query(
+			'SELECT COUNT(*) as count
+			FROM ' . $table_prefix . tables::TAGS . '
+			WHERE ' . $this->db->sql_build_array('SELECT', $sql_array));
+		$count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(0, $count);
+
+		$tag_id = 1;
+		$new_name_clean = "newtagname";
+		$assigned_count = $this->tags_manager->rename($tag_id, $new_name_clean);
+		$this->assertEquals(1, $assigned_count);
+
+		$sql_array = array(
+			'tag' => 'tag1',
+		);
+		$result = $this->db->sql_query(
+			'SELECT COUNT(*) as count
+			FROM ' . $table_prefix . tables::TAGS . '
+			WHERE ' . $this->db->sql_build_array('SELECT', $sql_array));
+		$count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(0, $count);
+
+		$sql_array = array(
+			'tag' => 'newtagname',
+		);
+		$result = $this->db->sql_query(
+			'SELECT COUNT(*) as count
+			FROM ' . $table_prefix . tables::TAGS . '
+			WHERE ' . $this->db->sql_build_array('SELECT', $sql_array));
+		$count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(1, $count);
 	}
 }
