@@ -282,7 +282,6 @@ class tags_manager_test extends \phpbb_database_test_case
 		sort($tags);
 		$this->assertEquals($valid_tags, $tags);
 
-
 		$valid_tags = array('tag2');
 		$this->tags_manager->assign_tags_to_topic($topic_id, $valid_tags);
 
@@ -464,7 +463,6 @@ class tags_manager_test extends \phpbb_database_test_case
 		);
 		$count = $this->tags_manager->count_topics_by_tags($tags);
 		$this->assertEquals(1, $count);
-
 
 		// case sensitive
 		$tags = array(
