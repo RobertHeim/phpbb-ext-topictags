@@ -129,12 +129,12 @@ class tags_manager_test extends \phpbb_database_test_case
 			FROM ' . $table_prefix .
 				 tables::TOPICTAGS);
 		$count = $this->db->sql_fetchfield('count');
-		$this->assertEquals(2, $count);
+		$this->assertEquals(4, $count);
 
 		// none of the tags is valid to the configured regex [a-z]
 		// so all assignments should be deleted.
 		$removed_count = $this->tags_manager->delete_assignments_of_invalid_tags();
-		$this->assertEquals(2, $removed_count);
+		$this->assertEquals(4, $removed_count);
 
 		$result = $this->db->sql_query(
 			'SELECT COUNT(*) as count
@@ -143,7 +143,7 @@ class tags_manager_test extends \phpbb_database_test_case
 		$count = $this->db->sql_fetchfield('count');
 		$this->assertEquals(0, $count);
 
-		// both tags are not assigned to any topic now
+		// all tags are not assigned to any topic now
 		$result = $this->db->sql_query(
 			'SELECT count
 			FROM ' . $table_prefix . tables::TAGS . '
@@ -155,6 +155,13 @@ class tags_manager_test extends \phpbb_database_test_case
 			'SELECT count
 			FROM ' . $table_prefix . tables::TAGS . '
 			WHERE id=2');
+		$count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(0, $count);
+
+		$result = $this->db->sql_query(
+			'SELECT count
+			FROM ' . $table_prefix . tables::TAGS . '
+			WHERE id=3');
 		$count = $this->db->sql_fetchfield('count');
 		$this->assertEquals(0, $count);
 
@@ -180,6 +187,10 @@ class tags_manager_test extends \phpbb_database_test_case
 			WHERE id=1');
 		$removed_count = $this->tags_manager->delete_assignments_where_topic_does_not_exist();
 		$this->assertEquals(1, $removed_count);
+
+		// nothing to do now
+		$removed_count = $this->tags_manager->delete_assignments_where_topic_does_not_exist();
+		$this->assertEquals(0, $removed_count);
 	}
 
 	public function test_delete_tags_from_tagdisabled_forums()
@@ -189,7 +200,7 @@ class tags_manager_test extends \phpbb_database_test_case
 		$removed_count = $this->tags_manager->delete_tags_from_tagdisabled_forums(array(1));
 		$this->assertEquals(0, $removed_count);
 		$removed_count = $this->tags_manager->delete_tags_from_tagdisabled_forums();
-		$this->assertEquals(1, $removed_count);
+		$this->assertEquals(2, $removed_count);
 	}
 
 	public function test_get_assigned_tags()
@@ -200,7 +211,8 @@ class tags_manager_test extends \phpbb_database_test_case
 		$this->assertEquals(array('tag1'), $tags);
 		$topic_id = 2;
 		$tags = $this->tags_manager->get_assigned_tags($topic_id);
-		$this->assertEquals(array('tag1'), $tags);
+		sort($tags);
+		$this->assertEquals(array('anothertag3', 'tag1'), $tags);
 	}
 
 	public function test_get_tag_suggestions()
@@ -260,16 +272,17 @@ class tags_manager_test extends \phpbb_database_test_case
 		global $table_prefix;
 		$topic_id = 2;
 		$tags = $this->tags_manager->get_assigned_tags($topic_id);
-		$this->assertEquals(array("tag1"), $tags);
+		sort($tags);
+		$this->assertEquals(array('anothertag3', 'tag1'), $tags);
 
-		$valid_tags = array("tag2", "tag3");
+		$valid_tags = array('tag2', 'tag3');
 		$this->tags_manager->assign_tags_to_topic($topic_id, $valid_tags);
 
 		$tags = $this->tags_manager->get_assigned_tags($topic_id);
 		$this->assertEquals($valid_tags, $tags);
 
 
-		$valid_tags = array("tag2");
+		$valid_tags = array('tag2');
 		$this->tags_manager->assign_tags_to_topic($topic_id, $valid_tags);
 
 		$tags = $this->tags_manager->get_assigned_tags($topic_id);
@@ -292,6 +305,11 @@ class tags_manager_test extends \phpbb_database_test_case
 		$tags = $this->tags_manager->get_existing_tags(array());
 		$this->assertEquals(array(), $tags);
 		$tags = $this->tags_manager->get_existing_tags();
+		usort($tags,
+			function ($a, $b)
+			{
+				return $a['id'] - $b['id'];
+			});
 		$this->assertEquals(
 			array(
 				array(
@@ -301,6 +319,10 @@ class tags_manager_test extends \phpbb_database_test_case
 				array(
 					"id" => 2,
 					"tag" => "tag2"
+				),
+				array(
+					"id" => 3,
+					"tag" => "anothertag3"
 				),
 			)
 			, $tags);
@@ -319,7 +341,8 @@ class tags_manager_test extends \phpbb_database_test_case
 			, $tags);
 
 		$tag_ids = $this->tags_manager->get_existing_tags(null, true);
-		$this->assertEquals(array(1, 2), $tag_ids);
+		sort($tag_ids);
+		$this->assertEquals(array(1, 2, 3), $tag_ids);
 	}
 
 	public function test_get_topics_by_tags()
@@ -334,6 +357,12 @@ class tags_manager_test extends \phpbb_database_test_case
 				'f_read' => true
 			)
 		));
+
+		$tags = array();
+		$start = 0;
+		$limit = 10;
+		$topics = $this->tags_manager->get_topics_by_tags($tags, $start, $limit);
+		$this->assertEquals(0, sizeof($topics));
 
 		$tags = array(
 			"tag1"
@@ -393,6 +422,24 @@ class tags_manager_test extends \phpbb_database_test_case
 				"topic_title" => "Topic1"
 			), $topics[0]);
 		$this->assertEquals(0, sizeof($diff));
+	}
+
+	public function test_get_topics_by_tags2()
+	{
+		// test if no forums are readable
+		$this->auth->expects($this->once())
+		->method('acl_getf')
+		->with($this->equalTo('f_read'))
+		->willReturn(array());
+		$tags = array(
+			"tag1",
+			"noneExistingTag"
+		);
+		$start = 0;
+		$limit = 10;
+		$mode = 'OR';
+		$topics = $this->tags_manager->get_topics_by_tags($tags, $start, $limit, $mode);
+		$this->assertEquals(0, sizeof($topics));
 	}
 
 	public function test_count_topics_by_tags()
@@ -471,6 +518,7 @@ class tags_manager_test extends \phpbb_database_test_case
 
 		$this->assertFalse($this->tags_manager->is_valid_tag("blacktag", true), 'tag is on blacklist');
 		$this->assertFalse($this->tags_manager->is_valid_tag("notwhitetag", true), 'tag is not on whitelist');
+		$this->assertTrue($this->tags_manager->is_valid_tag("whitetag", true), 'tag is not blacklisted and on whitelist');
 		$this->assertFalse($this->tags_manager->is_valid_tag("blackwhitetag", true), 'blacklist must be given priority');
 	}
 
@@ -591,7 +639,7 @@ class tags_manager_test extends \phpbb_database_test_case
 		global $table_prefix;
 		// uses auth, so we set up the mock/stub
 		// to allow reading first forum
-		$this->auth->expects($this->once())
+		$this->auth->expects($this->exactly(2))
 			->method('acl_getf')
 			->with($this->equalTo('f_read'))
 			->willReturn(array(
@@ -612,9 +660,16 @@ class tags_manager_test extends \phpbb_database_test_case
 		$count = $this->db->sql_fetchfield('count');
 		$this->assertEquals(0, $count);
 
+		// 2 assignments but only 1 is readable
 		$count_of_assignments = $this->tags_manager->merge($tag_to_delete,
 			$tag_to_delete_id, $tag_to_keep, $tag_to_keep_id);
 		$this->assertEquals(1, $count_of_assignments);
+		$result = $this->db->sql_query(
+			'SELECT COUNT(*) as count
+			FROM ' . $table_prefix . tables::TOPICTAGS . '
+			WHERE tag_id=' . $tag_to_keep_id);
+		$count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(2, $count);
 
 		// tag1 must be deleted
 		$result = $this->db->sql_query(
@@ -646,6 +701,37 @@ class tags_manager_test extends \phpbb_database_test_case
 			1,
 			2
 		), $topics);
+
+		// test if keep-tag is already assigned to topics that the deleted one is assigned to
+		$tag_to_delete = "tag2";
+		$tag_to_delete_id = 2;
+		$tag_to_keep = "anothertag3";
+		$tag_to_keep_id = 3;
+
+		// ensure test setup (tag2 must be assigned because of the merge before)
+		$tags = $this->tags_manager->get_assigned_tags(2);
+		sort($tags);
+		$this->assertEquals(array('anothertag3', 'tag2'), $tags);
+
+		// 3 assignments, but only 2 are valid
+		$count_of_assignments = $this->tags_manager->merge($tag_to_delete,
+			$tag_to_delete_id, $tag_to_keep, $tag_to_keep_id);
+		$this->assertEquals(2, $count_of_assignments);
+		$result = $this->db->sql_query(
+			'SELECT COUNT(*) as count
+			FROM ' . $table_prefix . tables::TOPICTAGS . '
+			WHERE tag_id=' . $tag_to_keep_id);
+		$count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(3, $count);
+
+		$result = $this->db->sql_query(
+			'SELECT COUNT(*) as count
+			FROM ' . $table_prefix . tables::TOPICTAGS . '
+			WHERE tag_id=' . $tag_to_keep_id . ' AND topic_id=2');
+		$count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(1, $count, 'the topic must not be assigned twice');
+		$tags = $this->tags_manager->get_assigned_tags(2);
+		$this->assertEquals(array('anothertag3'), $tags);
 	}
 
 	public function test_delete_tag()
@@ -765,8 +851,8 @@ class tags_manager_test extends \phpbb_database_test_case
 		$this->assertEquals(
 			array(
 				array(
-					'id' => 1,
-					'tag' => 'tag1',
+					'id' => 3,
+					'tag' => 'anothertag3',
 					'count' => 0
 				)
 			), $tags);
@@ -795,8 +881,8 @@ class tags_manager_test extends \phpbb_database_test_case
 		$this->assertEquals(
 			array(
 				array(
-					'id' => 2,
-					'tag' => 'tag2',
+					'id' => 1,
+					'tag' => 'tag1',
 					'count' => 0
 				)
 			), $tags);
@@ -828,9 +914,9 @@ class tags_manager_test extends \phpbb_database_test_case
 	public function test_count_tags()
 	{
 		$count = $this->tags_manager->count_tags();
-		$this->assertEquals(2, $count);
+		$this->assertEquals(3, $count);
 		$this->tags_manager->delete_tag(1);
 		$count = $this->tags_manager->count_tags();
-		$this->assertEquals(1, $count);
+		$this->assertEquals(2, $count);
 	}
 }
