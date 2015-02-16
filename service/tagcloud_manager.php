@@ -20,16 +20,28 @@ use robertheim\topictags\prefixes;
 */
 class tagcloud_manager
 {
+	/** @var \phpbb\db\driver\driver_interface */
 	private $db;
+
+	/** @var \phpbb\config\config */
 	private $config;
+
+	/** @var \phpbb\template\template */
 	private $template;
+
+	/** @var \phpbb\user */
+	protected $user;
+
+	/** @var \phpbb\controller\helper */
 	private $helper;
+
 	private $table_prefix;
 
 	public function __construct(
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\config\config $config,
 		\phpbb\template\template $template,
+		\phpbb\user $user,
 		\phpbb\controller\helper $helper,
 		$table_prefix
 	)
@@ -37,17 +49,17 @@ class tagcloud_manager
 		$this->db = $db;
 		$this->config = $config;
 		$this->template = $template;
+		$this->user = $user;
 		$this->helper = $helper;
 		$this->table_prefix = $table_prefix;
 	}
 
 	/**
 	 * Assigns all required data for the tag cloud to the template so that including tagcloud.html can display the tag cloud.
-	 * @param $limit the limit for assigned tags. If 0 (default) the config limit is used; if -1 all tags will be shown; $limit otherwise.
+	 * @param $limit the limit for assigned tags. If 0 (default) the config limit is used; if $limit <= -1 all tags will be shown; $limit otherwise.
 	 */
 	public function assign_tagcloud_to_template($limit = 0)
 	{
-		global $user;
 		if (0 == $limit)
 		{
 			$limit = $this->config[prefixes::CONFIG . '_max_tags_in_tagcloud'];
@@ -64,13 +76,13 @@ class tagcloud_manager
 		}
 
 		$show_count = '';
-		if (-1 == $limit)
+		if ($limit <= -1)
 		{
-			$show_count = $user->lang('RH_TOPICTAGS_DISPLAYING_TOTAL_ALL');
+			$show_count = $this->user->lang('RH_TOPICTAGS_DISPLAYING_TOTAL_ALL');
 		}
 		else
 		{
-			$show_count = $user->lang('RH_TOPICTAGS_DISPLAYING_TOTAL', $limit);
+			$show_count = $this->user->lang('RH_TOPICTAGS_DISPLAYING_TOTAL', $limit);
 		}
 
 		// ensure that the css for the tag cloud will be included

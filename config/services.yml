@@ -42,6 +42,7 @@ services:
             - @dbal.conn.driver
             - @config
             - @template
+            - @user
             - @controller.helper
             - %core.table_prefix%
     robertheim.topictags.acp.manage_tags_controller:
