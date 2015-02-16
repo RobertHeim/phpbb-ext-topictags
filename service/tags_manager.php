@@ -391,7 +391,7 @@ class tags_manager
 	public function get_existing_tags($tags = null, $only_ids = false)
 	{
 		$where = '';
-		if ($tags)
+		if (!is_null($tags))
 		{
 			if (empty($tags))
 			{

@@ -157,6 +157,17 @@ class tags_manager_test extends \phpbb_database_test_case
 			WHERE id=2');
 		$count = $this->db->sql_fetchfield('count');
 		$this->assertEquals(0, $count);
+
+		// remove all tags
+		$this->tags_manager->delete_unused_tags();
+		$result = $this->db->sql_query(
+			'SELECT COUNT(*) as count
+			FROM ' . $table_prefix . tables::TAGS);
+		$count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(0, $count);
+		// all tags are valid
+		$removed_count = $this->tags_manager->delete_assignments_of_invalid_tags();
+		$this->assertEquals(0, $removed_count);
 	}
 
 	public function test_delete_assignments_where_topic_does_not_exist()
@@ -173,6 +184,8 @@ class tags_manager_test extends \phpbb_database_test_case
 
 	public function test_delete_tags_from_tagdisabled_forums()
 	{
+		$removed_count = $this->tags_manager->delete_tags_from_tagdisabled_forums(array());
+		$this->assertEquals(0, $removed_count);
 		$removed_count = $this->tags_manager->delete_tags_from_tagdisabled_forums(array(1));
 		$this->assertEquals(0, $removed_count);
 		$removed_count = $this->tags_manager->delete_tags_from_tagdisabled_forums();
@@ -276,6 +289,8 @@ class tags_manager_test extends \phpbb_database_test_case
 
 	public function test_get_existing_tags()
 	{
+		$tags = $this->tags_manager->get_existing_tags(array());
+		$this->assertEquals(array(), $tags);
 		$tags = $this->tags_manager->get_existing_tags();
 		$this->assertEquals(
 			array(
