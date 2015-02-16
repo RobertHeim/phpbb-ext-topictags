@@ -279,6 +279,7 @@ class tags_manager_test extends \phpbb_database_test_case
 		$this->tags_manager->assign_tags_to_topic($topic_id, $valid_tags);
 
 		$tags = $this->tags_manager->get_assigned_tags($topic_id);
+		sort($tags);
 		$this->assertEquals($valid_tags, $tags);
 
 
