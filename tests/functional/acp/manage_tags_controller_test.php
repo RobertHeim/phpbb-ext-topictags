@@ -24,7 +24,7 @@ class manage_tags_controller_test extends topictags_functional_test_base
 	 */
 	public function test_handle_edit()
 	{
-		// == setup spcific for this test ==
+		// == setup specific to this test ==
 
 		$this->login();
 		$this->admin_login();
