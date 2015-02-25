@@ -19,7 +19,7 @@ class tags_manager_test extends \phpbb_database_test_case
 	protected function setUp()
 	{
 		parent::setUp();
-		global $table_prefix, $user;
+		global $table_prefix;
 		$this->db = $this->new_dbal();
 		$this->auth = $this->getMock('\phpbb\auth\auth');
 		$config = new \phpbb\config\config(array(
@@ -504,7 +504,7 @@ class tags_manager_test extends \phpbb_database_test_case
 		$this->assertTrue($this->tags_manager->is_valid_tag("abcdefghijabcdefghijabcdefghija", false));
 
 		// enable blacklist and whitelist
-		global $table_prefix, $user;
+		global $table_prefix;
 		$config = new \phpbb\config\config(array(
 			prefixes::CONFIG.'_allowed_tags_regex' => '/^[a-z]{3,30}$/i',
 			prefixes::CONFIG.'_whitelist_enabled' => true,
@@ -555,7 +555,7 @@ class tags_manager_test extends \phpbb_database_test_case
 		$this->assertEquals("t ag", $this->tags_manager->clean_tag("t ag"));
 
 		// auto convert space to minus
-		global $table_prefix, $user;
+		global $table_prefix;
 		$config = new \phpbb\config\config(array(
 			prefixes::CONFIG.'_allowed_tags_regex' => '/^[a-z]{3,30}$/i',
 			prefixes::CONFIG.'_convert_space_to_minus' => true,
