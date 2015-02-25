@@ -18,16 +18,6 @@ use \robertheim\topictags\prefixes;
  */
 class settings_test extends topictags_functional_test_base
 {
-	/**
-	 * Gets the acp module page for the settings.
-	 *
-	 * @return \Symfony\Component\DomCrawler\Crawler the crawler of the acp settings page.
-	 */
-	private function goto_settings_page()
-	{
-		// Load Pages ACP page
-		return self::request('GET', "adm/index.php?i=-robertheim-topictags-acp-topictags_module&sid={$this->sid}");
-	}
 
 	/**
 	 * Test ACP module appears

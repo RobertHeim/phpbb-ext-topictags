@@ -7,11 +7,19 @@
  */
 namespace robertheim\topictags\tests\functional;
 
+use \robertheim\topictags\prefixes;
 /**
  * @group functional
  */
 class topictags_functional_test_base extends \phpbb_functional_test_case
 {
+
+	/** @var /phpbb\auth\auth */
+	protected $auth;
+
+	/** @var \robertheim\topictags\service\tags_manager */
+	protected $tags_manager;
+
 	static protected function setup_extensions()
 	{
 		return array('robertheim/topictags');
@@ -27,6 +35,50 @@ class topictags_functional_test_base extends \phpbb_functional_test_case
 				'topictags_acp',
 				'topictags',
 		));
+
+		global $table_prefix;
+		$this->auth = $this->getMock('\phpbb\auth\auth');
+		$config = new \phpbb\config\config(array(
+				prefixes::CONFIG.'_allowed_tags_regex' => '/^[a-z]{3,30}$/i',
+		));
+		$this->tags_manager = new \robertheim\topictags\service\tags_manager(
+				$this->get_db(), $config, $this->auth, $table_prefix);
 	}
 
+	/**
+	 * Gets the acp module page for the settings.
+	 *
+	 * @return \Symfony\Component\DomCrawler\Crawler the crawler of the acp settings page.
+	 */
+	protected function goto_settings_page()
+	{
+		// Load Pages ACP page
+		return self::request('GET', "adm/index.php?i=-robertheim-topictags-acp-topictags_module&sid={$this->sid}");
+	}
+
+	/**
+	 * Gets the acp module page for managing tags.
+	 *
+	 * @return \Symfony\Component\DomCrawler\Crawler the crawler of the acp settings page.
+	 */
+	protected function goto_manage_tags_page()
+	{
+		// Load Pages ACP page
+		return self::request('GET', "adm/index.php?i=-robertheim-topictags-acp-topictags_module&mode=tags&sid={$this->sid}");
+	}
+
+	/**
+	 * Performs an ajax POST request, expectes a json response and decodes this json response an assoc array which is returned
+	 * @return array the decoded json response as assoc array
+	 */
+	protected function ajax($url, $params)
+	{
+		self::$client->request('POST', self::$root_url . $url, $params, array(), array(
+				'HTTP_X-Requested-With' => 'XMLHttpRequest',
+		));
+		$this->assertEquals('application/json',
+				self::$client->getResponse()->getHeader('Content-Type')
+		);
+		return json_decode(self::$client->getResponse()->getContent(), true);
+	}
 }
