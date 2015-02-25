@@ -20,6 +20,7 @@ class topictags_module
 	/** @var string */
 	public $u_action;
 
+	/** @var \robertheim\topictags\service\tags_manager */
 	protected $tags_manager;
 
 	public function __construct()
