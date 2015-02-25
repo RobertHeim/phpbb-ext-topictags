@@ -10,6 +10,11 @@
 namespace robertheim\topictags\acp;
 
 /**
+ * @ignore
+ */
+use \phpbb\json_response;
+
+/**
 * Handles the "manage-tags" page of the ACP.
 */
 class manage_tags_controller
