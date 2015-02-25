@@ -229,6 +229,7 @@ class manage_tags_controller
 				// new tag exist -> merge
 				$new_id = $new_ids[0];
 				$new_tag_count = $this->tags_manager->merge($old_tag_name, $old_id, $new_tag_name, $new_id);
+				$msg = $this->user->lang('TOPICTAGS_TAG_MERGED', $new_tag_name_clean);
 				if ($this->request->is_ajax())
 				{
 					$response = new json_response();
@@ -236,23 +237,24 @@ class manage_tags_controller
 						'success'       => true,
 						'merged'        => true,
 						'new_tag_count' => $new_tag_count,
-						'msg'           => base64_encode(rawurlencode($this->user->lang('TOPICTAGS_TAG_MERGED', $new_tag_name_clean))),
+						'msg'           => base64_encode(rawurlencode($msg)),
 					));
 				}
-				trigger_error($this->user->lang('TOPICTAGS_TAG_MERGED', $new_tag_name_clean) . adm_back_link($u_action));
+				trigger_error($msg . adm_back_link($u_action));
 			}
 
 			// old tag exist and new tag is valid and does not exist -> rename it
 			$tag_count = $this->tags_manager->rename($old_id, $new_tag_name_clean);
+			$msg = $this->user->lang('TOPICTAGS_TAG_CHANGED');
 			if ($this->request->is_ajax())
 			{
 				$response = new json_response();
 				$response->send(array(
 									'success' => true,
-									'msg'     => base64_encode(rawurlencode($this->user->lang('TOPICTAGS_TAG_CHANGED'))),
+									'msg'     => base64_encode(rawurlencode($msg)),
 								));
 			}
-			trigger_error($this->user->lang('TOPICTAGS_TAG_CHANGED') . adm_back_link($u_action));
+			trigger_error($msg . adm_back_link($u_action));
 		}
 	}
 
