@@ -104,6 +104,67 @@ class settings_test extends topictags_functional_test_base
 
 	}
 
+	public function test_display_tags_in_viewforum()
+	{
+		// == test specific setup ==
+
+		$this->login();
+		$this->admin_login();
+
+		// enable tagging in forum used for testing
+		$forum_id = 2;
+		$this->enable_topictags_in_forum($forum_id);
+
+		// create a topic to work with
+		$tmp = $this->create_topic($forum_id, 'display_tags_in_viewforum_functional_test', 'test topic');
+		$topic_id = $tmp['topic_id'];
+
+		// add tag
+		$tagname = 'tag19849817435928751';
+		$valid_tags = array($tagname);
+		$this->tags_manager->assign_tags_to_topic($topic_id, $valid_tags);
+
+		// == actual tests ==
+
+		// disable
+		$crawler = $this->goto_settings_page();
+		$form = $crawler->selectButton($this->lang('SUBMIT'))->form();
+		$field = $form->get(prefixes::CONFIG . '_display_tags_in_viewforum');
+		$field->setValue(0);
+		$crawler = $this->submit($form);
+		$this->assertContainsLang('TOPICTAGS_SETTINGS_SAVED', $crawler->text());
+
+		// must not be shown
+		$crawler = $this->request('GET', "viewforum.php?f=$forum_id");
+		$this->assertNotContains($tagname, $crawler->text());
+		$this->assertEquals(0, $crawler->filter('.rh_tag:contains("' . $tagname . '")')->count());
+
+		// enable
+		$crawler = $this->goto_settings_page();
+		$form = $crawler->selectButton($this->lang('SUBMIT'))->form();
+		$field = $form->get(prefixes::CONFIG . '_display_tags_in_viewforum');
+		$field->setValue(1);
+		$crawler = $this->submit($form);
+		$this->assertContainsLang('TOPICTAGS_SETTINGS_SAVED', $crawler->text());
+
+		// must be shown
+		$crawler = $this->request('GET', "viewforum.php?f=$forum_id");
+		$this->assertContains($tagname, $crawler->text());
+		$this->assertEquals(1, $crawler->filter('.rh_tag:contains("' . $tagname . '")')->count());
+
+		// == cleanup ==
+
+		// delete the created tags
+		$existing_tags = $this->tags_manager->get_existing_tags(array($tagname));
+		foreach ($existing_tags as $tag)
+		{
+			$this->tags_manager->delete_tag($tag['id']);
+		}
+
+		// delete the created topics
+		$this->delete_topic($topic_id);
+	}
+
 	public function test_display_tagloud()
 	{
 		$this->login();

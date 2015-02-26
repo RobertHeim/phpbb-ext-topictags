@@ -81,4 +81,13 @@ class topictags_functional_test_base extends \phpbb_functional_test_case
 		);
 		return json_decode(self::$client->getResponse()->getContent(), true);
 	}
+
+	protected function enable_topictags_in_forum($forum_id)
+	{
+		$sql = 'UPDATE ' . FORUMS_TABLE . '
+			SET ' . $this->db->sql_build_array('UPDATE', array('rh_topictags_enabled' => 1)) . '
+			WHERE forum_id = ' . ((int) $forum_id);
+		$this->db->sql_query($sql);
+		$this->tags_manager->calc_count_tags();
+	}
 }

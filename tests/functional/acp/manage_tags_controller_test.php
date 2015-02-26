@@ -31,11 +31,7 @@ class manage_tags_controller_test extends topictags_functional_test_base
 
 		// enable tagging in forum used for testing
 		$forum_id = 2;
-		$sql = 'UPDATE ' . FORUMS_TABLE . '
-			SET ' . $this->db->sql_build_array('UPDATE', array('rh_topictags_enabled'	=> 1)) . '
-			WHERE forum_id = ' . $forum_id;
-		$this->db->sql_query($sql);
-		$this->tags_manager->calc_count_tags();
+		$this->enable_topictags_in_forum($forum_id);
 
 		$this->auth->expects($this->exactly(4))
 		->method('acl_getf')
@@ -47,9 +43,9 @@ class manage_tags_controller_test extends topictags_functional_test_base
 		));
 
 		// create some topics to work with
-		$tmp = $this->create_topic(2, 'tag_edit_functional_test', 'test topic for editing tag');
+		$tmp = $this->create_topic($forum_id, 'tag_edit_functional_test', 'test topic for editing tag');
 		$topic_id = $tmp['topic_id'];
-		$tmp = $this->create_topic(2, 'tag_edit_functional_test2', 'test topic for editing tag (2)');
+		$tmp = $this->create_topic($forum_id, 'tag_edit_functional_test2', 'test topic for editing tag (2)');
 		$topic_id2 = $tmp['topic_id'];
 
 		// add tags
