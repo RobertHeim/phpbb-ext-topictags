@@ -127,12 +127,7 @@ class settings_test extends topictags_functional_test_base
 		// == actual tests ==
 
 		// disable
-		$crawler = $this->goto_settings_page();
-		$form = $crawler->selectButton($this->lang('SUBMIT'))->form();
-		$field = $form->get(prefixes::CONFIG . '_display_tags_in_viewforum');
-		$field->setValue(0);
-		$crawler = $this->submit($form);
-		$this->assertContainsLang('TOPICTAGS_SETTINGS_SAVED', $crawler->text());
+		$this->set_topictags_setting('_display_tags_in_viewforum', 0);
 
 		// must not be shown
 		$crawler = $this->request('GET', "viewforum.php?f=$forum_id");
@@ -140,12 +135,7 @@ class settings_test extends topictags_functional_test_base
 		$this->assertEquals(0, $crawler->filter('.rh_tag:contains("' . $tagname . '")')->count());
 
 		// enable
-		$crawler = $this->goto_settings_page();
-		$form = $crawler->selectButton($this->lang('SUBMIT'))->form();
-		$field = $form->get(prefixes::CONFIG . '_display_tags_in_viewforum');
-		$field->setValue(1);
-		$crawler = $this->submit($form);
-		$this->assertContainsLang('TOPICTAGS_SETTINGS_SAVED', $crawler->text());
+		$this->set_topictags_setting('_display_tags_in_viewforum', 1);
 
 		// must be shown
 		$crawler = $this->request('GET', "viewforum.php?f=$forum_id");
@@ -171,36 +161,85 @@ class settings_test extends topictags_functional_test_base
 		$this->admin_login();
 
 		// disable tagcloud
-		$crawler = $this->goto_settings_page();
-		$form = $crawler->selectButton($this->lang('SUBMIT'))->form();
-		$field = $form->get(prefixes::CONFIG . '_display_tagcloud_on_index');
-		$field->setValue(0);
-		$crawler = $this->submit($form);
-		$this->assertContainsLang('TOPICTAGS_SETTINGS_SAVED', $crawler->text());
+		$this->set_topictags_setting('_display_tagcloud_on_index', 0);
 
 		// must not be visible on index
 		$crawler = self::request('GET', 'index.php');
 		$this->assertNotContainsLang('RH_TOPICTAGS_TAGCLOUD', $crawler->text());
 
-		// must be disabled
-		$crawler = $this->goto_settings_page();
-		$form = $crawler->selectButton($this->lang('SUBMIT'))->form();
-		$field = $form->get(prefixes::CONFIG . '_display_tagcloud_on_index');
-		$this->assertEquals('0', $field->getValue());
-
 		// enable it
-		$field->setValue(1);
-		$crawler = $this->submit($form);
-		$this->assertContainsLang('TOPICTAGS_SETTINGS_SAVED', $crawler->text());
-
-		// must be enabled now
-		$crawler = $this->goto_settings_page();
-		$form = $crawler->selectButton($this->lang('SUBMIT'))->form();
-		$field = $form->get(prefixes::CONFIG . '_display_tagcloud_on_index');
-		$this->assertEquals('1', $field->getValue());
+		$this->set_topictags_setting('_display_tagcloud_on_index', 1);
 
 		// must be visible on the index page
 		$crawler = self::request('GET', 'index.php');
 		$this->assertContainsLang('RH_TOPICTAGS_TAGCLOUD', $crawler->text());
+	}
+
+	public function test_max_tags_in_tagcloud()
+	{
+		// == test specific setup ==
+
+		$this->login();
+		$this->admin_login();
+
+		// enable tagging in forum used for testing
+		$forum_id = 2;
+		$this->enable_topictags_in_forum($forum_id);
+
+		// create a topic to work with
+		$tmp = $this->create_topic($forum_id, 'display_tags_in_viewforum_functional_test', 'test topic');
+		$topic_id = $tmp['topic_id'];
+
+		// add tags
+		$count_of_tags = 20;
+		$valid_tags = array();
+		for ($i = 1; $i <= $count_of_tags; $i++)
+		{
+			$valid_tags[] = 'tag5694524_' . $i;
+		}
+		$this->tags_manager->assign_tags_to_topic($topic_id, $valid_tags);
+
+		// ensure cloud is shown
+		$this->set_topictags_setting('_display_tagcloud_on_index', 1);
+
+		// == actual tests ==
+
+		$tag_count_in_cloud = -1;
+		$this->set_topictags_setting('_max_tags_in_tagcloud', $tag_count_in_cloud, false, true);
+		// check index
+		$crawler = $this->request('GET', "index.php");
+		$this->assertEquals(0, $crawler->filter('.rh_topictags_tagcloud li')->count());
+
+		$tag_count_in_cloud = 2;
+		$this->set_topictags_setting('_max_tags_in_tagcloud', $tag_count_in_cloud);
+		// check index
+		$crawler = $this->request('GET', "index.php");
+		$this->assertEquals($tag_count_in_cloud, $crawler->filter('.rh_topictags_tagcloud li')->count());
+
+		$tag_count_in_cloud = 200;
+		$this->set_topictags_setting('_max_tags_in_tagcloud', $tag_count_in_cloud);
+		// check index
+		$crawler = $this->request('GET', "index.php");
+		foreach ($valid_tags as $tag)
+		{
+			$this->assertContains($tag, $crawler->text());
+		}
+		$this->assertLessThanOrEqual($tag_count_in_cloud, $crawler->filter('.rh_topictags_tagcloud li')->count());
+
+		// == cleanup ==
+
+		// restore default
+		$tag_count_in_cloud = 20;
+		$this->set_topictags_setting('_max_tags_in_tagcloud', $tag_count_in_cloud);
+
+		// delete the created tags
+		$existing_tags = $this->tags_manager->get_existing_tags($valid_tags);
+		foreach ($existing_tags as $tag)
+		{
+			$this->tags_manager->delete_tag($tag['id']);
+		}
+
+		// delete the created topics
+		$this->delete_topic($topic_id);
 	}
 }

@@ -8,6 +8,7 @@
 namespace robertheim\topictags\tests\functional;
 
 use \robertheim\topictags\prefixes;
+
 /**
  * @group functional
  */
@@ -89,5 +90,37 @@ class topictags_functional_test_base extends \phpbb_functional_test_case
 			WHERE forum_id = ' . ((int) $forum_id);
 		$this->db->sql_query($sql);
 		$this->tags_manager->calc_count_tags();
+	}
+
+	/**
+	 * Sets a setting via the acp settings page of the extension.
+	 *
+	 * @param string $html_name_postfix the name of the html form element to set the value for
+	 * @param mixed $value the value to set
+	 * @param boolean $validate_setting_update if true (default) the settings page is checked again for holding the new value after the update.
+	 * @param boolean $already_logged_in_acp whether (default) or not the user is already logged in into the acp
+	 */
+	protected function set_topictags_setting($html_name_postfix, $value, $validate_setting_update = true, $already_logged_in_acp = true)
+	{
+		if (!$already_logged_in_acp)
+		{
+			$this->login();
+			$this->admin_login();
+		}
+		$crawler = $this->goto_settings_page();
+		$form = $crawler->selectButton($this->lang('SUBMIT'))->form();
+		$field = $form->get(prefixes::CONFIG . $html_name_postfix);
+		$field->setValue($value);
+		$crawler = $this->submit($form);
+		$this->assertContainsLang('TOPICTAGS_SETTINGS_SAVED', $crawler->text());
+
+		if ($validate_setting_update)
+		{
+			// must be updated
+			$crawler = $this->goto_settings_page();
+			$form = $crawler->selectButton($this->lang('SUBMIT'))->form();
+			$field = $form->get(prefixes::CONFIG . $html_name_postfix);
+			$this->assertEquals($value, $field->getValue());
+		}
 	}
 }
