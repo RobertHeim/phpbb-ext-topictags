@@ -23,7 +23,7 @@ class tags_manager_test extends \phpbb_database_test_case
 		$this->db = $this->new_dbal();
 		$this->auth = $this->getMock('\phpbb\auth\auth');
 		$config = new \phpbb\config\config(array(
-			prefixes::CONFIG.'_allowed_tags_regex' => '/^[a-z]{3,30}$/i',
+			prefixes::CONFIG.'_allowed_tags_regex' => '/^[a-zäÄ]{3,30}$/i',
 		));
 		$this->tags_manager = new \robertheim\topictags\service\tags_manager(
 			$this->db, $config, $this->auth, $table_prefix);
@@ -349,7 +349,7 @@ class tags_manager_test extends \phpbb_database_test_case
 	{
 		// uses auth, so we set up the mock/stub
 		// to allow reading first forum
-		$this->auth->expects($this->exactly(4))
+		$this->auth->expects($this->exactly(6))
 			->method('acl_getf')
 			->with($this->equalTo('f_read'))
 			->willReturn(array(
@@ -402,6 +402,40 @@ class tags_manager_test extends \phpbb_database_test_case
 		$topics = $this->tags_manager->get_topics_by_tags($tags, $start, $limit);
 
 		$this->assertEquals(0, sizeof($topics));
+
+		// case sensitive + utf8
+		$topic_id = 4;
+		$tags = array(
+			"tÄäg"
+		);
+		$this->tags_manager->assign_tags_to_topic($topic_id, $tags);
+		$start = 0;
+		$limit = 10;
+		$mode = 'AND';
+		$casesensitive = true;
+		$topics = $this->tags_manager->get_topics_by_tags($tags, $start, $limit, $mode, $casesensitive);
+
+		$this->assertEquals(1, sizeof($topics));
+		$this->assertEquals($topic_id, $topics[0]['topic_id']);
+
+		// case insensitive + utf8
+		$topic_id = 4;
+		$tags = array(
+			"tÄäg"
+		);
+		$this->tags_manager->assign_tags_to_topic($topic_id, $tags);
+		$tags = array(
+			// note that the case is different now
+			"täÄg"
+		);
+		$start = 0;
+		$limit = 10;
+		$mode = 'AND';
+		$casesensitive = false;
+		$topics = $this->tags_manager->get_topics_by_tags($tags, $start, $limit, $mode, $casesensitive);
+
+		$this->assertEquals(1, sizeof($topics));
+		$this->assertEquals($topic_id, $topics[0]['topic_id']);
 
 		// search with OR
 		$tags = array(

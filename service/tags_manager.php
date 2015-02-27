@@ -359,7 +359,10 @@ class tags_manager
 			if (!$this->in_array_r($tag, $existing_tags))
 			{
 				// tag needs to be created
-				$sql_ary_new_tags[] = array('tag' => $tag);
+				$sql_ary_new_tags[] = array(
+					'tag'			=> $tag,
+					'tag_lowercase'	=> utf8_strtolower($tag),
+				);
 			}
 		}
 
@@ -532,9 +535,8 @@ class tags_manager
 		}
 		$sql_where_topic_access .= ' AND topics.topic_visibility = ' . ITEM_APPROVED;
 
-		// TODO store a utf8_clean_string string and compare this, instead of LOWER(...) see http://phpcrossref.com/xref/phpbb/_functions/utf8_clean_string.html
 		// tags is not an empty array here
-		$sql_where_tag_in = $this->db->sql_in_set($casesensitive ? ' t.tag' : 'LOWER(t.tag)', $tags);
+		$sql_where_tag_in = $this->db->sql_in_set($casesensitive ? ' t.tag' : 't.tag_lowercase', $tags);
 
 		$sql = '';
 		if ('AND' == $mode)

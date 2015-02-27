@@ -228,7 +228,7 @@ class main
 					'VIEWS'				=> $row['topic_views'],
 					'TOPIC_TITLE'		=> censor_text($row['topic_title']),
 					'TOPIC_TYPE'		=> $topic_type,
-					'FORUM_NAME'		=> (isset($row['forum_name'])) ? $row['forum_name'] : 'TODO',//$forum_data['forum_name'],
+					'FORUM_NAME'		=> (isset($row['forum_name'])) ? $row['forum_name'] : '',
 
 					'TOPIC_IMG_STYLE'		=> $folder_img,
 					'TOPIC_FOLDER_IMG'		=> $user->img($folder_img, $folder_alt),

@@ -64,6 +64,12 @@
             <value>Topic3</value>
             <value>1</value>
         </row>
+        <row>
+            <value>4</value>
+            <value>1</value>
+            <value>Topic4</value>
+            <value>1</value>
+        </row>
     </table>
     <table name="phpbb_rh_topictags">
         <column>id</column>
@@ -93,20 +99,24 @@
     <table name="phpbb_rh_topictags_tag">
         <column>id</column>
         <column>tag</column>
+        <column>tag_lowercase</column>
         <column>count</column>
         <row>
             <value>1</value>
             <value>tag1</value>
+            <value></value>
             <value>0</value>
         </row>
         <row>
             <value>2</value>
             <value>tag2</value>
+            <value></value>
             <value>0</value>
         </row>
         <row>
             <value>3</value>
             <value>anothertag3</value>
+            <value></value>
             <value>0</value>
         </row>
     </table>
