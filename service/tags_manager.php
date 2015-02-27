@@ -87,7 +87,7 @@ class tags_manager
 	/**
 	 * Removes all tags that are not assigned to at least one topic (garbage collection).
 	 *
-	 * @return count of deleted tags
+	 * @return integer count of deleted tags
 	 */
 	public function delete_unused_tags()
 	{
@@ -160,7 +160,7 @@ class tags_manager
 	/**
 	 * Removes all topic-tag-assignments where the topic does not exist anymore.
 	 *
-	 * @return count of deleted assignments
+	 * @return integer count of deleted assignments
 	 */
 	public function delete_assignments_where_topic_does_not_exist()
 	{
@@ -185,7 +185,7 @@ class tags_manager
 	 * Deletes all topic-tag-assignments where the topic resides in a forum with tagging disabled.
 	 *
 	 * @param $forum_ids array of forum-ids that should be checked (if null, all are checked).
-	 * @return count of deleted assignments
+	 * @return integer count of deleted assignments
 	 */
 	public function delete_tags_from_tagdisabled_forums($forum_ids = null)
 	{
@@ -321,6 +321,7 @@ class tags_manager
 		$ids = $this->get_existing_tags($valid_tags, true);
 
 		// create topic_id <->tag_id link in TOPICTAGS_TABLE
+		$sql_ary = array();
 		foreach ($ids as $id)
 		{
 			$sql_ary[] = array(

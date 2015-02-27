@@ -75,5 +75,4 @@ class release_0_0_1 extends \phpbb\db\migration\migration
 			array('config.add', array($this->config_prefix.'_version', $this->version)),
 		);
 	}
-
 }

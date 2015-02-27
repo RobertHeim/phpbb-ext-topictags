@@ -81,5 +81,4 @@ class release_0_0_9 extends \phpbb\db\migration\migration
 
 		return $role_id > 0;
 	}
-
 }
