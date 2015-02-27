@@ -160,19 +160,13 @@ class manage_tags_controller
 	 */
 	private function handle_edit($u_action)
 	{
-		// TODO none-ajax
 		$old_tag_name = $this->request->variable('old_tag_name', '');
 		$new_tag_name = $this->request->variable('new_tag_name', '');
 
 		if (empty($old_tag_name) || empty($new_tag_name))
 		{
 			$error_msg = $this->user->lang('TOPICTAGS_MISSING_TAG_NAMES');
-			$response = new json_response();
-			$response->send(array(
-				'success'   => false,
-				'error_msg' => base64_encode(rawurlencode($error_msg)),
-			));
-			trigger_error($error_msg . adm_back_link($u_action), E_USER_WARNING);
+			$this->simple_response($error_msg, false);
 		}
 		else
 		{
@@ -181,26 +175,13 @@ class manage_tags_controller
 			if ($old_tag_name == $new_tag_name)
 			{
 				$error_msg = $this->user->lang('TOPICTAGS_NO_MODIFICATION', $old_tag_name);
-				$response = new json_response();
-				$response->send(array(
-					'success'   => false,
-					'error_msg' => base64_encode(rawurlencode($error_msg)),
-				));
-				trigger_error($error_msg . adm_back_link($u_action), E_USER_WARNING);
+				$this->simple_response($error_msg, false);
 			}
 			$old_ids = $this->tags_manager->get_existing_tags(array($old_tag_name), true);
 			if (empty($old_ids))
 			{
 				$error_msg = $this->user->lang('TOPICTAGS_TAG_DOES_NOT_EXIST', $old_tag_name);
-				if ($this->request->is_ajax())
-				{
-					$response = new json_response();
-					$response->send(array(
-						'success'   => false,
-						'error_msg' => base64_encode(rawurlencode($error_msg)),
-					));
-				}
-				trigger_error($error_msg . adm_back_link($u_action), E_USER_WARNING);
+				$this->simple_response($error_msg, false);
 			}
 			// if we reach here, we know that we got a single valid old tag
 			$old_id = $old_ids[0];
@@ -210,15 +191,7 @@ class manage_tags_controller
 			if (!$is_valid)
 			{
 				$error_msg = $this->user->lang('TOPICTAGS_TAG_INVALID', $new_tag_name);
-				if ($this->request->is_ajax())
-				{
-					$response = new json_response();
-					$response->send(array(
-						'success'   => false,
-						'error_msg' => base64_encode(rawurlencode($error_msg)),
-					));
-				}
-				trigger_error($error_msg . adm_back_link($u_action), E_USER_WARNING);
+				$this->simple_response($error_msg, false);
 			}
 
 			// old tag exist and new tag is valid
@@ -229,31 +202,60 @@ class manage_tags_controller
 				$new_id = $new_ids[0];
 				$new_tag_count = $this->tags_manager->merge($old_id, $new_tag_name, $new_id);
 				$msg = $this->user->lang('TOPICTAGS_TAG_MERGED', $new_tag_name_clean);
-				if ($this->request->is_ajax())
-				{
-					$response = new json_response();
-					$response->send(array(
+				$this->simple_response($msg, true, array(
 						'success'       => true,
 						'merged'        => true,
 						'new_tag_count' => $new_tag_count,
 						'msg'           => base64_encode(rawurlencode($msg)),
-					));
-				}
-				trigger_error($msg . adm_back_link($u_action));
+				));
 			}
 
 			// old tag exist and new tag is valid and does not exist -> rename it
 			$this->tags_manager->rename($old_id, $new_tag_name_clean);
 			$msg = $this->user->lang('TOPICTAGS_TAG_CHANGED');
-			if ($this->request->is_ajax())
+			$this->simple_response($msg);
+		}
+	}
+
+	/**
+	 * Creates an ajax response or a normal response depending on the request.
+	 *
+	 * @param string $msg the message for the normal response
+	 * @param boolean $success whether the response is marked successful (default) or not
+	 * @param array $ajax_response optional values to response in ajax_response. If no values are
+	 *                             given the response will be for success==true:
+	 *                                <pre>array(
+	 *                                  'success' => true,
+	 *                                  'msg' => base64_encode(rawurlencode($msg))
+	 *                                )</pre>
+	 *                             and for success==false:
+	 *                                <pre>array(
+	 *                                  'success' => false,
+	 *                                  'error_msg' => base64_encode(rawurlencode($msg))
+	 *                                )</pre>
+	 */
+	private function simple_response($msg, $success = true, array $ajax_response = array())
+	{
+		if ($this->request->is_ajax())
+		{
+			if (empty($ajax_response))
 			{
-				$response = new json_response();
-				$response->send(array(
-									'success' => true,
-									'msg'     => base64_encode(rawurlencode($msg)),
-								));
+				$msg_key = $success ? 'msg' : 'error_msg';
+				$ajax_response = array(
+					'success' => $success,
+					$msg_key => base64_encode(rawurlencode($msg)),
+				);
 			}
+			$response = new json_response();
+			$response->send($ajax_response);
+		}
+		if ($success)
+		{
 			trigger_error($msg . adm_back_link($u_action));
+		}
+		else
+		{
+			trigger_error($msg . adm_back_link($u_action), E_USER_WARNING);
 		}
 	}
 
