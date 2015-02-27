@@ -58,4 +58,4 @@ script:
 after_script:
   - sh -c "if [ '$TRAVIS_PHP_VERSION' = '5.3.3' ] && [ '$DB' = 'mysqli' ]; then cd phpBB/ext/$EXTNAME/ ; fi"
   - sh -c "if [ '$TRAVIS_PHP_VERSION' = '5.3.3' ] && [ '$DB' = 'mysqli' ]; then wget https://scrutinizer-ci.com/ocular.phar ; fi"
-  - sh -c "if [ '$TRAVIS_PHP_VERSION' = '5.3.3' ] && [ '$DB' = 'mysqli' ]; then php ocular.phar code-coverage:upload --format=php-clover coverage.clover ; fi"
+  - sh -c "if [ '$TRAVIS_PHP_VERSION' = '5.3.3' ] && [ '$DB' = 'mysqli' ]; then php ocular.phar code-coverage:upload --format=php-clover coverage.clover --repository=$EXTNAME; fi"
