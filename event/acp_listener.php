@@ -20,7 +20,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class acp_listener implements EventSubscriberInterface
 {
 
-	static public function getSubscribedEvents()
+	public static function getSubscribedEvents()
 	{
 		return array(
 			'core.acp_manage_forums_initialise_data'   => 'acp_manage_forums_initialise_data',
@@ -32,6 +32,8 @@ class acp_listener implements EventSubscriberInterface
 
 	private $request;
 
+	private $user;
+
 	private $tags_manager;
 
 	/**
@@ -39,17 +41,18 @@ class acp_listener implements EventSubscriberInterface
 	 */
 	public function __construct(
 		\phpbb\request\request_interface $request,
+		\phpbb\user $user,
 		\robertheim\topictags\service\tags_manager $tags_manager
 	)
 	{
 		$this->request = $request;
+		$this->user = $user;
 		$this->tags_manager = $tags_manager;
 	}
 
 	public function acp_manage_forums_initialise_data($event)
 	{
-		global $user;
-		$user->add_lang_ext('robertheim/topictags', 'topictags_acp');
+		$this->user->add_lang_ext('robertheim/topictags', 'topictags_acp');
 	}
 
 	public function acp_manage_forums_display_form($event)
@@ -66,7 +69,6 @@ class acp_listener implements EventSubscriberInterface
 
 	public function acp_manage_forums_validate_data($event)
 	{
-		global $request;
 		$data = $event->get_data();
 
 		$post = $this->request->get_super_global(\phpbb\request\request::POST);
@@ -80,9 +82,8 @@ class acp_listener implements EventSubscriberInterface
 		$prune = isset($post['rh_topictags_prune']) ? $post['rh_topictags_prune'] : 0;
 		if ($prune && $status)
 		{
-			global $user;
-			$user->add_lang_ext('robertheim/topictags', 'topictags_acp');
-			$data['errors'][] = $user->lang('ACP_RH_TOPICTAGS_PRUNING_REQUIRES_TAGGING_DISABLED');
+			$this->user->add_lang_ext('robertheim/topictags', 'topictags_acp');
+			$data['errors'][] = $this->user->lang('ACP_RH_TOPICTAGS_PRUNING_REQUIRES_TAGGING_DISABLED');
 		}
 
 		$event->set_data($data);
@@ -90,8 +91,6 @@ class acp_listener implements EventSubscriberInterface
 
 	public function acp_manage_forums_update_data_after($event)
 	{
-		global $request;
-
 		$post = $this->request->get_super_global(\phpbb\request\request::POST);
 
 		$status = isset($post['rh_topictags_enabled']) ? $post['rh_topictags_enabled'] : 0;
@@ -105,5 +104,4 @@ class acp_listener implements EventSubscriberInterface
 		}
 		$this->tags_manager->calc_count_tags();
 	}
-
 }

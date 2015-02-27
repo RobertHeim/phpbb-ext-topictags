@@ -13,7 +13,7 @@ use robertheim\topictags\prefixes;
 use robertheim\topictags\tables;
 use robertheim\topictags\service\tags_manager;
 
-class release_0_0_8 extends \phpbb\db\migration\migration
+class release_0_0_8 extends \phpbb\db\migration\container_aware_migration
 {
 	protected $version = '0.0.8-DEV';
 
@@ -22,7 +22,7 @@ class release_0_0_8 extends \phpbb\db\migration\migration
 		return version_compare($this->config[prefixes::CONFIG.'_version'], $this->version, '>=');
 	}
 
-	static public function depends_on()
+	public static function depends_on()
 	{
 		return array(
 			'\robertheim\topictags\migrations\release_0_0_7',
@@ -70,8 +70,8 @@ class release_0_0_8 extends \phpbb\db\migration\migration
 
 	public function calc_count_tags()
 	{
-		global $auth;
-		// TODO custom service in migrations https://www.phpbb.com/community/viewtopic.php?f=461&t=2264646
+		/* @var $auth \phpbb\auth\auth */
+		$auth = $this->container->get('auth');
 		$tags_manager = new tags_manager($this->db, $this->config, $auth, $this->table_prefix);
 		$tags_manager->calc_count_tags();
 	}

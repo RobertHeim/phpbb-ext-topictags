@@ -16,6 +16,7 @@ services:
         class: robertheim\topictags\event\acp_listener
         arguments:
             - @request
+            - @user
             - @robertheim.topictags.tags_manager
         tags:
             - { name: event.listener }
@@ -27,6 +28,11 @@ services:
             - @controller.helper
             - @request
             - @user
+            - @auth
+            - @dispatcher
+            - @service_container
+            - %core.php_ext%
+            - %core.root_path%
             - @robertheim.topictags.tags_manager
             - @robertheim.topictags.tagcloud_manager
     robertheim.topictags.tags_manager:

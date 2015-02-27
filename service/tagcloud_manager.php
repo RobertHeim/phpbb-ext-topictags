@@ -66,8 +66,9 @@ class tagcloud_manager
 		}
 
 		// get the data
+		// when $limit is still 0 there should not be displayed any tags
+		$tags = (0 == $limit) ? array() : $this->get_top_tags($limit);
 		$maximum = $this->get_maximum_tag_usage_count();
-		$tags = $this->get_top_tags($limit);
 
 		$result_size = sizeof($tags);
 		if ($result_size < $limit)
@@ -168,7 +169,9 @@ class tagcloud_manager
 		);
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 		$result = $this->db->sql_query_limit($sql, 1);
-		return (int) $this->db->sql_fetchfield('count');
+		$re = (int) $this->db->sql_fetchfield('count');
+		$this->db->sql_freeresult($result);
+		return $re;
 	}
 
 	/**
@@ -190,15 +193,15 @@ class tagcloud_manager
 		{
 			return 'rh_topictags_smallest';
 		}
-		else if ($percent >= 20 and $percent < 40)
+		else if ($percent >= 20 && $percent < 40)
 		{
 			return 'rh_topictags_small';
 		}
-		else if ($percent >= 40 and $percent < 60)
+		else if ($percent >= 40 && $percent < 60)
 		{
 			return 'rh_topictags_medium';
 		}
-		else if ($percent >= 60 and $percent < 80)
+		else if ($percent >= 60 && $percent < 80)
 		{
 			return 'rh_topictags_large';
 		}

@@ -20,6 +20,7 @@ class topictags_module
 	/** @var string */
 	public $u_action;
 
+	/** @var \robertheim\topictags\service\tags_manager */
 	protected $tags_manager;
 
 	public function __construct()
@@ -112,7 +113,12 @@ class topictags_module
 				$config->set(prefixes::CONFIG . '_allowed_tags_exp_for_users', $exp_for_users);
 				$config->set(prefixes::CONFIG . '_display_tagcloud_on_index', $request->variable(prefixes::CONFIG . '_display_tagcloud_on_index', 1));
 				$config->set(prefixes::CONFIG . '_display_tagcount_in_tagcloud', $request->variable(prefixes::CONFIG . '_display_tagcount_in_tagcloud', 1));
-				$config->set(prefixes::CONFIG . '_max_tags_in_tagcloud', $request->variable(prefixes::CONFIG . '_max_tags_in_tagcloud', 20));
+				$max_tags_in_tagcloud = $request->variable(prefixes::CONFIG . '_max_tags_in_tagcloud', 20);
+				if ($max_tags_in_tagcloud < 0)
+				{
+					$max_tags_in_tagcloud = 0;
+				}
+				$config->set(prefixes::CONFIG . '_max_tags_in_tagcloud', $max_tags_in_tagcloud);
 				$config->set(prefixes::CONFIG . '_convert_space_to_minus', $request->variable(prefixes::CONFIG . '_convert_space_to_minus', 1));
 
 				$deleted_assignments_count = 0;

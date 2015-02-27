@@ -1,0 +1,6 @@
+tools:
+  external_code_coverage:
+      timeout: 1200 # seconds
+filter:
+    excluded_paths:
+        - tests/*

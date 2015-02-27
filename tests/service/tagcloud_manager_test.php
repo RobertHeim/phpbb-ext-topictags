@@ -92,18 +92,18 @@ class tagcloud_manager_test extends \phpbb_database_test_case
 			}))
 			->willReturn(true);
 
- 		$this->tagcloud_manager->assign_tagcloud_to_template($limit);
+		$this->tagcloud_manager->assign_tagcloud_to_template($limit);
 	}
 
 	public function test_assign_tagcloud_to_template2()
 	{
- 		$limit = 2;
- 		$show_count = 'Display ' . $limit . ' tags.';
- 		$this->user->expects($this->once())
+		$limit = 2;
+		$show_count = 'Display ' . $limit . ' tags.';
+		$this->user->expects($this->once())
 	 		->method('lang')
 	 		->with('RH_TOPICTAGS_DISPLAYING_TOTAL', $limit)
 	 		->willReturn($show_count);
- 		$this->template->expects($this->once())
+		$this->template->expects($this->once())
 	 		->method('assign_vars')
 	 		->with($this->equalTo(
 	 			array(
@@ -113,7 +113,7 @@ class tagcloud_manager_test extends \phpbb_database_test_case
 	 			))
 	 		)->willReturn(true);
 
- 		$this->template->expects($this->exactly(2))
+		$this->template->expects($this->exactly(2))
 	 		->method('assign_block_vars')
 	 		->withConsecutive(
 	 			array('rh_topictags_tags', $this->callback(function($o) {
@@ -133,7 +133,7 @@ class tagcloud_manager_test extends \phpbb_database_test_case
 	 		)
 	 		->willReturn(true);
 
- 		$this->tagcloud_manager->assign_tagcloud_to_template($limit);
+		$this->tagcloud_manager->assign_tagcloud_to_template($limit);
 	}
 
 	public function test_assign_tagcloud_to_template3()

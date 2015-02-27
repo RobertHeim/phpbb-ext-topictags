@@ -24,7 +24,7 @@ class release_0_0_1 extends \phpbb\db\migration\migration
 		return isset($installed_version) && version_compare($installed_version, $this->version, '>=');
 	}
 
-	static public function depends_on()
+	public static function depends_on()
 	{
 		return array('\phpbb\db\migration\data\v310\dev');
 	}
@@ -75,5 +75,4 @@ class release_0_0_1 extends \phpbb\db\migration\migration
 			array('config.add', array($this->config_prefix.'_version', $this->version)),
 		);
 	}
-
 }

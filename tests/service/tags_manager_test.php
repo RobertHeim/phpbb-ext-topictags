@@ -19,7 +19,7 @@ class tags_manager_test extends \phpbb_database_test_case
 	protected function setUp()
 	{
 		parent::setUp();
-		global $table_prefix, $user;
+		global $table_prefix;
 		$this->db = $this->new_dbal();
 		$this->auth = $this->getMock('\phpbb\auth\auth');
 		$config = new \phpbb\config\config(array(
@@ -282,7 +282,6 @@ class tags_manager_test extends \phpbb_database_test_case
 		sort($tags);
 		$this->assertEquals($valid_tags, $tags);
 
-
 		$valid_tags = array('tag2');
 		$this->tags_manager->assign_tags_to_topic($topic_id, $valid_tags);
 
@@ -465,7 +464,6 @@ class tags_manager_test extends \phpbb_database_test_case
 		$count = $this->tags_manager->count_topics_by_tags($tags);
 		$this->assertEquals(1, $count);
 
-
 		// case sensitive
 		$tags = array(
 			"tAg1"
@@ -506,7 +504,7 @@ class tags_manager_test extends \phpbb_database_test_case
 		$this->assertTrue($this->tags_manager->is_valid_tag("abcdefghijabcdefghijabcdefghija", false));
 
 		// enable blacklist and whitelist
-		global $table_prefix, $user;
+		global $table_prefix;
 		$config = new \phpbb\config\config(array(
 			prefixes::CONFIG.'_allowed_tags_regex' => '/^[a-z]{3,30}$/i',
 			prefixes::CONFIG.'_whitelist_enabled' => true,
@@ -557,7 +555,7 @@ class tags_manager_test extends \phpbb_database_test_case
 		$this->assertEquals("t ag", $this->tags_manager->clean_tag("t ag"));
 
 		// auto convert space to minus
-		global $table_prefix, $user;
+		global $table_prefix;
 		$config = new \phpbb\config\config(array(
 			prefixes::CONFIG.'_allowed_tags_regex' => '/^[a-z]{3,30}$/i',
 			prefixes::CONFIG.'_convert_space_to_minus' => true,
@@ -662,8 +660,8 @@ class tags_manager_test extends \phpbb_database_test_case
 		$this->assertEquals(0, $count);
 
 		// 2 assignments but only 1 is readable
-		$count_of_assignments = $this->tags_manager->merge($tag_to_delete,
-			$tag_to_delete_id, $tag_to_keep, $tag_to_keep_id);
+		$count_of_assignments = $this->tags_manager->merge($tag_to_delete_id,
+				$tag_to_keep, $tag_to_keep_id);
 		$this->assertEquals(1, $count_of_assignments);
 		$result = $this->db->sql_query(
 			'SELECT COUNT(*) as count
@@ -715,8 +713,8 @@ class tags_manager_test extends \phpbb_database_test_case
 		$this->assertEquals(array('anothertag3', 'tag2'), $tags);
 
 		// 3 assignments, but only 2 are valid
-		$count_of_assignments = $this->tags_manager->merge($tag_to_delete,
-			$tag_to_delete_id, $tag_to_keep, $tag_to_keep_id);
+		$count_of_assignments = $this->tags_manager->merge($tag_to_delete_id,
+			$tag_to_keep, $tag_to_keep_id);
 		$this->assertEquals(2, $count_of_assignments);
 		$result = $this->db->sql_query(
 			'SELECT COUNT(*) as count

@@ -87,7 +87,7 @@ class tags_manager
 	/**
 	 * Removes all tags that are not assigned to at least one topic (garbage collection).
 	 *
-	 * @return count of deleted tags
+	 * @return integer count of deleted tags
 	 */
 	public function delete_unused_tags()
 	{
@@ -160,7 +160,7 @@ class tags_manager
 	/**
 	 * Removes all topic-tag-assignments where the topic does not exist anymore.
 	 *
-	 * @return count of deleted assignments
+	 * @return integer count of deleted assignments
 	 */
 	public function delete_assignments_where_topic_does_not_exist()
 	{
@@ -185,7 +185,7 @@ class tags_manager
 	 * Deletes all topic-tag-assignments where the topic resides in a forum with tagging disabled.
 	 *
 	 * @param $forum_ids array of forum-ids that should be checked (if null, all are checked).
-	 * @return count of deleted assignments
+	 * @return integer count of deleted assignments
 	 */
 	public function delete_tags_from_tagdisabled_forums($forum_ids = null)
 	{
@@ -321,6 +321,7 @@ class tags_manager
 		$ids = $this->get_existing_tags($valid_tags, true);
 
 		// create topic_id <->tag_id link in TOPICTAGS_TABLE
+		$sql_ary = array();
 		foreach ($ids as $id)
 		{
 			$sql_ary[] = array(
@@ -386,7 +387,8 @@ class tags_manager
 	 * If $only_ids is set to true, an array containing only the ids of the tags will be returned: array(1,2,3,..)
 	 *
 	 * @param $tags array of tag-names; might be null to get all existing tags
-	 * @return array(array('id'=>.. , 'tag'=> ..), array('id'=>.. , 'tag'=> ..), ...) or array(1,2,3,..) if $only_ids==true
+	 * @param $only_ids whether to return only the tag-ids (true) or tag names as well (false, default)
+	 * @return array an array of the form array(array('id'=>.. , 'tag'=> ..), array('id'=>.. , 'tag'=> ..), ...) or array(1,2,3,..) if $only_ids==true
 	 */
 	public function get_existing_tags($tags = null, $only_ids = false)
 	{
@@ -640,7 +642,7 @@ class tags_manager
 	 * Splits the given tags into valid and invalid ones.
 	 *
 	 * @param $tags an array of potential tags
-	 * @return array('valid'=> array(), 'invalid' => array())
+	 * @return array array('valid'=> array(), 'invalid' => array())
 	 */
 	public function split_valid_tags($tags)
 	{
@@ -847,16 +849,15 @@ class tags_manager
 	}
 
 	/**
-	 * Merges two tags, by assigning all topics of tag_to_delete to the tag_to_keep and then delet the tag_to_delete.
+	 * Merges two tags, by assigning all topics of tag_to_delete_id to the tag_to_keep_id and then deletes the tag_to_delete_id.
 	 * NOTE: Both tags must exist and this is not checked again!
 	 *
-	 * @param string $tag_to_delete must be valid
 	 * @param int $tag_to_delete_id the id of the tag to delete
 	 * @param string $tag_to_keep must be valid
 	 * @param int $tag_to_keep_id the id of the tag to keep
 	 * @return the new count of assignments of the kept tag
 	 */
-	public function merge($tag_to_delete, $tag_to_delete_id, $tag_to_keep, $tag_to_keep_id)
+	public function merge($tag_to_delete_id, $tag_to_keep, $tag_to_keep_id)
 	{
 		$tag_to_delete_id = (int) $tag_to_delete_id;
 		$tag_to_keep_id = (int) $tag_to_keep_id;
