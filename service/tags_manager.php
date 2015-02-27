@@ -106,7 +106,7 @@ class tags_manager
 	/**
 	 * Deletes all assignments of tags, that are no longer valid
 	 *
-	 * @return count of removed assignments
+	 * @return integer count of removed assignments
 	 */
 	public function delete_assignments_of_invalid_tags()
 	{

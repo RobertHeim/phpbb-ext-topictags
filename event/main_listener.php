@@ -86,7 +86,6 @@ class main_listener implements EventSubscriberInterface
 	{
 		$tags_string = utf8_normalize_nfc($this->request->variable('rh_topictags', '', true));
 		$tags_string = rawurldecode(base64_decode($tags_string));
-		//$tags_string = utf8_encode($tags_string);
 
 		if ('' === $tags_string)
 		{

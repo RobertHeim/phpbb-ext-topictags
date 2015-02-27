@@ -143,7 +143,6 @@ class manage_tags_controller
 			{
 				trigger_error('TOPICTAGS_TAG_DELETED');
 			}
-			//trigger_error($this->user->lang['YES'] . adm_back_link($u_action));
 			trigger_error($this->user->lang('TOPICTAGS_TAG_DELETED') . adm_back_link($u_action));
 		}
 		else
