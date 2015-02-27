@@ -22,7 +22,7 @@ use robertheim\topictags\permissions;
 class main_listener implements EventSubscriberInterface
 {
 
-	static public function getSubscribedEvents()
+	public static function getSubscribedEvents()
 	{
 		return array(
 			'core.user_setup'                                => 'load_language_on_setup',
@@ -198,7 +198,7 @@ class main_listener implements EventSubscriberInterface
 				return;
 			}
 
-			$mode = $enable_trader = $topic_id = $post_id = $topic_first_post_id = false;
+			$mode = $topic_id = $post_id = $topic_first_post_id = false;
 
 			if (!empty($data['mode'])) {
 				$mode = $data['mode'];
@@ -293,7 +293,6 @@ class main_listener implements EventSubscriberInterface
 				{
 					// we cannot use assign_block_vars('topicrow.tags', ...) here, because the block 'topicrow' is not yet assigned
 					// add links
-					$tpl_tags = array();
 					foreach ($tags as $tag)
 					{
 						$this->template->assign_block_vars('rh_tags_tmp', array (

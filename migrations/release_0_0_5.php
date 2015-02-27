@@ -20,7 +20,7 @@ class release_0_0_5 extends \phpbb\db\migration\migration
 		return version_compare($this->config[prefixes::CONFIG.'_version'], $this->version, '>=');
 	}
 
-	static public function depends_on()
+	public static function depends_on()
 	{
 		return array(
 			'\robertheim\topictags\migrations\release_0_0_4',

@@ -16,6 +16,7 @@ services:
         class: robertheim\topictags\event\acp_listener
         arguments:
             - @request
+            - @user
             - @robertheim.topictags.tags_manager
         tags:
             - { name: event.listener }
