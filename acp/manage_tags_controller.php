@@ -42,7 +42,6 @@ class manage_tags_controller
 		\phpbb\pagination $pagination,
 		\robertheim\topictags\service\tags_manager $tags_manager)
 	{
-		global $phpbb_container;
 		$this->config = $config;
 		$this->request = $request;
 		$this->user = $user;
