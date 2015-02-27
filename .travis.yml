@@ -60,4 +60,4 @@ script:
   - sh -c "if [ '$EPV' != '0' ] && [ '$TRAVIS_PHP_VERSION' = '5.3.3' ] && [ '$DB' = 'mysqli' ]; then phpBB/ext/$EXTNAME/vendor/bin/EPV.php run --dir='phpBB/ext/$EXTNAME/'; fi"
 
 after_script:
-- sh -c "if [ '$COVERAGE' != '0' ]; then ../robertheim/topictags/travis/upload-coverage.sh $DB $TRAVIS_PHP_VERSION; fi"
+- sh -c "if [ '$COVERAGE' != '0' ]; then ../RobertHeim/phpbb-ext-topictags/travis/upload-coverage.sh $DB $TRAVIS_PHP_VERSION; fi"
