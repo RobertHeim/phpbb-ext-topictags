@@ -849,16 +849,15 @@ class tags_manager
 	}
 
 	/**
-	 * Merges two tags, by assigning all topics of tag_to_delete to the tag_to_keep and then delet the tag_to_delete.
+	 * Merges two tags, by assigning all topics of tag_to_delete_id to the tag_to_keep_id and then deletes the tag_to_delete_id.
 	 * NOTE: Both tags must exist and this is not checked again!
 	 *
-	 * @param string $tag_to_delete must be valid
 	 * @param int $tag_to_delete_id the id of the tag to delete
 	 * @param string $tag_to_keep must be valid
 	 * @param int $tag_to_keep_id the id of the tag to keep
 	 * @return the new count of assignments of the kept tag
 	 */
-	public function merge($tag_to_delete, $tag_to_delete_id, $tag_to_keep, $tag_to_keep_id)
+	public function merge($tag_to_delete_id, $tag_to_keep, $tag_to_keep_id)
 	{
 		$tag_to_delete_id = (int) $tag_to_delete_id;
 		$tag_to_keep_id = (int) $tag_to_keep_id;

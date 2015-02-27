@@ -713,8 +713,8 @@ class tags_manager_test extends \phpbb_database_test_case
 		$this->assertEquals(array('anothertag3', 'tag2'), $tags);
 
 		// 3 assignments, but only 2 are valid
-		$count_of_assignments = $this->tags_manager->merge($tag_to_delete,
-			$tag_to_delete_id, $tag_to_keep, $tag_to_keep_id);
+		$count_of_assignments = $this->tags_manager->merge($tag_to_delete_id,
+			$tag_to_keep, $tag_to_keep_id);
 		$this->assertEquals(2, $count_of_assignments);
 		$result = $this->db->sql_query(
 			'SELECT COUNT(*) as count

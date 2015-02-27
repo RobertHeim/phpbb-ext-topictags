@@ -227,7 +227,7 @@ class manage_tags_controller
 			{
 				// new tag exist -> merge
 				$new_id = $new_ids[0];
-				$new_tag_count = $this->tags_manager->merge($old_tag_name, $old_id, $new_tag_name, $new_id);
+				$new_tag_count = $this->tags_manager->merge($old_id, $new_tag_name, $new_id);
 				$msg = $this->user->lang('TOPICTAGS_TAG_MERGED', $new_tag_name_clean);
 				if ($this->request->is_ajax())
 				{
