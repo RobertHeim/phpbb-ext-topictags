@@ -292,8 +292,6 @@ class main
 	 */
 	public function suggest_tags()
 	{
-		// TODO: when symfony2 is updated to at least 2.4 add to route:
-		// condition: "context.isXmlHttpRequest()" instead of using the helper->error(..., 404)
 		if ($this->request->is_ajax())
 		{
 			$data = json_decode(file_get_contents('php://input'), true);
