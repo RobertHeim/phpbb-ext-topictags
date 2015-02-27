@@ -25,7 +25,7 @@
 			<dd><!-- Cannot put tags here, because overflow:hidden of dl-tag --></dd>
 		</dl>
 		<div style="width:40%; margin-top:-45px;margin-left:46%" ng-app="rhTopicTagsInputApp" ng-controller="rhTopicTagsInputCtrl" data-ng-init="init('{TOPICTAGS_WHITELIST}')">
-			<tags-input ng-model="tags" add-on-comma="true" replace-spaces-with-dashes="{TOPICTAGS_CONVERT_SPACE_TO_MINUS}" placeholder="..." tabindex="2" enable-editing-last-tag="true" min-length="1">
+			<tags-input ng-model="tags" add-on-comma="false" replace-spaces-with-dashes="{TOPICTAGS_CONVERT_SPACE_TO_MINUS}" placeholder="..." tabindex="2" enable-editing-last-tag="true" min-length="1">
 				<auto-complete source="loadTags($query)"></auto-complete>
 			</tags-input>
 			<input type="hidden" name="robertheim_topictags_whitelist" id="rh_topictags" value="{[{ jsonRep }]}" />
