@@ -166,7 +166,7 @@ class manage_tags_controller
 		if (empty($old_tag_name) || empty($new_tag_name))
 		{
 			$error_msg = $this->user->lang('TOPICTAGS_MISSING_TAG_NAMES');
-			$this->simple_response($error_msg, false);
+			$this->simple_response($u_action, $error_msg, false);
 		}
 		else
 		{
@@ -175,13 +175,13 @@ class manage_tags_controller
 			if ($old_tag_name == $new_tag_name)
 			{
 				$error_msg = $this->user->lang('TOPICTAGS_NO_MODIFICATION', $old_tag_name);
-				$this->simple_response($error_msg, false);
+				$this->simple_response($u_action, $error_msg, false);
 			}
 			$old_ids = $this->tags_manager->get_existing_tags(array($old_tag_name), true);
 			if (empty($old_ids))
 			{
 				$error_msg = $this->user->lang('TOPICTAGS_TAG_DOES_NOT_EXIST', $old_tag_name);
-				$this->simple_response($error_msg, false);
+				$this->simple_response($u_action, $error_msg, false);
 			}
 			// if we reach here, we know that we got a single valid old tag
 			$old_id = $old_ids[0];
@@ -191,7 +191,7 @@ class manage_tags_controller
 			if (!$is_valid)
 			{
 				$error_msg = $this->user->lang('TOPICTAGS_TAG_INVALID', $new_tag_name);
-				$this->simple_response($error_msg, false);
+				$this->simple_response($u_action, $error_msg, false);
 			}
 
 			// old tag exist and new tag is valid
@@ -202,7 +202,7 @@ class manage_tags_controller
 				$new_id = $new_ids[0];
 				$new_tag_count = $this->tags_manager->merge($old_id, $new_tag_name, $new_id);
 				$msg = $this->user->lang('TOPICTAGS_TAG_MERGED', $new_tag_name_clean);
-				$this->simple_response($msg, true, array(
+				$this->simple_response($u_action, $msg, true, array(
 						'success'       => true,
 						'merged'        => true,
 						'new_tag_count' => $new_tag_count,
@@ -213,13 +213,14 @@ class manage_tags_controller
 			// old tag exist and new tag is valid and does not exist -> rename it
 			$this->tags_manager->rename($old_id, $new_tag_name_clean);
 			$msg = $this->user->lang('TOPICTAGS_TAG_CHANGED');
-			$this->simple_response($msg);
+			$this->simple_response($u_action, $msg);
 		}
 	}
 
 	/**
 	 * Creates an ajax response or a normal response depending on the request.
 	 *
+	 * @param string $u_action phpbb acp-u_action
 	 * @param string $msg the message for the normal response
 	 * @param boolean $success whether the response is marked successful (default) or not
 	 * @param array $ajax_response optional values to response in ajax_response. If no values are
@@ -234,7 +235,7 @@ class manage_tags_controller
 	 *                                  'error_msg' => base64_encode(rawurlencode($msg))
 	 *                                )</pre>
 	 */
-	private function simple_response($msg, $success = true, array $ajax_response = array())
+	private function simple_response($u_action, $msg, $success = true, array $ajax_response = array())
 	{
 		if ($this->request->is_ajax())
 		{
