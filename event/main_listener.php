@@ -88,7 +88,8 @@ class main_listener implements EventSubscriberInterface
 		$tags_string = rawurldecode(base64_decode($tags_string));
 		//$tags_string = utf8_encode($tags_string);
 
-		if ('' === $tags_string) {
+		if ('' === $tags_string)
+		{
 			return array();
 		}
 
@@ -200,38 +201,46 @@ class main_listener implements EventSubscriberInterface
 
 			$mode = $topic_id = $post_id = $topic_first_post_id = false;
 
-			if (!empty($data['mode'])) {
+			if (!empty($data['mode']))
+			{
 				$mode = $data['mode'];
 			}
 
-			if ($mode == 'reply') {
+			if ($mode == 'reply')
+			{
 				return;
 			}
 
-			if (!empty($data['post_data']['topic_id'])) {
+			if (!empty($data['post_data']['topic_id']))
+			{
 				$topic_id = $data['post_data']['topic_id'];
 			}
 
-			if (!empty($data['post_data']['post_id'])) {
+			if (!empty($data['post_data']['post_id']))
+			{
 				$post_id = $data['post_data']['post_id'];
 			}
 
-			if (!empty($data['post_data']['topic_first_post_id'])) {
+			if (!empty($data['post_data']['topic_first_post_id']))
+			{
 				$topic_first_post_id = $data['post_data']['topic_first_post_id'];
 			}
 
 			$is_new_topic = $mode == 'post';
 			$is_edit_first_post = $mode == 'edit' && $topic_id && $post_id && $post_id == $topic_first_post_id;
-			if ($is_new_topic || $is_edit_first_post) {
+			if ($is_new_topic || $is_edit_first_post)
+			{
 
 				$data['page_data']['RH_TOPICTAGS_SHOW_FIELD'] = true;
 
 				// do we got some preview-data?
 				$tags = array();
-				if ($this->request->is_set_post('rh_topictags')) {
+				if ($this->request->is_set_post('rh_topictags'))
+				{
 					// use data from post-request
 					$tags = $this->get_tags_from_post_request();
-				} else if ($is_edit_first_post) {
+				} else if ($is_edit_first_post)
+				{
 					// use data from db
 					$tags = $this->tags_manager->get_assigned_tags($topic_id);
 				}
@@ -338,7 +347,8 @@ class main_listener implements EventSubscriberInterface
 			$tags = $this->tags_manager->get_assigned_tags($topic_id);
 			if (!empty($tags))
 			{
-				foreach ($tags as $tag) {
+				foreach ($tags as $tag)
+				{
 					$this->template->assign_block_vars('rh_topic_tags', array(
 						'NAME' => $tag,
 						'LINK' => $this->helper->route('robertheim_topictags_show_tag_controller', array(
