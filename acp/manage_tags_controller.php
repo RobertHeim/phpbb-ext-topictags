@@ -66,6 +66,9 @@ class manage_tags_controller
 			case 'edit':
 				$this->handle_edit($u_action);
 			break;
+			case 'edit_non_ajax':
+				$this->handle_edit($u_action, false);
+			break;
 			default:
 				// show all tags
 				$sort_key = $this->request->variable('sort_key', self::SORT_NAME_ASC);
@@ -99,10 +102,10 @@ class manage_tags_controller
 				foreach ($tags as $tag)
 				{
 					$this->template->assign_block_vars('tags', array(
-						'NAME'         => $tag['tag'],
-						'ASSIGNMENTS'  => $tag['count'],
-						'U_DELETE_TAG' => $this->get_tag_link($u_action, $tag['id']) . '&amp;action=delete',
-						// TODO none-ajax 'U_EDIT_TAG_URL'	=> $this->get_tag_link($u_action, $tag['id']) . '&amp;action=edit',
+						'NAME'				=> $tag['tag'],
+						'ASSIGNMENTS'		=> $tag['count'],
+						'U_DELETE_TAG'		=> $this->get_tag_link($u_action, $tag['id']) . '&amp;action=delete',
+						'U_EDIT_TAG'		=> $this->get_tag_link($u_action, $tag['id']) . '&amp;action=edit_non_ajax',
 					));
 				}
 				$this->template->assign_vars(array(
@@ -156,10 +159,27 @@ class manage_tags_controller
 	}
 
 	/**
+	 * @param $is_ajax whether the edit is called by ajax or not
 	 * @param string $u_action phpbb acp-u_action
 	 */
-	private function handle_edit($u_action)
+	private function handle_edit($u_action, $is_ajax)
 	{
+		if (!$is_ajax)
+		{
+			$new_tag_name = $this->request->variable('new_tag_name', '');
+			if (empty($new_tag_name))
+			{
+				$tag_id = $this->request->variable('tag_id', 0);
+				$old_tag_name = $this->tags_manager->get_tag_by_id($tag_id);
+				$this->template->assign_vars(array(
+					'U_ACTION'				=> $this->get_tag_link($u_action, $tag_id) . '&amp;action=edit_non_ajax',
+					'S_EDIT_TAG_NON_AJAX'	=> true,
+					'OLD_TAG_NAME'			=> $old_tag_name,
+				));
+				return;
+			}
+			// now new_tag_name and old_tag_name are set and the normal procedure can take place.
+		}
 		$old_tag_name = $this->request->variable('old_tag_name', '');
 		$new_tag_name = $this->request->variable('new_tag_name', '');
 
@@ -170,8 +190,11 @@ class manage_tags_controller
 		}
 		else
 		{
-			$old_tag_name = rawurldecode(base64_decode($old_tag_name));
-			$new_tag_name = rawurldecode(base64_decode($new_tag_name));
+			if ($is_ajax)
+			{
+				$old_tag_name = rawurldecode(base64_decode($old_tag_name));
+				$new_tag_name = rawurldecode(base64_decode($new_tag_name));
+			}
 			if ($old_tag_name == $new_tag_name)
 			{
 				$error_msg = $this->user->lang('TOPICTAGS_NO_MODIFICATION', $old_tag_name);
