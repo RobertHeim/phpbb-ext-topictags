@@ -83,7 +83,7 @@ class acp_listener implements EventSubscriberInterface
 		if ($prune && $status)
 		{
 			$this->user->add_lang_ext('robertheim/topictags', 'topictags_acp');
-			$data['errors'][] = $user->lang('ACP_RH_TOPICTAGS_PRUNING_REQUIRES_TAGGING_DISABLED');
+			$data['errors'][] = $this->user->lang('ACP_RH_TOPICTAGS_PRUNING_REQUIRES_TAGGING_DISABLED');
 		}
 
 		$event->set_data($data);
