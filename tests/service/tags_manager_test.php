@@ -660,8 +660,8 @@ class tags_manager_test extends \phpbb_database_test_case
 		$this->assertEquals(0, $count);
 
 		// 2 assignments but only 1 is readable
-		$count_of_assignments = $this->tags_manager->merge($tag_to_delete,
-			$tag_to_delete_id, $tag_to_keep, $tag_to_keep_id);
+		$count_of_assignments = $this->tags_manager->merge($tag_to_delete_id,
+				$tag_to_keep, $tag_to_keep_id);
 		$this->assertEquals(1, $count_of_assignments);
 		$result = $this->db->sql_query(
 			'SELECT COUNT(*) as count
