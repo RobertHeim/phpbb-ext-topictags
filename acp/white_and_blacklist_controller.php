@@ -145,5 +145,4 @@ class white_and_blacklist_controller
 					'U_ACTION'								=> $u_action
 				));
 	}
-
 }

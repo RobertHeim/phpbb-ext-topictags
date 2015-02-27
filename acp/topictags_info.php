@@ -11,7 +11,7 @@ namespace robertheim\topictags\acp;
 
 class topictags_info
 {
-	function module()
+	public function module()
 	{
 		return array(
 			'filename'	=> '\robertheim\topictags\acp\topictags_module',

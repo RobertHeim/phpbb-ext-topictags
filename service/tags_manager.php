@@ -386,7 +386,8 @@ class tags_manager
 	 * If $only_ids is set to true, an array containing only the ids of the tags will be returned: array(1,2,3,..)
 	 *
 	 * @param $tags array of tag-names; might be null to get all existing tags
-	 * @return array(array('id'=>.. , 'tag'=> ..), array('id'=>.. , 'tag'=> ..), ...) or array(1,2,3,..) if $only_ids==true
+	 * @param $only_ids whether to return only the tag-ids (true) or tag names as well (false, default)
+	 * @return array an array of the form array(array('id'=>.. , 'tag'=> ..), array('id'=>.. , 'tag'=> ..), ...) or array(1,2,3,..) if $only_ids==true
 	 */
 	public function get_existing_tags($tags = null, $only_ids = false)
 	{
@@ -640,7 +641,7 @@ class tags_manager
 	 * Splits the given tags into valid and invalid ones.
 	 *
 	 * @param $tags an array of potential tags
-	 * @return array('valid'=> array(), 'invalid' => array())
+	 * @return array array('valid'=> array(), 'invalid' => array())
 	 */
 	public function split_valid_tags($tags)
 	{

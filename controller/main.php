@@ -27,6 +27,18 @@ class main
 
 	protected $user;
 
+	protected $auth;
+
+	/** @var \phpbb\event\dispatcher */
+	protected $phpbb_dispatcher;
+
+	/** @var \Symfony\Component\DependencyInjection\ContainerInterface */
+	protected $phpbb_container;
+
+	protected $php_ext;
+
+	protected $phpbb_root_path;
+
 	protected $tags_manager;
 
 	protected $tagcloud_manager;
@@ -40,6 +52,11 @@ class main
 						\phpbb\controller\helper $helper,
 						\phpbb\request\request $request,
 						\phpbb\user $user,
+						\phpbb\auth\auth $auth,
+						\phpbb\event\dispatcher $phpbb_dispatcher,
+						\Symfony\Component\DependencyInjection\ContainerInterface $phpbb_container,
+						$php_ext,
+						$phpbb_root_path,
 						\robertheim\topictags\service\tags_manager $tags_manager,
 						\robertheim\topictags\service\tagcloud_manager $tagcloud_manager
 	)
@@ -49,6 +66,11 @@ class main
 		$this->helper			= $helper;
 		$this->request			= $request;
 		$this->user				= $user;
+		$this->auth				= $auth;
+		$this->phpbb_dispatcher	= $phpbb_dispatcher;
+		$this->phpbb_container	= $phpbb_container;
+		$this->php_ext			= $php_ext;
+		$this->phpbb_root_path	= $phpbb_root_path;
 		$this->tags_manager		= $tags_manager;
 		$this->tagcloud_manager	= $tagcloud_manager;
 	}
@@ -73,7 +95,13 @@ class main
 	 */
 	public function show_tag($tags, $mode, $casesensitive)
 	{
-		global $user, $phpbb_container, $config, $phpbb_root_path, $request;
+		$phpbb_container = $this->phpbb_container;
+		$request = $this->request;
+		$user = $this->user;
+		$config = $this->config;
+		$auth = $this->auth;
+		$phpbb_dispatcher = $this->phpbb_dispatcher;
+
 		// validate mode
 		// default == AND
 		$mode = ($mode == 'OR' ? 'OR' : 'AND');
@@ -86,7 +114,7 @@ class main
 		if (sizeof($all_tags['invalid']) > 0)
 		{
 			$this->template->assign_var('RH_TOPICTAGS_SEARCH_IGNORED_TAGS',
-				$user->lang('RH_TOPICTAGS_SEARCH_IGNORED_TAGS', join(', ', $all_tags['invalid']))
+				$this->user->lang('RH_TOPICTAGS_SEARCH_IGNORED_TAGS', join(', ', $all_tags['invalid']))
 			);
 		}
 
@@ -128,7 +156,6 @@ class main
 		}
 		else
 		{
-			global $phpEx, $auth, $phpbb_dispatcher, $template;
 			$this->template->assign_vars(array(
 				'NEWEST_POST_IMG'			=> $user->img('icon_topic_newest', 'VIEW_NEWEST_POST'),
 				'LAST_POST_IMG'				=> $user->img('icon_topic_latest', 'VIEW_LATEST_POST'),
@@ -140,7 +167,7 @@ class main
 			));
 
 			$phpbb_content_visibility = $phpbb_container->get('content.visibility');
-			include_once($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+			include_once($this->phpbb_root_path . 'includes/functions_display.' . $this->php_ext);
 
 			foreach ($topics as $topic)
 			{
@@ -173,14 +200,14 @@ class main
 
 				// Generate all the URIs ...
 				$view_topic_url_params = 'f=' . $row['forum_id'] . '&amp;t=' . $topic_id;
-				$view_topic_url = append_sid("{$phpbb_root_path}viewtopic.$phpEx", $view_topic_url_params);
+				$view_topic_url = append_sid("{$this->phpbb_root_path}viewtopic.{$this->php_ext}", $view_topic_url_params);
 
 				$topic_unapproved = (($row['topic_visibility'] == ITEM_UNAPPROVED || $row['topic_visibility'] == ITEM_REAPPROVE) && $auth->acl_get('m_approve', $row['forum_id']));
 				$posts_unapproved = ($row['topic_visibility'] == ITEM_APPROVED && $row['topic_posts_unapproved'] && $auth->acl_get('m_approve', $row['forum_id']));
 				$topic_deleted = $row['topic_visibility'] == ITEM_DELETED;
 
-				$u_mcp_queue = ($topic_unapproved || $posts_unapproved) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=queue&amp;mode=' . (($topic_unapproved) ? 'approve_details' : 'unapproved_posts') . "&amp;t=$topic_id", true, $user->session_id) : '';
-				$u_mcp_queue = (!$u_mcp_queue && $topic_deleted) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=queue&amp;mode=deleted_topics&amp;t=' . $topic_id, true, $user->session_id) : $u_mcp_queue;
+				$u_mcp_queue = ($topic_unapproved || $posts_unapproved) ? append_sid("{$this->phpbb_root_path}mcp.{$this->php_ext}", 'i=queue&amp;mode=' . (($topic_unapproved) ? 'approve_details' : 'unapproved_posts') . "&amp;t=$topic_id", true, $user->session_id) : '';
+				$u_mcp_queue = (!$u_mcp_queue && $topic_deleted) ? append_sid("{$this->phpbb_root_path}mcp.{$this->php_ext}", 'i=queue&amp;mode=deleted_topics&amp;t=' . $topic_id, true, $user->session_id) : $u_mcp_queue;
 
 				// Send vars to template
 				$topic_row = array(
@@ -227,12 +254,12 @@ class main
 					'S_TOPIC_LOCKED'		=> ($row['topic_status'] == ITEM_LOCKED) ? true : false,
 					'S_TOPIC_MOVED'			=> ($row['topic_status'] == ITEM_MOVED) ? true : false,
 
-					'U_NEWEST_POST'			=> append_sid("{$phpbb_root_path}viewtopic.$phpEx", $view_topic_url_params . '&amp;view=unread') . '#unread',
-					'U_LAST_POST'			=> append_sid("{$phpbb_root_path}viewtopic.$phpEx", $view_topic_url_params . '&amp;p=' . $row['topic_last_post_id']) . '#p' . $row['topic_last_post_id'],
+					'U_NEWEST_POST'			=> append_sid("{$this->phpbb_root_path}viewtopic.{$this->php_ext}", $view_topic_url_params . '&amp;view=unread') . '#unread',
+					'U_LAST_POST'			=> append_sid("{$this->phpbb_root_path}viewtopic.{$this->php_ext}", $view_topic_url_params . '&amp;p=' . $row['topic_last_post_id']) . '#p' . $row['topic_last_post_id'],
 					'U_LAST_POST_AUTHOR'	=> get_username_string('profile', $row['topic_last_poster_id'], $row['topic_last_poster_name'], $row['topic_last_poster_colour']),
 					'U_TOPIC_AUTHOR'		=> get_username_string('profile', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']),
 					'U_VIEW_TOPIC'			=> $view_topic_url,
-					'U_MCP_REPORT'			=> append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=reports&amp;mode=reports&amp;f=' . $row['forum_id'] . '&amp;t=' . $topic_id, true, $user->session_id),
+					'U_MCP_REPORT'			=> append_sid("{$this->phpbb_root_path}mcp.{$this->php_ext}", 'i=reports&amp;mode=reports&amp;f=' . $row['forum_id'] . '&amp;t=' . $topic_id, true, $user->session_id),
 					'U_MCP_QUEUE'			=> $u_mcp_queue,
 
 					'S_TOPIC_TYPE_SWITCH'	=> ($s_type_switch == $s_type_switch_test) ? -1 : $s_type_switch_test,
@@ -249,7 +276,7 @@ class main
 				$vars = array('row', 'topic_row');
 				extract($phpbb_dispatcher->trigger_event('robertheim.topictags.viewforum_modify_topicrow', compact($vars)));
 
-				$template->assign_block_vars('topicrow', $topic_row);
+				$this->template->assign_block_vars('topicrow', $topic_row);
 
 				// mini pagination of posts in topic-rowss
 				$pagination->generate_template_pagination($view_topic_url, 'topicrow.pagination', 'start', $replies + 1, $config['posts_per_page'], 1, true, true);

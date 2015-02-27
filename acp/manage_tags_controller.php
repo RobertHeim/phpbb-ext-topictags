@@ -243,7 +243,7 @@ class manage_tags_controller
 			}
 
 			// old tag exist and new tag is valid and does not exist -> rename it
-			$tag_count = $this->tags_manager->rename($old_id, $new_tag_name_clean);
+			$this->tags_manager->rename($old_id, $new_tag_name_clean);
 			$msg = $this->user->lang('TOPICTAGS_TAG_CHANGED');
 			if ($this->request->is_ajax())
 			{
@@ -281,5 +281,4 @@ class manage_tags_controller
 
 		return $sort_selects;
 	}
-
 }
