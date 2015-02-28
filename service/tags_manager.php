@@ -975,7 +975,7 @@ class tags_manager
 			$tag = array();
 			$tags[] = array(
 				'id'			=> (int) $row['id'],
-				'tag		'	=> $row['tag'],
+				'tag'			=> $row['tag'],
 				'tag_lowercase'	=> $row['tag_lowercase'],
 				'count'			=> (int) $row['count'],
 			);
