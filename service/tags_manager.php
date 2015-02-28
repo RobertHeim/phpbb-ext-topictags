@@ -972,7 +972,6 @@ class tags_manager
 		$tags = array();
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$tag = array();
 			$tags[] = array(
 				'id'			=> (int) $row['id'],
 				'tag'			=> $row['tag'],
