@@ -161,7 +161,7 @@ class manage_tags_controller
 	 * @param $is_ajax whether the edit is called by ajax or not
 	 * @param string $u_action phpbb acp-u_action
 	 */
-	private function handle_edit($u_action, $is_ajax)
+	private function handle_edit($u_action, $is_ajax = true)
 	{
 		if (!$is_ajax)
 		{
