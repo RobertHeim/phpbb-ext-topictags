@@ -18,7 +18,7 @@
 	"require": {
 		"php": ">=5.3.3"
 	},
-    "require-dev": {
+	"require-dev": {
 		"phpbb/epv": "dev-master"
 	},
 	"extra": {
