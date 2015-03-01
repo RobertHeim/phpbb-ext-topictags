@@ -31,7 +31,7 @@ class release_0_0_3 extends \phpbb\db\migration\migration
 	{
 		return array(
 			'add_columns'	=> array(
-				$this->table_prefix . 'forums'	=> array(
+				FORUMS_TABLE	=> array(
 					'rh_topictags_enabled'	=> array('BOOL', 0),
 				),
 			),
@@ -42,7 +42,7 @@ class release_0_0_3 extends \phpbb\db\migration\migration
 	{
 		return array(
 			'drop_columns'	=> array(
-				$this->table_prefix . 'forums'	=> array(
+				FORUMS_TABLE	=> array(
 					'rh_topictags_enabled',
 			),
 		));
