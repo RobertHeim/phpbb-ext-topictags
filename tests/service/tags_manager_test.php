@@ -886,6 +886,7 @@ class tags_manager_test extends \phpbb_database_test_case
 				array(
 					'id' => 3,
 					'tag' => 'anothertag3',
+					'tag_lowercase' => 'anothertag3',
 					'count' => 0
 				)
 			), $tags);
@@ -901,6 +902,7 @@ class tags_manager_test extends \phpbb_database_test_case
 				array(
 					'id' => 2,
 					'tag' => 'tag2',
+					'tag_lowercase' => 'tag2',
 					'count' => 0
 				)
 			), $tags);
@@ -916,6 +918,7 @@ class tags_manager_test extends \phpbb_database_test_case
 				array(
 					'id' => 1,
 					'tag' => 'tag1',
+					'tag_lowercase' => 'tag1',
 					'count' => 0
 				)
 			), $tags);
@@ -934,11 +937,13 @@ class tags_manager_test extends \phpbb_database_test_case
 				array(
 					'id' => 2,
 					'tag' => 'tag2',
+					'tag_lowercase' => 'tag2',
 					'count' => 0
 				),
 				array(
 					'id' => 1,
 					'tag' => 'tag1',
+					'tag_lowercase' => 'tag1',
 					'count' => 1
 				)
 			), $tags);

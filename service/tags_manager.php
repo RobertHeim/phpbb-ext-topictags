@@ -913,7 +913,8 @@ class tags_manager
 	public function rename($tag_id, $new_name_clean)
 	{
 		$sql_ary = array(
-			'tag'	=> $new_name_clean,
+			'tag'			=> $new_name_clean,
+			'tag_lowercase'	=> utf8_strtolower($new_name_clean),
 		);
 		$sql = 'UPDATE ' . $this->table_prefix . tables::TAGS . '
 			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
@@ -972,7 +973,6 @@ class tags_manager
 		$tags = array();
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$tag = array();
 			$tags[] = array(
 				'id'			=> (int) $row['id'],
 				'tag'			=> $row['tag'],
