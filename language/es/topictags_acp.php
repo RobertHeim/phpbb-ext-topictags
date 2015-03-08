@@ -44,6 +44,8 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_MAINTENANCE'				=> 'Mantenimiento',
 	'TOPICTAGS_TITLE'					=> 'RH Etiquetas de temas',
 	'TOPICTAGS_SETTINGS_SAVED'			=> 'Configuración actualizada correctamente.',
+	'TOPICTAGS_WHITELIST_SAVED'			=> 'Lista blanca actualizada correctamente.',
+	'TOPICTAGS_BLACKLIST_SAVED'			=> 'Lista negra actualizada correctamente.',
 
 	'TOPICTAGS_DISPLAY_TAGCLOUD_ON_INDEX'		=> 'Mostrar nube de etiquetas en el índice',
 	'TOPICTAGS_DISPLAY_TAGCLOUD_ON_INDEX_EXP'	=> 'Cuando se habilita, una nube de etiquetas se muestra en la parte inferior de la página de índice',
@@ -111,7 +113,7 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_BLACKLIST'						=> 'Lista negra',
 	'TOPICTAGS_BLACKLIST_EXP'					=> 'Lista de etiquetas prohibidas.<br/>NOTA: Todas las etiquetas que no están conformes con la expresión regular siempre serán rechazadas.',
 
-	'TOPICTAGS_ALLOWED_TAGS_REGEX'				=> 'Regular Expression for allowed tags',
+	'TOPICTAGS_ALLOWED_TAGS_REGEX'				=> 'Expresión regular para etiquetas permitidas',
 	'TOPICTAGS_ALLOWED_TAGS_REGEX_EXP'			=> 'ADVERTENCIA: No cambie esto, si no sabe lo que está haciendo. <strong>Las etiquetas pueden ser de 30 caracteres como máximo</strong>, por favor considere esto durante el diseño de expresiones regulares.<br/>Tenga en cuenta que las etiquetas no válidas, no se pueden buscar después, pero todavía se muestran en los temas.<br/>Considere la limpieza de las etiquetas no válidas (ver sección de mantenimiento).<br/>Por defecto: ' . $lang['ACP_RH_TOPICTAGS_REGEX_DEFAULT'],
 
 	'TOPICTAGS_CONVERT_SPACE_TO_MINUS'			=> 'Convertir " " a "-"',
@@ -119,5 +121,26 @@ $lang = array_merge($lang, array(
 
 	'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS'		=> 'Explicación para los usuarios',
 	'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS_EXP'	=> 'Este texto se muestra a los usuarios y debe explicar qué etiquetas se permiten, y cuáles no.<br/>Por defecto: ' . $lang['ACP_RH_TOPICTAGS_REGEX_EXP_FOR_USERS_DEFAULT'],
+
+	'TOPICTAGS_MANAGE_TAGS_EXP'					=> 'La tabla muestra todas las etiquetas existentes. Aquí puede eliminarlas (y todas sus asignaciones) o editar una etiqueta. También puede combinar etiquetas, con la edición de una etiqueta y el establecimiento de su nombre para que sea igual a otra etiqueta y así se fusionarán automáticamente.',
+	'TOPICTAGS_NO_TAGS'							=> 'No hay etiquetas todavía.',
+	'TOPICTAGS_TAG'								=> 'Etiqueta',
+	'TOPICTAGS_ASSIGNMENTS'						=> 'Asignaciones',
+	'TOPICTAGS_NEW_TAG_NAME'					=> 'Nuevo nombre de etiqueta',
+	'TOPICTAGS_NEW_TAG_NAME_EXP'				=> 'Por favor, introduzca un nuevo nombre de etiqueta.',
+	'TOPICTAGS_TAG_DELETE_CONFIRM'				=> "¿Seguro que quiere eliminar la etiqueta <em>%s</em>? Esto eliminará la etiqueta de <b>todos los temas</b> donde se le asignó. Esto no puede ser revertido.",
+	'TOPICTAGS_TAG_DELETED'						=> 'La etiqueta ha sido borrada.',
+	'TOPICTAGS_MISSING_TAG_ID'					=> 'Falta el ID de la etiqueta.',
+	'TOPICTAGS_TAG_CHANGED'						=> 'La etiqueta ha sido cambiada.',
+	'TOPICTAGS_TAG_MERGED'						=> "La etiqueta se ha fusionado con la etiqueta '%s'.",
+	'TOPICTAGS_MISSING_TAG_NAMES'				=> 'Faltan nombres de etiquetas.',
+	'TOPICTAGS_TAG_INVALID'						=> 'La etiqueta "%s" no es válida, por favor verifique los ajustes de etiquetas.',
+	'TOPICTAGS_TAG_DOES_NOT_EXIST'				=> 'La etiqueta "%s" no existe.',
+	'TOPICTAGS_NO_MODIFICATION'					=> 'La etiqueta no fue cambiada.',
+
+	'TOPICTAGS_SORT_NAME_ASC'					=> 'Nombre de etiqueta A&rArr;Z', // &rArr; is a right-arrow (=>)
+	'TOPICTAGS_SORT_NAME_DESC'					=> 'Nombre de etiqueta Z&rArr;A', // &rArr; is a right-arrow (=>)
+	'TOPICTAGS_SORT_COUNT_ASC'					=> 'Orden de asignaciones ascendente',
+	'TOPICTAGS_SORT_COUNT_DESC'					=> 'Orden de asignaciones descendente',
 
 ));
