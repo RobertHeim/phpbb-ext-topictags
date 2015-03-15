@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/RobertHeim/phpbb-ext-topictags.svg?branch=master)](https://travis-ci.org/RobertHeim/phpbb-ext-topictags)
+
 phpbb-ext-topictags
 ===================
 

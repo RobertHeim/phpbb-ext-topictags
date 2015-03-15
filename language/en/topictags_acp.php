@@ -141,6 +141,6 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_SORT_NAME_ASC'					=> 'Tag name A&rArr;Z', // &rArr; is a right-arrow (=>)
 	'TOPICTAGS_SORT_NAME_DESC'					=> 'Tag name Z&rArr;A', // &rArr; is a right-arrow (=>)
 	'TOPICTAGS_SORT_COUNT_ASC'					=> 'Assignments count ascending',
-	'TOPICTAGS_SORT_COU	NT_DESC'					=> 'Assignments count descending',
+	'TOPICTAGS_SORT_COUNT_DESC'					=> 'Assignments count descending',
 
 ));
