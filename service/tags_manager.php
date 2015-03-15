@@ -490,7 +490,7 @@ class tags_manager
 	 * @param $casesensitive false or true
 	 * @return string 'SELECT topics.* FROM ' . TOPICS_TABLE . ' topics WHERE ' . [calculated where]
 	 */
-	private function get_topics_build_query(array $tags, $mode = 'AND', $casesensitive = false)
+	public function get_topics_build_query(array $tags, $mode = 'AND', $casesensitive = false)
 	{
 		if (empty($tags))
 		{
