@@ -102,6 +102,5 @@ and (max-width : 480px)
 	.rh_topictags_tagcloud li
 	{
 		display:	block;
-		width:		100%;
 	}
 }
