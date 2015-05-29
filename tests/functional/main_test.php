@@ -26,7 +26,7 @@ class main_test extends topictags_functional_test_base
 	public function test_prune_tags_when_topic_deleted()
 	{
 		$this->login();
-		$this->admin();
+		$this->admin_login();
 
 		// enable tagging in forum used for testing
 		$forum_id = 2;
