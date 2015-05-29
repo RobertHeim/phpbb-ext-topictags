@@ -33,6 +33,7 @@ class main_listener implements EventSubscriberInterface
 			'robertheim.topictags.viewforum_modify_topicrow' => 'viewforum_modify_topicrow',
 			'core.viewtopic_assign_template_vars_before'     => 'viewtopic_assign_template_vars_before',
 			'core.submit_post_end'                           => 'submit_post_end',
+			'core.delete_topics_before_query'                => 'delete_topics_before_query',
 		);
 	}
 
@@ -363,5 +364,18 @@ class main_listener implements EventSubscriberInterface
 				$this->template->assign_var('S_RH_TOPICTAGS_INCLUDE_CSS', true);
 			}
 		}
+	}
+
+	/**
+	 * Event: core.delete_topics_before_query
+	 *
+	 * prune tags when topic is deleted
+	 *
+	 * @param $event
+	 */
+	public function delete_topics_before_query($event) {
+		$data = $event->get_data();
+		$topic_ids = $data['topic_ids'];
+		$this->tags_manager->remove_all_tags_from_topics($topic_ids, true);
 	}
 }

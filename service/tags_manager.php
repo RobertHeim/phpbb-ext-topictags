@@ -47,13 +47,32 @@ class tags_manager
 	 * Remove all tags from the given topic
 	 *
 	 * @param $topic_id
-	 * @param $delete_unused_tags if set to true unsued tags are removed from the db.
+	 * @param $delete_unused_tags if set to true unused tags are removed from the db.
 	 */
 	public function remove_all_tags_from_topic($topic_id, $delete_unused_tags = true)
 	{
 		// remove tags from topic
 		$sql = 'DELETE FROM ' . $this->table_prefix . tables::TOPICTAGS. '
 			WHERE topic_id = ' . (int) $topic_id;
+		$this->db->sql_query($sql);
+		if ($delete_unused_tags)
+		{
+			$this->delete_unused_tags();
+		}
+		$this->calc_count_tags();
+	}
+
+	/**
+	 * Remove tag assignments from the given topics
+	 *
+	 * @param $topic_ids array of topic ids
+	 * @param $delete_unused_tags if set to true unused tags are removed from the db.
+	 */
+	public function remove_all_tags_from_topics(array $topic_ids, $delete_unused_tags = true)
+	{
+		// remove tags from topic
+		$sql = 'DELETE FROM ' . $this->table_prefix . tables::TOPICTAGS. '
+			WHERE ' . $this->db->sql_in_set('topic_id', $topic_ids);
 		$this->db->sql_query($sql);
 		if ($delete_unused_tags)
 		{
