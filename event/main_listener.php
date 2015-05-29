@@ -373,7 +373,8 @@ class main_listener implements EventSubscriberInterface
 	 *
 	 * @param $event
 	 */
-	public function delete_topics_before_query($event) {
+	public function delete_topics_before_query($event)
+	{
 		$data = $event->get_data();
 		$topic_ids = $data['topic_ids'];
 		$this->tags_manager->remove_all_tags_from_topics($topic_ids, true);
