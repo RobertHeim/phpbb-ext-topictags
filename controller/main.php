@@ -76,7 +76,7 @@ class main
 	}
 
 	/**
-	 * Demo controller for route /tags
+	 * Controller for route /tags
 	 *
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
@@ -87,7 +87,7 @@ class main
 	}
 
 	/**
-	 * shows a list of topics that have the given $tags assigned
+	 * Shows a list of topics that have the given $tags assigned
 	 *
 	 * @param $tags tags seperated by comma (",")
 	 * @param $mode the mode indicates whether all tags (AND, default) or any tag (OR) should be assigned to the resulting topics
@@ -126,7 +126,7 @@ class main
 		if (empty($tags))
 		{
 			// no valid tags
-			return $this->helper->render('show_tag.html', 'Tag-'.$user->lang('SEARCH'));
+			return $this->helper->render('show_tag.html', 'Tag-' . $user->lang('SEARCH'));
 		}
 
 		$pagination		= $phpbb_container->get('pagination');
