@@ -38,14 +38,14 @@ class main_test extends topictags_functional_test_base
 		$tmp = $this->create_topic($forum_id, 'test_prune_tags_when_topic_deleted2', 'test topic for test_prune_tags_when_topic_deleted (2)');
 		$topic_id2 = $tmp['topic_id'];
 
-		// add tags
+		// add one tag to the first topic
 		$tagname = 'tag1091723409838701993874';
 		$valid_tags = array($tagname);
 		$this->tags_manager->assign_tags_to_topic($topic_id, $valid_tags);
 
+		// add the same tag + another one to the second topic
 		$tagname2 = 'tag210778577730498403981';
-		$valid_tags = array($tagname2);
-		$this->tags_manager->assign_tags_to_topic($topic_id, $valid_tags);
+		$valid_tags = array($tagname , $tagname2);
 		$this->tags_manager->assign_tags_to_topic($topic_id2, $valid_tags);
 
 		// ensure that both tags exist
