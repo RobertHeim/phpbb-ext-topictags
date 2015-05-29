@@ -125,6 +125,7 @@ class main_listener implements EventSubscriberInterface
 		{
 			$this->template->assign_vars(array(
 				'RH_TOPICTAGS_DISPLAY_TAGCLOUD_ON_INDEX'	=> true,
+				'RH_TOPICTAGS_TAGCLOUD_LINK'				=> $this->helper->route('robertheim_topictags_controller'),
 			));
 			$this->tagcloud_manager->assign_tagcloud_to_template();
 		}
