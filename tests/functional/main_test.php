@@ -17,7 +17,7 @@ use robertheim\topictags\tables;
 /**
  * @group functional
  */
-class main_tests extends topictags_functional_test_base
+class main_test extends topictags_functional_test_base
 {
 
 	/**
@@ -31,15 +31,6 @@ class main_tests extends topictags_functional_test_base
 		// enable tagging in forum used for testing
 		$forum_id = 2;
 		$this->enable_topictags_in_forum($forum_id);
-
-		$this->auth->expects($this->exactly(4))
-		->method('acl_getf')
-		->with($this->equalTo('f_read'))
-		->willReturn(array(
-				$forum_id => array(
-						'f_read' => true
-				)
-		));
 
 		// create some topics to work with
 		$tmp = $this->create_topic($forum_id, 'test_prune_tags_when_topic_deleted', 'test topic for test_prune_tags_when_topic_deleted');
