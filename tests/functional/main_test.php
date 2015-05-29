@@ -53,6 +53,7 @@ class main_test extends topictags_functional_test_base
 
 		$this->delete_topic($topic_id2);
 
+		global $table_prefix;
 		// ensure that the tags are no longer assigned to the deleted topic
 		$result = $this->db->sql_query(
 			'SELECT COUNT(*) as count
