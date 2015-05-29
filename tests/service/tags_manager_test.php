@@ -98,6 +98,63 @@ class tags_manager_test extends \phpbb_database_test_case
 		$this->assertEquals(0, $assigned_tags_count);
 	}
 
+	public function test_remove_all_tags_from_topics()
+	{
+		global $table_prefix;
+
+		$topic_ids = array(1, 2);
+
+		// there are three tag assignments to the topics,
+		// but only two tags, because one is assigned to both
+		$result = $this->db->sql_query(
+			'SELECT COUNT(*) as count
+			FROM ' . $table_prefix .
+			tables::TOPICTAGS . '
+			WHERE ' . $this->db->sql_in_set('topic_id', $topic_ids));
+		$assigned_tags_count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(3, $assigned_tags_count);
+
+		$delete_unused_tags = true;
+		$this->tags_manager->remove_all_tags_from_topics($topic_ids,
+			$delete_unused_tags);
+
+		// there is no tag assigned to the topics
+		$result = $this->db->sql_query(
+			'SELECT COUNT(*) as count
+			FROM ' . $table_prefix .
+			tables::TOPICTAGS . '
+			WHERE ' . $this->db->sql_in_set('topic_id', $topic_ids));
+		$assigned_tags_count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(0, $assigned_tags_count);
+
+		// one tag was not assigned to any other topic and must be deleted
+		// because it is not used anymore
+		$result = $this->db->sql_query(
+			'SELECT COUNT(*) as count
+			FROM ' . $table_prefix . tables::TAGS . '
+			WHERE id=1');
+		$assigned_tags_count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(0, $assigned_tags_count);
+
+		// the other tag must still exist, because it is assigned to
+		// another topic
+		$result = $this->db->sql_query(
+			'SELECT COUNT(*) as count
+			FROM ' . $table_prefix . tables::TAGS . '
+			WHERE id=3');
+		$assigned_tags_count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(1, $assigned_tags_count);
+
+		// there was one unused tag before already, which now must
+		// have been deleted
+		$result = $this->db->sql_query(
+			'SELECT COUNT(*) as count
+			FROM ' . $table_prefix . tables::TAGS . '
+			WHERE id=2');
+		$assigned_tags_count = $this->db->sql_fetchfield('count');
+		$this->assertEquals(0, $assigned_tags_count);
+	}
+
 	public function test_delete_unused_tags()
 	{
 		global $table_prefix;
