@@ -576,7 +576,7 @@ class tags_manager
 		// validate mode
 		$mode = ($mode == 'OR' ? 'OR' : 'AND');
 
-		$sql_where_tag_in = $tags = $this->sql_in_casesensitive_tag($tags, $casesensitive);
+		$sql_where_tag_in = $this->sql_in_casesensitive_tag($tags, $casesensitive);
 		$sql_where_topic_access = $this->sql_where_topic_access();
 		$sql = '';
 		if ('AND' == $mode)
