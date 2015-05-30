@@ -198,7 +198,7 @@ class main_listener implements EventSubscriberInterface
 				return;
 			}
 
-			$mode = $topic_id = false;
+			$topic_id = false;
 
 			if (empty($data['mode']) || $data['mode'] == 'reply')
 			{
@@ -244,6 +244,13 @@ class main_listener implements EventSubscriberInterface
 		return $mode == 'edit' && $post_id && $post_id == $topic_first_post_id;
 	}
 
+	/**
+	 * Calculates the template data for the topic
+	 *
+	 * @param int $topic_id the id of the topic
+	 * @param boolean $is_edit_first_post whether it is a first post edit or not
+	 * @return array the page data
+	 */
 	private function get_template_data_for_topic($topic_id, $is_edit_first_post)
 	{
 		$page_data = array();
@@ -337,7 +344,7 @@ class main_listener implements EventSubscriberInterface
 	/**
 	 * Assigns the given tags to the template block
 	 *
-	 * @param unknown $block_name the name of the template block
+	 * @param string $block_name the name of the template block
 	 * @param array $tags the tags to assign
 	 */
 	private function assign_tags_to_template($block_name, array $tags)
