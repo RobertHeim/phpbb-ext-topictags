@@ -10,7 +10,6 @@
 namespace robertheim\topictags\migrations;
 
 use robertheim\topictags\prefixes;
-use robertheim\topictags\tables;
 
 class release_0_0_14 extends \phpbb\db\migration\migration
 {
