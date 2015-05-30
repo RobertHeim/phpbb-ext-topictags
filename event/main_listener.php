@@ -301,16 +301,7 @@ class main_listener implements EventSubscriberInterface
 				{
 					// we cannot use assign_block_vars('topicrow.tags', ...) here, because the block 'topicrow' is not yet assigned
 					// add links
-					foreach ($tags as $tag)
-					{
-						$this->template->assign_block_vars('rh_tags_tmp', array (
-							'NAME'	=> $tag,
-							'LINK'	=> $this->helper->route('robertheim_topictags_show_tag_controller', array(
-											'tags'	=> urlencode($tag),
-										)),
-						));
-					}
-
+					$this->assign_tags_to_template('rh_tags_tmp', $tags);
 					// small_tag.html might want to use our extension's css.
 					$this->template->assign_var('S_RH_TOPICTAGS_INCLUDE_CSS', true);
 					// we cannot just use 'small_tag.html' because in viewforum.php twig only searches in phpbb_root/styles/prosilver/template,
@@ -325,6 +316,23 @@ class main_listener implements EventSubscriberInterface
 					$event->set_data($data);
 				}
 			}
+		}
+	}
+
+	/**
+	 * assigns the given tags to the template block
+	 * @param unknown $block_name the name of the template block
+	 * @param array $tags the tags to assign
+	 */
+	private function assign_tags_to_template($block_name, array $tags) {
+		foreach ($tags as $tag)
+		{
+			$this->template->assign_block_vars($block_name, array (
+				'NAME'	=> $tag,
+				'LINK'	=> $this->helper->route('robertheim_topictags_show_tag_controller', array(
+					'tags'	=> urlencode($tag),
+				)),
+			));
 		}
 	}
 
@@ -346,16 +354,7 @@ class main_listener implements EventSubscriberInterface
 			$tags = $this->tags_manager->get_assigned_tags($topic_id);
 			if (!empty($tags))
 			{
-				foreach ($tags as $tag)
-				{
-					$this->template->assign_block_vars('rh_topic_tags', array(
-						'NAME' => $tag,
-						'LINK' => $this->helper->route('robertheim_topictags_show_tag_controller', array(
-							'tags'	=> urlencode($tag)
-						)),
-					));
-				}
-
+				$this->assign_tags_to_template('rh_topic_tags', $tags);
 				$this->template->assign_vars(array(
 					'RH_TOPICTAGS_SHOW'	=> true,
 					'META'				=> '<meta name="keywords" content="' . join(', ', $tags) . '">',
