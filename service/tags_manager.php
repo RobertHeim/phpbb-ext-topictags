@@ -51,15 +51,7 @@ class tags_manager
 	 */
 	public function remove_all_tags_from_topic($topic_id, $delete_unused_tags = true)
 	{
-		// remove tags from topic
-		$sql = 'DELETE FROM ' . $this->table_prefix . tables::TOPICTAGS. '
-			WHERE topic_id = ' . (int) $topic_id;
-		$this->db->sql_query($sql);
-		if ($delete_unused_tags)
-		{
-			$this->delete_unused_tags();
-		}
-		$this->calc_count_tags();
+		$this->remove_all_tags_from_topic(array($topic_id), $delete_unused_tags);
 	}
 
 	/**
