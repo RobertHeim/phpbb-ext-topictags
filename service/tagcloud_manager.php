@@ -76,15 +76,10 @@ class tagcloud_manager
 			$limit = $result_size;
 		}
 
-		$show_count = '';
-		if ($limit <= -1)
-		{
-			$show_count = $this->user->lang('RH_TOPICTAGS_DISPLAYING_TOTAL_ALL');
-		}
-		else
-		{
-			$show_count = $this->user->lang('RH_TOPICTAGS_DISPLAYING_TOTAL', $limit);
-		}
+		$show_count = ($limit <= -1)
+			? $this->user->lang('RH_TOPICTAGS_DISPLAYING_TOTAL_ALL')
+			: $show_count = $this->user->lang('RH_TOPICTAGS_DISPLAYING_TOTAL', $limit);
+
 
 		// ensure that the css for the tag cloud will be included
 		$this->template->assign_vars(array(
@@ -132,15 +127,9 @@ class tagcloud_manager
 			'ORDER_BY'	=> 't.count DESC',
 		);
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
-		$result = null;
-		if ($limit > 0)
-		{
-			$result = $this->db->sql_query_limit($sql, (int) $limit);
-		}
-		else
-		{
-			$result = $this->db->sql_query($sql);
-		}
+		$result = ($limit > 0)
+			? $result = $this->db->sql_query_limit($sql, (int) $limit)
+			: $result = $this->db->sql_query($sql);
 		$tags = array();
 		while ($row = $this->db->sql_fetchrow($result))
 		{
