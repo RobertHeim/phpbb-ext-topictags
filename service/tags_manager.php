@@ -495,7 +495,72 @@ class tags_manager
 	}
 
 	/**
+	 * Generates a sql_in_set depending on $casesensitive using tag or tag_lowercase.
+	 *
+	 * @param array $tags the tags to build the sql for
+	 * @param boolean $casesensitive whether to let the tags in place (true) or make them lower case (false)
+	 * @return string the sql in string depending on $casesensitive using tag or tag_lowercase
+	 */
+	private function sql_in_casesensitive_tag(array $tags, $casesensitive)
+	{
+		$tags_copy = $tags;
+		if (!$casesensitive)
+		{
+			$tag_count = sizeof($tags_copy);
+			for ($i = 0; $i < $tag_count; $i++)
+			{
+				$tags_copy[$i] = utf8_strtolower($tags_copy[$i]);
+			}
+		}
+		return $this->db->sql_in_set($casesensitive ? ' t.tag' : 't.tag_lowercase', $tags_copy);
+	}
+
+	/**
+	 * Gets the forum ids that the user is allowed to read.
+	 *
+	 * @return array forum ids that the user is allowed to read
+	 */
+	private function get_readable_forums()
+	{
+		$forum_ary = array();
+		$forum_read_ary = $this->auth->acl_getf('f_read');
+		foreach ($forum_read_ary as $forum_id => $allowed)
+		{
+			if ($allowed['f_read'])
+			{
+				$forum_ary[] = (int) $forum_id;
+			}
+		}
+
+		// Remove double entries
+		$forum_ary = array_unique($forum_ary);
+		return $forum_ary;
+	}
+
+	/**
+	 * Get sql-source for the topics that reside in forums that the user can read and which are approved.
+	 *
+	 * @return string the generated sql
+	 */
+	private function sql_where_topic_access()
+	{
+		$forum_ary = $this->get_readable_forums();
+		$sql_where_topic_access = '';
+		if (empty($forum_ary))
+		{
+			$sql_where_topic_access = ' 1=0 ';
+		}
+		else
+		{
+			$sql_where_topic_access = $this->db->sql_in_set('topics.forum_id', $forum_ary, false, true);
+		}
+		$sql_where_topic_access .= ' AND topics.topic_visibility = ' . ITEM_APPROVED;
+		return $sql_where_topic_access;
+	}
+
+	/**
 	 * Builds an sql query that selects all topics assigned with the tags depending on $mode and $casesensitive
+	 *
 	 * @param $tags array of tags
 	 * @param $mode AND or OR
 	 * @param $casesensitive false or true
@@ -511,47 +576,12 @@ class tags_manager
 		// validate mode
 		$mode = ($mode == 'OR' ? 'OR' : 'AND');
 
-		$tag_count = sizeof($tags);
-		if (!$casesensitive)
-		{
-			for ($i = 0; $i < $tag_count; $i++)
-			{
-				$tags[$i] = utf8_strtolower($tags[$i]);
-			}
-		}
-
-		// Get forums that the user is allowed to read
-		$forum_ary = array();
-		$forum_read_ary = $this->auth->acl_getf('f_read');
-		foreach ($forum_read_ary as $forum_id => $allowed)
-		{
-			if ($allowed['f_read'])
-			{
-				$forum_ary[] = (int) $forum_id;
-			}
-		}
-
-		// Remove double entries
-		$forum_ary = array_unique($forum_ary);
-
-		// Get sql-source for the topics that reside in forums that the user can read and which are approved.
-		$sql_where_topic_access = '';
-		if (empty($forum_ary))
-		{
-			$sql_where_topic_access = ' 1=0 ';
-		}
-		else
-		{
-			$sql_where_topic_access = $this->db->sql_in_set('topics.forum_id', $forum_ary, false, true);
-		}
-		$sql_where_topic_access .= ' AND topics.topic_visibility = ' . ITEM_APPROVED;
-
-		// tags is not an empty array here
-		$sql_where_tag_in = $this->db->sql_in_set($casesensitive ? ' t.tag' : 't.tag_lowercase', $tags);
-
+		$sql_where_tag_in = $tags = $this->sql_in_casesensitive_tag($tags, $casesensitive);
+		$sql_where_topic_access = $this->sql_where_topic_access();
 		$sql = '';
 		if ('AND' == $mode)
 		{
+			$tag_count = sizeof($tags);
 			// http://stackoverflow.com/questions/26038114/sql-select-distinct-where-exist-row-for-each-id-in-other-table
 			$sql = 'SELECT topics.*
 				FROM 	' . TOPICS_TABLE								. ' topics
