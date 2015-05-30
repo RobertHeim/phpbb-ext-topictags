@@ -51,7 +51,7 @@ class tags_manager
 	 */
 	public function remove_all_tags_from_topic($topic_id, $delete_unused_tags = true)
 	{
-		$this->remove_all_tags_from_topic(array($topic_id), $delete_unused_tags);
+		$this->remove_all_tags_from_topics(array($topic_id), $delete_unused_tags);
 	}
 
 	/**
