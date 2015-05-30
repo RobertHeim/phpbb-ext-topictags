@@ -54,7 +54,8 @@ class release_0_0_9 extends \phpbb\db\migration\migration
 		return $re;
 	}
 
-	private function add_role_permission(array $re, $rolename, $permission) {
+	private function add_role_permission(array $re, $rolename, $permission)
+	{
 		if ($this->role_exists($rolename))
 		{
 			$re[] = array('permission.permission_set', array($rolename, $permission));
