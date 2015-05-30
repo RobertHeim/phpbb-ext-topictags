@@ -768,7 +768,7 @@ class tags_manager
 		$sql = 'UPDATE ' . FORUMS_TABLE . '
 			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
 			WHERE forum_type = ' . FORUM_POST . '
-				AND rh_topictags_enabled = 1';
+				AND rh_topictags_enabled = ' . ($enable ? '0' : '1');
 		$this->db->sql_query($sql);
 		$affected_rows = $this->db->sql_affectedrows();
 		$this->calc_count_tags();
