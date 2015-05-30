@@ -47,13 +47,13 @@ class topictags_module
 				$this->tpl_name = 'topictags_whitelist';
 				$this->page_title = 'ACP_TOPICTAGS_WHITELIST';
 				$acp_whiteblacklist_controller = $phpbb_container->get('robertheim.topictags.acp.white_and_blacklist_controller');
-				$acp_whiteblacklist_controller->manage_whitelist($mode, $this->u_action);
+				$acp_whiteblacklist_controller->manage_whitelist($this->u_action);
 			break;
 			case 'blacklist':
 				$this->tpl_name = 'topictags_blacklist';
 				$this->page_title = 'ACP_TOPICTAGS_BLACKLIST';
 				$acp_whiteblacklist_controller = $phpbb_container->get('robertheim.topictags.acp.white_and_blacklist_controller');
-				$acp_whiteblacklist_controller->manage_blacklist($mode, $this->u_action);
+				$acp_whiteblacklist_controller->manage_blacklist($this->u_action);
 			break;
 			case 'tags':
 				$this->tpl_name = 'topictags_manage_tags';

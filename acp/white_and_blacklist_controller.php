@@ -44,65 +44,29 @@ class white_and_blacklist_controller
 
 	/**
 	 *
-	 * @param string $mode
-	 *        	phpbb acp-mode
-	 * @param string $u_action
-	 *        	phpbb acp-u_action
+	 * @param string $u_action phpbb acp-u_action
 	 */
-	public function manage_whitelist($mode, $u_action)
+	public function manage_whitelist($u_action)
 	{
-		// Define the name of the form for use as a form key
-		$form_name = 'topictags';
-		add_form_key($form_name);
-
-		$errors = array();
-
-		if ($this->request->is_set_post('submit'))
-		{
-			if (! check_form_key($form_name))
-			{
-				trigger_error('FORM_INVALID');
-			}
-
-			$this->config->set(prefixes::CONFIG . '_whitelist_enabled', $this->request->variable(prefixes::CONFIG . '_whitelist_enabled', 0));
-			$whitelist = rawurldecode(base64_decode($this->request->variable(prefixes::CONFIG . '_whitelist', '')));
-			if (! empty($whitelist))
-			{
-				$whitelist = json_decode($whitelist, true);
-				$tags = array();
-				for ($i = 0, $size = sizeof($whitelist); $i < $size; $i ++)
-				{
-					$tags[] = $whitelist[$i]['text'];
-				}
-				$whitelist = json_encode($tags);
-			}
-			$this->config->set(prefixes::CONFIG . '_whitelist', $whitelist);
-			trigger_error($this->user->lang('TOPICTAGS_WHITELIST_SAVED') . adm_back_link($u_action));
-		}
-		$whitelist = $this->config[prefixes::CONFIG . '_whitelist'];
-		$whitelist = base64_encode(rawurlencode($whitelist));
-		$this->template->assign_vars(
-			array(
-				'TOPICTAGS_VERSION'						=> $this->user->lang('TOPICTAGS_INSTALLED', $this->config[prefixes::CONFIG . '_version']),
-				'TOPICTAGS_WHITELIST_ENABLED'			=> $this->config[prefixes::CONFIG . '_whitelist_enabled'],
-				'TOPICTAGS_WHITELIST'					=> $whitelist,
-				'S_RH_TOPICTAGS_INCLUDE_NG_TAGS_INPUT'	=> true,
-				'S_RH_TOPICTAGS_INCLUDE_CSS'			=> true,
-				'S_ERROR'								=> (sizeof($errors)) ? true : false,
-				'ERROR_MSG'								=> implode('<br />', $errors),
-				'U_ACTION'								=> $u_action
-			));
+		$this->manage_list($u_action, 'whitelist');
 	}
 
 	/**
 	 *
-	 * @param string $mode
-	 *        	phpbb acp-mode
-	 * @param string $u_action
-	 *        	phpbb acp-u_action
+	 * @param string $u_action phpbb acp-u_action
 	 */
-	public function manage_blacklist($mode, $u_action)
+	public function manage_blacklist($u_action)
 	{
+		$this->manage_list($u_action, 'blacklist');
+	}
+
+	/**
+	 * @param string $list_name whitelist or blacklist
+	 * @param string $u_action phpbb acp-u_action
+	 */
+	private function manage_list($u_action, $list_name)
+	{
+		$list_name_upper = strtoupper($list_name);
 		// Define the name of the form for use as a form key
 		$form_name = 'topictags';
 		add_form_key($form_name);
@@ -116,33 +80,33 @@ class white_and_blacklist_controller
 				trigger_error('FORM_INVALID');
 			}
 
-			$this->config->set(prefixes::CONFIG . '_blacklist_enabled', $this->request->variable(prefixes::CONFIG . '_blacklist_enabled', 0));
-			$blacklist = rawurldecode(base64_decode($this->request->variable(prefixes::CONFIG . '_blacklist', '')));
-			if (! empty($blacklist))
+			$this->config->set(prefixes::CONFIG . '_' . $list_name . '_enabled', $this->request->variable(prefixes::CONFIG . '_' . $list_name . '_enabled', 0));
+			$list = rawurldecode(base64_decode($this->request->variable(prefixes::CONFIG . '_' . $list_name, '')));
+			if (! empty($list))
 			{
-				$blacklist = json_decode($blacklist, true);
+				$list = json_decode($list, true);
 				$tags = array();
-				for ($i = 0, $size = sizeof($blacklist); $i < $size; $i ++)
+				for ($i = 0, $size = sizeof($list); $i < $size; $i ++)
 				{
-					$tags[] = $blacklist[$i]['text'];
+					$tags[] = $list[$i]['text'];
 				}
-				$blacklist = json_encode($tags);
+				$list = json_encode($tags);
 			}
-			$this->config->set(prefixes::CONFIG . '_blacklist', $blacklist);
-			trigger_error($this->user->lang('TOPICTAGS_BLACKLIST_SAVED') . adm_back_link($u_action));
+			$this->config->set(prefixes::CONFIG . '_' . $list_name, $list);
+			trigger_error($this->user->lang('TOPICTAGS_' . $list_name_upper . '_SAVED') . adm_back_link($u_action));
 		}
-		$blacklist = $this->config[prefixes::CONFIG . '_blacklist'];
-		$blacklist = base64_encode(rawurlencode($blacklist));
+		$list = $this->config[prefixes::CONFIG . '_' . $list_name];
+		$list = base64_encode(rawurlencode($list));
 			$this->template->assign_vars(
 				array(
-					'TOPICTAGS_VERSION'						=> $this->user->lang('TOPICTAGS_INSTALLED', $this->config[prefixes::CONFIG . '_version']),
-					'TOPICTAGS_BLACKLIST_ENABLED'			=> $this->config[prefixes::CONFIG . '_blacklist_enabled'],
-					'TOPICTAGS_BLACKLIST'					=> $blacklist,
-					'S_RH_TOPICTAGS_INCLUDE_NG_TAGS_INPUT'	=> true,
-					'S_RH_TOPICTAGS_INCLUDE_CSS'			=> true,
-					'S_ERROR'								=> (sizeof($errors)) ? true : false,
-					'ERROR_MSG'								=> implode('<br />', $errors),
-					'U_ACTION'								=> $u_action
+					'TOPICTAGS_VERSION'								=> $this->user->lang('TOPICTAGS_INSTALLED', $this->config[prefixes::CONFIG . '_version']),
+					'TOPICTAGS_' . $list_name_upper . '_ENABLED'	=> $this->config[prefixes::CONFIG . '_' . $list_name . '_enabled'],
+					'TOPICTAGS_' . $list_name_upper					=> $list,
+					'S_RH_TOPICTAGS_INCLUDE_NG_TAGS_INPUT'			=> true,
+					'S_RH_TOPICTAGS_INCLUDE_CSS'					=> true,
+					'S_ERROR'										=> (sizeof($errors)) ? true : false,
+					'ERROR_MSG'										=> implode('<br />', $errors),
+					'U_ACTION'										=> $u_action
 				));
 	}
 }
