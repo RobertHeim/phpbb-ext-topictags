@@ -37,26 +37,11 @@ class release_0_0_9 extends \phpbb\db\migration\migration
 		$re[] = array('permission.add', array(permissions::USE_TAGS));
 
 		// Set permissions for the board roles
-		if ($this->role_exists('ROLE_ADMIN_FULL'))
-		{
-			$re[] = array('permission.permission_set', array('ROLE_ADMIN_FULL', permissions::ADMIN_EDIT_TAGS));
-		}
-		if ($this->role_exists('ROLE_MOD_FULL'))
-		{
-			$re[] = array('permission.permission_set', array('ROLE_MOD_FULL', permissions::MOD_EDIT_TAGS));
-		}
-		if ($this->role_exists('ROLE_MOD_STANDARD'))
-		{
-			$re[] = array('permission.permission_set', array('ROLE_MOD_STANDARD', permissions::MOD_EDIT_TAGS));
-		}
-		if ($this->role_exists('ROLE_USER_FULL'))
-		{
-			$re[] = array('permission.permission_set', array('ROLE_USER_FULL', permissions::USE_TAGS));
-		}
-		if ($this->role_exists('ROLE_USER_STANDARD'))
-		{
-			$re[] = array('permission.permission_set', array('ROLE_USER_STANDARD', permissions::USE_TAGS));
-		}
+		$re = $this->add_role_permission($re, 'ROLE_ADMIN_FULL', permissions::ADMIN_EDIT_TAGS);
+		$re = $this->add_role_permission($re, 'ROLE_MOD_FULL', permissions::MOD_EDIT_TAGS);
+		$re = $this->add_role_permission($re, 'ROLE_MOD_STANDARD', permissions::MOD_EDIT_TAGS);
+		$re = $this->add_role_permission($re, 'ROLE_USER_FULL', permissions::USE_TAGS);
+		$re = $this->add_role_permission($re, 'ROLE_USER_STANDARD', permissions::USE_TAGS);
 
 		$re[] = array('config.add', array(prefixes::CONFIG.'_convert_space_to_minus', 1));
 		$re[] = array('config.add', array(prefixes::CONFIG.'_whitelist_enabled', 0));
@@ -66,6 +51,14 @@ class release_0_0_9 extends \phpbb\db\migration\migration
 
 		$re[] = array('config.update', array(prefixes::CONFIG.'_version', $this->version));
 
+		return $re;
+	}
+
+	private function add_role_permission(array $re, $rolename, $permission) {
+		if ($this->role_exists($rolename))
+		{
+			$re[] = array('permission.permission_set', array($rolename, $permission));
+		}
 		return $re;
 	}
 
