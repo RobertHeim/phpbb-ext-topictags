@@ -169,12 +169,13 @@ class main_listener implements EventSubscriberInterface
 		{
 			$event_data = $event->get_data();
 			$data = $event_data['data'];
-
-			$tags = $this->get_tags_from_post_request();
-			$all_tags = $this->tags_manager->split_valid_tags($tags);
-			$valid_tags = $all_tags['valid'];
-			$this->tags_manager->assign_tags_to_topic($data['topic_id'], $valid_tags);
-			$event->set_data($event_data);
+			if ($this->is_edit_first_post($event_data['mode'], $data))
+			{
+				$tags = $this->get_tags_from_post_request();
+				$all_tags = $this->tags_manager->split_valid_tags($tags);
+				$valid_tags = $all_tags['valid'];
+				$this->tags_manager->assign_tags_to_topic($data['topic_id'], $valid_tags);
+			}
 		}
 	}
 
@@ -197,82 +198,96 @@ class main_listener implements EventSubscriberInterface
 				return;
 			}
 
-			$mode = $topic_id = $post_id = $topic_first_post_id = false;
+			$mode = $topic_id = false;
 
-			if (!empty($data['mode']))
-			{
-				$mode = $data['mode'];
-			}
-
-			if ($mode == 'reply')
+			if (empty($data['mode']) || $data['mode'] == 'reply')
 			{
 				return;
 			}
+
+			$mode = $data['mode'];
 
 			if (!empty($data['post_data']['topic_id']))
 			{
 				$topic_id = $data['post_data']['topic_id'];
 			}
 
-			if (!empty($data['post_data']['post_id']))
-			{
-				$post_id = $data['post_data']['post_id'];
-			}
-
-			if (!empty($data['post_data']['topic_first_post_id']))
-			{
-				$topic_first_post_id = $data['post_data']['topic_first_post_id'];
-			}
-
 			$is_new_topic = $mode == 'post';
-			$is_edit_first_post = $mode == 'edit' && $topic_id && $post_id && $post_id == $topic_first_post_id;
+			$is_edit_first_post = $topic_id && $this->is_edit_first_post($mode, $data['post_data']);
 			if ($is_new_topic || $is_edit_first_post)
 			{
-
-				$data['page_data']['RH_TOPICTAGS_SHOW_FIELD'] = true;
-
-				// do we got some preview-data?
-				$tags = array();
-				if ($this->request->is_set_post('rh_topictags'))
-				{
-					// use data from post-request
-					$tags = $this->get_tags_from_post_request();
-				}
-				else if ($is_edit_first_post)
-				{
-					// use data from db
-					$tags = $this->tags_manager->get_assigned_tags($topic_id);
-				}
-
-				$data['page_data']['RH_TOPICTAGS'] = base64_encode(rawurlencode(json_encode($tags)));
-
-				$data['page_data']['RH_TOPICTAGS_ALLOWED_TAGS_REGEX'] = $this->config[prefixes::CONFIG.'_allowed_tags_regex'];
-				$data['page_data']['RH_TOPICTAGS_CONVERT_SPACE_TO_MINUS'] = $this->config[prefixes::CONFIG.'_convert_space_to_minus'] ? 'true' : 'false';
-
-				$data['page_data']['S_RH_TOPICTAGS_WHITELIST_ENABLED'] = $this->config[prefixes::CONFIG.'_whitelist_enabled'];
-
-				if ($this->config[prefixes::CONFIG.'_whitelist_enabled'])
-				{
-					$data['page_data']['S_RH_TOPICTAGS_WHITELIST_ENABLED'] = true;
-					$tags = json_decode($this->config[prefixes::CONFIG.'_whitelist'], true);
-					for ($i = 0, $size = sizeof($tags); $i < $size; $i++)
-					{
-						$this->template->assign_block_vars('rh_topictags_whitelist', array(
-							'LINK' => '#',
-							'NAME' => $tags[$i],
-						));
-					}
-				}
-				else
-				{
-					$data['page_data']['RH_TOPICTAGS_ALLOWED_TAGS_EXP'] = $this->config[prefixes::CONFIG.'_allowed_tags_exp_for_users'];
-				}
-				$data['page_data']['S_RH_TOPICTAGS_INCLUDE_NG_TAGS_INPUT'] = true;
-				$data['page_data']['S_RH_TOPICTAGS_INCLUDE_CSS'] = true;
-
+				$page_data = $this->get_template_data_for_topic($topic_id, $is_edit_first_post);
+				$data['page_data'] = array_merge($data['page_data'], $page_data);
 				$event->set_data($data);
 			}
 		}
+	}
+
+	/**
+	 * Check whether the post data indicates that the first post of a topic is edited or not.
+	 *
+	 * @param string $mode the events data mode
+	 * @param array $post_data the event data
+	 * @return boolean true if it is a first post edit, false otherwise
+	 */
+	private function is_edit_first_post($mode, array $post_data)
+	{
+		$post_id = $topic_first_post_id = false;
+		if (!empty($post_data['topic_first_post_id']))
+		{
+			$topic_first_post_id = $post_data['topic_first_post_id'];
+		}
+		if (!empty($post_data['post_id']))
+		{
+			$post_id = $post_data['post_id'];
+		}
+		return $mode == 'edit' && $post_id && $post_id == $topic_first_post_id;
+	}
+
+	private function get_template_data_for_topic($topic_id, $is_edit_first_post)
+	{
+		$page_data = array();
+		$page_data['RH_TOPICTAGS_SHOW_FIELD'] = true;
+
+		// do we got some preview-data?
+		$tags = array();
+		if ($this->request->is_set_post('rh_topictags'))
+		{
+			// use data from post-request
+			$tags = $this->get_tags_from_post_request();
+		}
+		else if ($is_edit_first_post)
+		{
+			// use data from db
+			$tags = $this->tags_manager->get_assigned_tags($topic_id);
+		}
+
+		$page_data['RH_TOPICTAGS'] = base64_encode(rawurlencode(json_encode($tags)));
+
+		$page_data['RH_TOPICTAGS_ALLOWED_TAGS_REGEX'] = $this->config[prefixes::CONFIG . '_allowed_tags_regex'];
+		$page_data['RH_TOPICTAGS_CONVERT_SPACE_TO_MINUS'] = $this->config[prefixes::CONFIG . '_convert_space_to_minus'] ? 'true' : 'false';
+
+		$page_data['S_RH_TOPICTAGS_WHITELIST_ENABLED'] = $this->config[prefixes::CONFIG . '_whitelist_enabled'];
+
+		if ($this->config[prefixes::CONFIG . '_whitelist_enabled'])
+		{
+			$page_data['S_RH_TOPICTAGS_WHITELIST_ENABLED'] = true;
+			$tags = json_decode($this->config[prefixes::CONFIG . '_whitelist'], true);
+			for ($i = 0, $size = sizeof($tags); $i < $size; $i++)
+			{
+				$this->template->assign_block_vars('rh_topictags_whitelist', array(
+					'LINK' => '#',
+					'NAME' => $tags[$i],
+				));
+			}
+		}
+		else
+		{
+			$page_data['RH_TOPICTAGS_ALLOWED_TAGS_EXP'] = $this->config[prefixes::CONFIG . '_allowed_tags_exp_for_users'];
+		}
+		$page_data['S_RH_TOPICTAGS_INCLUDE_NG_TAGS_INPUT'] = true;
+		$page_data['S_RH_TOPICTAGS_INCLUDE_CSS'] = true;
+		return $page_data;
 	}
 
 	/**
@@ -320,7 +335,8 @@ class main_listener implements EventSubscriberInterface
 	}
 
 	/**
-	 * assigns the given tags to the template block
+	 * Assigns the given tags to the template block
+	 *
 	 * @param unknown $block_name the name of the template block
 	 * @param array $tags the tags to assign
 	 */
