@@ -80,7 +80,6 @@ class tagcloud_manager
 			? $this->user->lang('RH_TOPICTAGS_DISPLAYING_TOTAL_ALL')
 			: $show_count = $this->user->lang('RH_TOPICTAGS_DISPLAYING_TOTAL', $limit);
 
-
 		// ensure that the css for the tag cloud will be included
 		$this->template->assign_vars(array(
 			'S_RH_TOPICTAGS_INCLUDE_CSS'		=> true,
