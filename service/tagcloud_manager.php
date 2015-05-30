@@ -178,7 +178,8 @@ class tagcloud_manager
 			$percent = floor(($count / $maximum) * 100);
 		}
 
-		switch (true) {
+		switch (true)
+		{
 			case $percent < 20:
 				return 'rh_topictags_smallest';
 			case $percent < 40:
