@@ -751,13 +751,24 @@ class tags_manager
 	 */
 	public function enable_tags_in_all_forums()
 	{
-		$sql_ary = array(
-			'rh_topictags_enabled'	=> 1
+		return $this->set_tags_enabled_in_all_forums(true);
+	}
+
+	/**
+	 * en/disables tagging engine in all forums (not categories and links).
+	 *
+	 * @param boolean $enable true to enable and false to disabl the engine
+	 * @return number of affected forums (should be the count of all forums (type FORUM_POST ))
+	 */
+	private function set_tags_enabled_in_all_forums($enable)
+	{
+		$sql_ary =  array(
+			'rh_topictags_enabled'	=> $enable ? 1 : 0
 		);
 		$sql = 'UPDATE ' . FORUMS_TABLE . '
 			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
 			WHERE forum_type = ' . FORUM_POST . '
-				AND rh_topictags_enabled = 0';
+				AND rh_topictags_enabled = 1';
 		$this->db->sql_query($sql);
 		$affected_rows = $this->db->sql_affectedrows();
 		$this->calc_count_tags();
@@ -771,17 +782,31 @@ class tags_manager
 	 */
 	public function disable_tags_in_all_forums()
 	{
-		$sql_ary =  array(
-			'rh_topictags_enabled'	=> 0
+		return $this->set_tags_enabled_in_all_forums(false);
+	}
+
+	/**
+	 * Checks if all forums have the given status of the tagging engine (enabled/disabled)
+	 *
+	 * @param boolean $status true to check for enabled, false to check for disabled engine
+	 * @return boolean true if for all forums tagging is in state $status
+	 */
+	private function is_status_in_all_forums($status)
+	{
+		// there exist any which are disabled => is_enabled_in_all_forums == false
+		$sql_array = array(
+			'SELECT'	=> 'COUNT(*) as all_not_in_status',
+			'FROM'		=> array(
+				FORUMS_TABLE => 'f',
+			),
+			'WHERE'		=> 'f.rh_topictags_enabled = ' . ($status? '0' : '1') . '
+				AND forum_type = ' . FORUM_POST,
 		);
-		$sql = 'UPDATE ' . FORUMS_TABLE . '
-			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
-			WHERE forum_type = ' . FORUM_POST . '
-				AND rh_topictags_enabled = 1';
-		$this->db->sql_query($sql);
-		$affected_rows = $this->db->sql_affectedrows();
-		$this->calc_count_tags();
-		return $affected_rows;
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+		$result = $this->db->sql_query($sql);
+		$is_all_in_status = ((int) $this->db->sql_fetchfield('all_not_in_status')) == 0;
+		$this->db->sql_freeresult($result);
+		return $is_all_in_status;
 	}
 
 	/**
@@ -791,20 +816,7 @@ class tags_manager
 	 */
 	public function is_enabled_in_all_forums()
 	{
-		// there exist any which are disabled => is_enabled_in_all_forums == false
-		$sql_array = array(
-			'SELECT'	=> 'COUNT(*) as all_enabled',
-			'FROM'      => array(
-				FORUMS_TABLE => 'f',
-			),
-			'WHERE'		=> 'f.rh_topictags_enabled = 0
-				AND forum_type = ' . FORUM_POST,
-		);
-		$sql = $this->db->sql_build_query('SELECT', $sql_array);
-		$result = $this->db->sql_query($sql);
-		$enabled = ((int) $this->db->sql_fetchfield('all_enabled')) == 0;
-		$this->db->sql_freeresult($result);
-		return $enabled;
+		return $this->is_status_in_all_forums(true);
 	}
 
 	/**
@@ -814,20 +826,7 @@ class tags_manager
 	 */
 	public function is_disabled_in_all_forums()
 	{
-		// there exist any which are enabled => is_disabled_in_all_forums == false
-		$sql_array = array(
-			'SELECT'	=> 'COUNT(*) as all_disabled',
-			'FROM'      => array(
-				FORUMS_TABLE => 'f',
-			),
-			'WHERE'		=> 'f.rh_topictags_enabled = 1
-				AND forum_type = ' . FORUM_POST,
-		);
-		$sql = $this->db->sql_build_query('SELECT', $sql_array);
-		$result = $this->db->sql_query($sql);
-		$disabled = ((int) $this->db->sql_fetchfield('all_disabled')) == 0;
-		$this->db->sql_freeresult($result);
-		return $disabled;
+		return $this->is_status_in_all_forums(false);
 	}
 
 	/**
