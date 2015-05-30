@@ -189,25 +189,17 @@ class tagcloud_manager
 			$percent = floor(($count / $maximum) * 100);
 		}
 
-		if ($percent < 20)
-		{
-			return 'rh_topictags_smallest';
-		}
-		else if ($percent >= 20 && $percent < 40)
-		{
-			return 'rh_topictags_small';
-		}
-		else if ($percent >= 40 && $percent < 60)
-		{
-			return 'rh_topictags_medium';
-		}
-		else if ($percent >= 60 && $percent < 80)
-		{
-			return 'rh_topictags_large';
-		}
-		else
-		{
-			return 'rh_topictags_largest';
+		switch (true) {
+			case $percent < 20:
+				return 'rh_topictags_smallest';
+			case $percent < 40:
+				return 'rh_topictags_small';
+			case $percent < 60:
+				return 'rh_topictags_medium';
+			case $percent < 80:
+				return 'rh_topictags_large';
+			default:
+				return 'rh_topictags_largest';
 		}
 	}
 }
