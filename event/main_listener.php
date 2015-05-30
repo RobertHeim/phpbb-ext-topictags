@@ -324,7 +324,8 @@ class main_listener implements EventSubscriberInterface
 	 * @param unknown $block_name the name of the template block
 	 * @param array $tags the tags to assign
 	 */
-	private function assign_tags_to_template($block_name, array $tags) {
+	private function assign_tags_to_template($block_name, array $tags)
+	{
 		foreach ($tags as $tag)
 		{
 			$this->template->assign_block_vars($block_name, array (
