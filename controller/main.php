@@ -95,10 +95,6 @@ class main
 	 */
 	public function show_tag($tags, $mode, $casesensitive)
 	{
-		$phpbb_container = $this->phpbb_container;
-		$user = $this->user;
-		$config = $this->config;
-
 		// validate mode
 		// default == AND
 		$mode = ($mode == 'OR' ? 'OR' : 'AND');
@@ -118,26 +114,27 @@ class main
 		$tags = $all_tags['valid'];
 		$tags_string = join(', ', $tags);
 		$this->template->assign_var('RH_TOPICTAGS_SEARCH_HEADER',
-			$user->lang('RH_TOPICTAGS_SEARCH_HEADER_' . $mode, $tags_string)
+			$this->user->lang('RH_TOPICTAGS_SEARCH_HEADER_' . $mode, $tags_string)
 		);
 		if (empty($tags))
 		{
 			// no valid tags
-			return $this->helper->render('show_tag.html', 'Tag-' . $user->lang('SEARCH'));
+			$this->template->assign_var('NO_TOPICS_FOR_TAG', $this->user->lang('RH_TOPICTAGS_NO_TOPICS_FOR_NO_TAG'));
+			return $this->helper->render('show_tag.html', 'Tag-' . $this->user->lang('SEARCH'));
 		}
 
 		$topics_count	= $this->tags_manager->count_topics_by_tags($tags, $mode, $casesensitive);
 		if ($topics_count <= 0)
 		{
-			$this->template->assign_var('NO_TOPICS_FOR_TAG', $user->lang('RH_TOPICTAGS_NO_TOPICS_FOR_TAG_'.$mode,
+			$this->template->assign_var('NO_TOPICS_FOR_TAG', $this->user->lang('RH_TOPICTAGS_NO_TOPICS_FOR_TAG_'.$mode,
 				$tags_string));
 		}
 		else
 		{
-			$pagination		= $phpbb_container->get('pagination');
+			$pagination		= $this->phpbb_container->get('pagination');
 
 			$start			= $this->request->variable('start', 0);
-			$limit			= $config['topics_per_page'];
+			$limit			= $this->config['topics_per_page'];
 
 			$start			= $pagination->validate_start($start, $limit, $topics_count);
 
@@ -150,22 +147,22 @@ class main
 
 			$pagination->generate_template_pagination($base_url, 'pagination', 'start', $topics_count, $limit, $start);
 
-			$user->add_lang('viewforum');
+			$this->user->add_lang('viewforum');
 
 			$this->template->assign_vars(array(
-				'TOTAL_TOPICS'				=> $user->lang('VIEW_FORUM_TOPICS', $topics_count),
-				'NEWEST_POST_IMG'			=> $user->img('icon_topic_newest', 'VIEW_NEWEST_POST'),
-				'LAST_POST_IMG'				=> $user->img('icon_topic_latest', 'VIEW_LATEST_POST'),
-				'REPORTED_IMG'				=> $user->img('icon_topic_reported', 'TOPIC_REPORTED'),
-				'UNAPPROVED_IMG'			=> $user->img('icon_topic_unapproved', 'TOPIC_UNAPPROVED'),
-				'DELETED_IMG'				=> $user->img('icon_topic_deleted', 'TOPIC_DELETED'),
-				'POLL_IMG'					=> $user->img('icon_topic_poll', 'TOPIC_POLL'),
+				'TOTAL_TOPICS'				=> $this->user->lang('VIEW_FORUM_TOPICS', $topics_count),
+				'NEWEST_POST_IMG'			=> $this->user->img('icon_topic_newest', 'VIEW_NEWEST_POST'),
+				'LAST_POST_IMG'				=> $this->user->img('icon_topic_latest', 'VIEW_LATEST_POST'),
+				'REPORTED_IMG'				=> $this->user->img('icon_topic_reported', 'TOPIC_REPORTED'),
+				'UNAPPROVED_IMG'			=> $this->user->img('icon_topic_unapproved', 'TOPIC_UNAPPROVED'),
+				'DELETED_IMG'				=> $this->user->img('icon_topic_deleted', 'TOPIC_DELETED'),
+				'POLL_IMG'					=> $this->user->img('icon_topic_poll', 'TOPIC_POLL'),
 				'S_TOPIC_ICONS'				=> true,
 			));
 
 			$this->display_topics($topics);
 		} // else
-		return $this->helper->render('show_tag.html', 'Tag-' . $user->lang('SEARCH'));
+		return $this->helper->render('show_tag.html', 'Tag-' . $this->user->lang('SEARCH'));
 	}
 
 	/**
@@ -178,109 +175,72 @@ class main
 		$phpbb_content_visibility = $this->phpbb_container->get('content.visibility');
 		include_once($this->phpbb_root_path . 'includes/functions_display.' . $this->php_ext);
 
-		$phpbb_container = $this->phpbb_container;
-		$user = $this->user;
-		$auth = $this->auth;
-		$config = $this->config;
-		$phpbb_dispatcher = $this->phpbb_dispatcher;
-		$pagination = $phpbb_container->get('pagination');
+		$pagination = $this->phpbb_container->get('pagination');
 
-		foreach ($topics as $topic)
+		foreach ($topics as $t)
 		{
-			$topic_id = $topic['topic_id'];
-			$row = $topic;
-			$s_type_switch = 0;
-
-			$topic_forum_id = ($row['forum_id']) ? (int) $row['forum_id'] : $forum_id;
-
-			// This will allow the style designer to output a different header
-			// or even separate the list of announcements from sticky and normal topics
-			$s_type_switch_test = ($row['topic_type'] == POST_ANNOUNCE || $row['topic_type'] == POST_GLOBAL) ? 1 : 0;
-
-			// Replies
-			$replies = $phpbb_content_visibility->get_count('topic_posts', $row, $topic_forum_id) - 1;
-
-			if ($row['topic_status'] == ITEM_MOVED)
-			{
-				$topic_id = $row['topic_moved_id'];
-				$unread_topic = false;
-			}
-			else
-			{
-				$unread_topic = (isset($topic_tracking_info[$topic_id]) && $row['topic_last_post_time'] > $topic_tracking_info[$topic_id]) ? true : false;
-			}
-
-			// Get folder img, topic status/type related information
-			$folder_img = $folder_alt = $topic_type = '';
-			topic_status($row, $replies, $unread_topic, $folder_img, $folder_alt, $topic_type);
-
-			// Generate all the URIs ...
-			$view_topic_url_params = 'f=' . $row['forum_id'] . '&amp;t=' . $topic_id;
-			$view_topic_url = append_sid("{$this->phpbb_root_path}viewtopic.{$this->php_ext}", $view_topic_url_params);
-
-			$topic_unapproved = (($row['topic_visibility'] == ITEM_UNAPPROVED || $row['topic_visibility'] == ITEM_REAPPROVE) && $auth->acl_get('m_approve', $row['forum_id']));
-			$posts_unapproved = ($row['topic_visibility'] == ITEM_APPROVED && $row['topic_posts_unapproved'] && $auth->acl_get('m_approve', $row['forum_id']));
-			$topic_deleted = $row['topic_visibility'] == ITEM_DELETED;
-
-			$u_mcp_queue = ($topic_unapproved || $posts_unapproved) ? append_sid("{$this->phpbb_root_path}mcp.{$this->php_ext}", 'i=queue&amp;mode=' . (($topic_unapproved) ? 'approve_details' : 'unapproved_posts') . "&amp;t=$topic_id", true, $user->session_id) : '';
-			$u_mcp_queue = (!$u_mcp_queue && $topic_deleted) ? append_sid("{$this->phpbb_root_path}mcp.{$this->php_ext}", 'i=queue&amp;mode=deleted_topics&amp;t=' . $topic_id, true, $user->session_id) : $u_mcp_queue;
+			$topic = new topic($t, $this->user, $this->auth, $phpbb_content_visibility, $this->phpbb_root_path, $this->php_ext);
 
 			// Send vars to template
 			$topic_row = array(
-				'FORUM_ID'					=> $row['forum_id'],
-				'TOPIC_ID'					=> $topic_id,
-				'TOPIC_AUTHOR'				=> get_username_string('username', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']),
-				'TOPIC_AUTHOR_COLOUR'		=> get_username_string('colour', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']),
-				'TOPIC_AUTHOR_FULL'			=> get_username_string('full', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']),
-				'FIRST_POST_TIME'			=> $user->format_date($row['topic_time']),
-				'LAST_POST_SUBJECT'			=> censor_text($row['topic_last_post_subject']),
-				'LAST_POST_TIME'			=> $user->format_date($row['topic_last_post_time']),
-				'LAST_VIEW_TIME'			=> $user->format_date($row['topic_last_view_time']),
-				'LAST_POST_AUTHOR'			=> get_username_string('username', $row['topic_last_poster_id'], $row['topic_last_poster_name'], $row['topic_last_poster_colour']),
-				'LAST_POST_AUTHOR_COLOUR'	=> get_username_string('colour', $row['topic_last_poster_id'], $row['topic_last_poster_name'], $row['topic_last_poster_colour']),
-				'LAST_POST_AUTHOR_FULL'		=> get_username_string('full', $row['topic_last_poster_id'], $row['topic_last_poster_name'], $row['topic_last_poster_colour']),
+				'FORUM_ID'					=> $topic->forum_id(),
+				'TOPIC_ID'					=> $topic->topic_id(),
+				'TOPIC_AUTHOR'				=> $topic->author('username'),
+				'TOPIC_AUTHOR_COLOUR'		=> $topic->author('colour'),
+				'TOPIC_AUTHOR_FULL'			=> $topic->author('full'),
+				'FIRST_POST_TIME'			=> $topic->topic_time(),
+				'LAST_POST_SUBJECT'			=> $topic->last_post_subject(),
+				'LAST_POST_TIME'			=> $topic->last_post_time(),
+				'LAST_VIEW_TIME'			=> $topic->last_view_time(),
+				'LAST_POST_AUTHOR'			=> $topic->last_author('username'),
+				'LAST_POST_AUTHOR_COLOUR'	=> $topic->last_author('colour'),
+				'LAST_POST_AUTHOR_FULL'		=> $topic->last_author('full'),
 
-				'REPLIES'			=> $replies,
-				'VIEWS'				=> $row['topic_views'],
-				'TOPIC_TITLE'		=> censor_text($row['topic_title']),
-				'TOPIC_TYPE'		=> $topic_type,
-				'FORUM_NAME'		=> (isset($row['forum_name'])) ? $row['forum_name'] : '',
+				'REPLIES'			=> $topic->replies(),
+				'VIEWS'				=> $topic->views(),
+				'TOPIC_TITLE'		=> $topic->topic_title(),
+				'TOPIC_TYPE'		=> $topic->topic_type(),
+				'FORUM_NAME'		=> $topic->forum_name(),
 
-				'TOPIC_IMG_STYLE'		=> $folder_img,
-				'TOPIC_FOLDER_IMG'		=> $user->img($folder_img, $folder_alt),
-				'TOPIC_FOLDER_IMG_ALT'	=> $user->lang[$folder_alt],
+				'TOPIC_IMG_STYLE'		=> $topic->img_style(),
+				'TOPIC_FOLDER_IMG'		=> $topic->folder_img(),
+				'TOPIC_FOLDER_IMG_ALT'	=> $topic->folder_img_alt(),
 
-				'TOPIC_ICON_IMG'		=> (!empty($icons[$row['icon_id']])) ? $icons[$row['icon_id']]['img'] : '',
-				'TOPIC_ICON_IMG_WIDTH'	=> (!empty($icons[$row['icon_id']])) ? $icons[$row['icon_id']]['width'] : '',
-				'TOPIC_ICON_IMG_HEIGHT'	=> (!empty($icons[$row['icon_id']])) ? $icons[$row['icon_id']]['height'] : '',
-				'ATTACH_ICON_IMG'		=> ($auth->acl_get('u_download') && $auth->acl_get('f_download', $row['forum_id']) && $row['topic_attachment']) ? $user->img('icon_topic_attach', $user->lang['TOTAL_ATTACHMENTS']) : '',
-				'UNAPPROVED_IMG'		=> ($topic_unapproved || $posts_unapproved) ? $user->img('icon_topic_unapproved', ($topic_unapproved) ? 'TOPIC_UNAPPROVED' : 'POSTS_UNAPPROVED') : '',
+				// not supported by RH Topic Tags
+				'TOPIC_ICON_IMG'		=> '',
+				'TOPIC_ICON_IMG_WIDTH'	=> '',
+				'TOPIC_ICON_IMG_HEIGHT'	=> '',
 
-				'S_TOPIC_TYPE'			=> $row['topic_type'],
-				'S_USER_POSTED'			=> (isset($row['topic_posted']) && $row['topic_posted']) ? true : false,
-				'S_UNREAD_TOPIC'		=> $unread_topic,
-				'S_TOPIC_REPORTED'		=> (!empty($row['topic_reported']) && $auth->acl_get('m_report', $row['forum_id'])) ? true : false,
-				'S_TOPIC_UNAPPROVED'	=> $topic_unapproved,
-				'S_POSTS_UNAPPROVED'	=> $posts_unapproved,
-				'S_TOPIC_DELETED'		=> $topic_deleted,
-				'S_HAS_POLL'			=> ($row['poll_start']) ? true : false,
-				'S_POST_ANNOUNCE'		=> ($row['topic_type'] == POST_ANNOUNCE) ? true : false,
-				'S_POST_GLOBAL'			=> ($row['topic_type'] == POST_GLOBAL) ? true : false,
-				'S_POST_STICKY'			=> ($row['topic_type'] == POST_STICKY) ? true : false,
-				'S_TOPIC_LOCKED'		=> ($row['topic_status'] == ITEM_LOCKED) ? true : false,
-				'S_TOPIC_MOVED'			=> ($row['topic_status'] == ITEM_MOVED) ? true : false,
+				'ATTACH_ICON_IMG'		=> $topic->attach_icon_img(),
+				'UNAPPROVED_IMG'		=> $topic->unapproved_img(),
 
-				'U_NEWEST_POST'			=> append_sid("{$this->phpbb_root_path}viewtopic.{$this->php_ext}", $view_topic_url_params . '&amp;view=unread') . '#unread',
-				'U_LAST_POST'			=> append_sid("{$this->phpbb_root_path}viewtopic.{$this->php_ext}", $view_topic_url_params . '&amp;p=' . $row['topic_last_post_id']) . '#p' . $row['topic_last_post_id'],
-				'U_LAST_POST_AUTHOR'	=> get_username_string('profile', $row['topic_last_poster_id'], $row['topic_last_poster_name'], $row['topic_last_poster_colour']),
-				'U_TOPIC_AUTHOR'		=> get_username_string('profile', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']),
-				'U_VIEW_TOPIC'			=> $view_topic_url,
-				'U_MCP_REPORT'			=> append_sid("{$this->phpbb_root_path}mcp.{$this->php_ext}", 'i=reports&amp;mode=reports&amp;f=' . $row['forum_id'] . '&amp;t=' . $topic_id, true, $user->session_id),
-				'U_MCP_QUEUE'			=> $u_mcp_queue,
+				'S_TOPIC_TYPE'			=> $topic->topic_type(),
+				'S_USER_POSTED'			=> $topic->user_posted(),
+				'S_UNREAD_TOPIC'		=> $topic->unread_topic(),
+				'S_TOPIC_REPORTED'		=> $topic->topic_reported(),
+				'S_TOPIC_UNAPPROVED'	=> $topic->topic_unapproved(),
+				'S_POSTS_UNAPPROVED'	=> $topic->posts_unapproved(),
+				'S_TOPIC_DELETED'		=> $topic->topic_deleted(),
+				'S_HAS_POLL'			=> $topic->has_poll(),
+				'S_POST_ANNOUNCE'		=> $topic->post_announce(),
+				'S_POST_GLOBAL'			=> $topic->post_global(),
+				'S_POST_STICKY'			=> $topic->post_sticky(),
+				'S_TOPIC_LOCKED'		=> $topic->locked(),
+				'S_TOPIC_MOVED'			=> $topic->moved(),
 
-				'S_TOPIC_TYPE_SWITCH'	=> ($s_type_switch == $s_type_switch_test) ? -1 : $s_type_switch_test,
+				'U_NEWEST_POST'			=> $topic->newest_post_url(),
+				'U_LAST_POST'			=> $topic->last_post_url(),
+				'U_LAST_POST_AUTHOR'	=> $topic->last_post_author(),
+				'U_TOPIC_AUTHOR'		=> $topic->topic_author(),
+				'U_VIEW_TOPIC'			=> $topic->view_topic_url(),
+				'U_MCP_REPORT'			=> $topic->mcp_report(),
+				'U_MCP_QUEUE'			=> $topic->u_mcp_queue(),
+
+				'S_TOPIC_TYPE_SWITCH'	=> $topic->topic_type_switch(),
 			);
 
+			// create row for event so it is simmilar to the core.viewforum_modify_topicrow
+			$row = $t;
 			/**
 			 * Modify the topic data before it is assigned to the template
 			 *
@@ -290,12 +250,12 @@ class main
 			 * @since 0.0.13-b1
 			*/
 			$vars = array('row', 'topic_row');
-			extract($phpbb_dispatcher->trigger_event('robertheim.topictags.viewforum_modify_topicrow', compact($vars)));
+			extract($this->phpbb_dispatcher->trigger_event('robertheim.topictags.viewforum_modify_topicrow', compact($vars)));
 
 			$this->template->assign_block_vars('topicrow', $topic_row);
 
 			// mini pagination of posts in topic-rowss
-			$pagination->generate_template_pagination($view_topic_url, 'topicrow.pagination', 'start', $replies + 1, $config['posts_per_page'], 1, true, true);
+			$pagination->generate_template_pagination($topic->view_topic_url(), 'topicrow.pagination', 'start', $topic->replies() + 1, $this->config['posts_per_page'], 1, true, true);
 		} // foreach
 	}
 
