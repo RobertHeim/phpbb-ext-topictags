@@ -42,8 +42,6 @@ class topic
 	private $topic_unapproved;
 	private $posts_unapproved;
 	private $topic_deleted;
-	private $u_mcp_queue;
-
 
 	/**
 	 *
@@ -78,9 +76,6 @@ class topic
 		$this->topic_unapproved = (($topic_row['topic_visibility'] == ITEM_UNAPPROVED || $topic_row['topic_visibility'] == ITEM_REAPPROVE) && $auth->acl_get('m_approve', $this->forum_id));
 		$this->posts_unapproved = ($topic_row['topic_visibility'] == ITEM_APPROVED && $topic_row['topic_posts_unapproved'] && $auth->acl_get('m_approve', $this->forum_id));
 		$this->topic_deleted = $topic_row['topic_visibility'] == ITEM_DELETED;
-
-		$u_mcp_queue = ($this->topic_unapproved || $this->posts_unapproved) ? append_sid("{$this->phpbb_root_path}mcp.{$this->php_ext}", 'i=queue&amp;mode=' . (($this->topic_unapproved) ? 'approve_details' : 'unapproved_posts') . "&amp;t={$this->topic_id}", true, $this->user->session_id) : '';
-		$this->u_mcp_queue = (!$u_mcp_queue && $this->topic_deleted) ? append_sid("{$this->phpbb_root_path}mcp.{$this->php_ext}", 'i=queue&amp;mode=deleted_topics&amp;t=' . $this->topic_id, true, $user->session_id) : $u_mcp_queue;
 	}
 
 	public function user_posted()
@@ -100,7 +95,24 @@ class topic
 
 	public function u_mcp_queue()
 	{
-		return $this->u_mcp_queue;
+		$mode = '';
+		if ($this->topic_unapproved)
+		{
+			$mode = 'approve_details';
+		}
+		else if ($this->posts_unapproved)
+		{
+			$mode = 'unapproved_posts';
+		}
+		else if ($this->topic_deleted)
+		{
+			$mode = 'deleted_topics';
+		}
+		else
+		{
+			return '';
+		}
+		return append_sid("{$this->phpbb_root_path}mcp.{$this->php_ext}", "i=queue&amp;mode=$mode&amp;t={$this->topic_id}", true, $this->user->session_id);
 	}
 
 	public function unapproved_img()
