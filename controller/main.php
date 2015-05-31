@@ -185,7 +185,7 @@ class main
 		$auth = $this->auth;
 		$config = $this->config;
 		$phpbb_dispatcher = $this->phpbb_dispatcher;
-		$pagination		= $phpbb_container->get('pagination');
+		$pagination = $phpbb_container->get('pagination');
 
 		foreach ($topics as $topic)
 		{
