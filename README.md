@@ -68,7 +68,7 @@ Goto ACP -> Extensions -> RH Topic Tags
 Go to ACP -> tab Customise -> Manage extensions -> disable RH Topic Tags
 
 ```
-cd phpBB3
+cd phpBB3/ext/robertheim/topictags
 git pull
 ```
 
