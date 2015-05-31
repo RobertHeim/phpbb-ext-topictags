@@ -56,12 +56,23 @@ git clone https://github.com/RobertHeim/phpbb-ext-topictags.git ext/robertheim/t
 ```
 
 ### 2. activate
-Go to ACP -> tab customise -> Manage extensions -> enable RH Topic Tags  
+Go to ACP -> tab Customise -> Manage extensions -> enable RH Topic Tags
 Go to ACP -> Forums -> edit/create any forum -> set *Enable RH Topic Tags* to *Yes*
 
 ### 3. configure
 
 Goto ACP -> Extensions -> RH Topic Tags
+
+## Update
+
+Go to ACP -> tab Customise -> Manage extensions -> disable RH Topic Tags
+
+```
+cd phpBB3
+git pull
+```
+
+Go to ACP -> tab Customise -> Manage extensions -> enable RH Topic Tags
 
 ## Support
 
