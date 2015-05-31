@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/RobertHeim/phpbb-ext-topictags.svg?branch=master)](https://travis-ci.org/RobertHeim/phpbb-ext-topictags)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/RobertHeim/phpbb-ext-topictags/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/RobertHeim/phpbb-ext-topictags/?branch=master)
 
 phpbb-ext-topictags
 ===================
