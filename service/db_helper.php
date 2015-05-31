@@ -8,12 +8,6 @@
 namespace robertheim\topictags\service;
 
 /**
- * @ignore
- */
-use robertheim\topictags\tables;
-use robertheim\topictags\prefixes;
-
-/**
 * Helper for executing db queries.
 */
 class db_helper
@@ -146,7 +140,7 @@ class db_helper
 		$result = $limit > 0
 			? $this->db->sql_query_limit($sql, $limit, $start)
 			: $this->db->sql_query($sql);
-		$re =  $this->db->sql_fetchfield($field_name);
+		$re = $this->db->sql_fetchfield($field_name);
 		$this->db->sql_freeresult($result);
 		return $re;
 	}
