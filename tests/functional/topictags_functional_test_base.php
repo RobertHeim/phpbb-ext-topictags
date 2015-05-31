@@ -8,6 +8,7 @@
 namespace robertheim\topictags\tests\functional;
 
 use \robertheim\topictags\prefixes;
+use robertheim\topictags\service\db_helper;
 
 /**
  * @group functional
@@ -42,8 +43,9 @@ class topictags_functional_test_base extends \phpbb_functional_test_case
 		$config = new \phpbb\config\config(array(
 				prefixes::CONFIG.'_allowed_tags_regex' => '/^[a-z]{3,30}$/i',
 		));
+		$db_helper = new db_helper($this->get_db());
 		$this->tags_manager = new \robertheim\topictags\service\tags_manager(
-				$this->get_db(), $config, $this->auth, $table_prefix);
+				$this->get_db(), $config, $this->auth, $db_helper, $table_prefix);
 	}
 
 	/**

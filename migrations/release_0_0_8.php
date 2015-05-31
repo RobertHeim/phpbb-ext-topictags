@@ -12,6 +12,7 @@ namespace robertheim\topictags\migrations;
 use robertheim\topictags\prefixes;
 use robertheim\topictags\tables;
 use robertheim\topictags\service\tags_manager;
+use robertheim\topictags\service\db_helper;
 
 class release_0_0_8 extends \phpbb\db\migration\container_aware_migration
 {
@@ -72,7 +73,8 @@ class release_0_0_8 extends \phpbb\db\migration\container_aware_migration
 	{
 		/* @var $auth \phpbb\auth\auth */
 		$auth = $this->container->get('auth');
-		$tags_manager = new tags_manager($this->db, $this->config, $auth, $this->table_prefix);
+		$db_helper = new db_helper($this->db);
+		$tags_manager = new tags_manager($this->db, $this->config, $auth, $db_helper, $this->table_prefix);
 		$tags_manager->calc_count_tags();
 	}
 }
