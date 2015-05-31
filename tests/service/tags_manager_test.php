@@ -25,8 +25,9 @@ class tags_manager_test extends \phpbb_database_test_case
 		$config = new \phpbb\config\config(array(
 			prefixes::CONFIG.'_allowed_tags_regex' => '/^[a-zäÄ]{3,30}$/i',
 		));
+		$db_helper = new \robertheim\topictags\service\db_helper($this->db);
 		$this->tags_manager = new \robertheim\topictags\service\tags_manager(
-			$this->db, $config, $this->auth, $table_prefix);
+			$this->db, $config, $this->auth, $db_helper, $table_prefix);
 	}
 
 	public function getDataSet()
@@ -603,8 +604,9 @@ class tags_manager_test extends \phpbb_database_test_case
 			prefixes::CONFIG.'_blacklist' => json_encode(array("blacktag", "blackwhitetag")),
 			prefixes::CONFIG.'_whitelist' => json_encode(array("whitetag", "blackwhitetag")),
 		));
+		$db_helper = new \robertheim\topictags\service\db_helper($this->db);
 		$this->tags_manager = new \robertheim\topictags\service\tags_manager(
-			$this->db, $config, $this->auth, $table_prefix);
+			$this->db, $config, $this->auth, $db_helper, $table_prefix);
 
 		$this->assertFalse($this->tags_manager->is_valid_tag("blacktag", true), 'tag is on blacklist');
 		$this->assertFalse($this->tags_manager->is_valid_tag("notwhitetag", true), 'tag is not on whitelist');
@@ -651,8 +653,10 @@ class tags_manager_test extends \phpbb_database_test_case
 			prefixes::CONFIG.'_allowed_tags_regex' => '/^[a-z]{3,30}$/i',
 			prefixes::CONFIG.'_convert_space_to_minus' => true,
 		));
+		$db_helper = new \robertheim\topictags\service\db_helper($this->db);
 		$this->tags_manager = new \robertheim\topictags\service\tags_manager(
-			$this->db, $config, $this->auth, $table_prefix);
+			$this->db, $config, $this->auth, $db_helper, $table_prefix);
+
 		$this->assertEquals("t-ag", $this->tags_manager->clean_tag("t ag"));
 	}
 

@@ -35,12 +35,17 @@ services:
             - %core.root_path%
             - @robertheim.topictags.tags_manager
             - @robertheim.topictags.tagcloud_manager
+    robertheim.topictags.db_helper:
+        class: robertheim\topictags\service\db_helper
+        arguments:
+            - @dbal.conn.driver
     robertheim.topictags.tags_manager:
         class: robertheim\topictags\service\tags_manager
         arguments:
             - @dbal.conn.driver
             - @config
             - @auth
+            - @robertheim.topictags.db_helper
             - %core.table_prefix%
     robertheim.topictags.tagcloud_manager:
         class: robertheim\topictags\service\tagcloud_manager

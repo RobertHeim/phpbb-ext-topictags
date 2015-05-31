@@ -14,6 +14,7 @@ namespace robertheim\topictags\service;
  */
 use robertheim\topictags\tables;
 use robertheim\topictags\prefixes;
+use robertheim\topictags\service\db_helper;
 
 /**
 * Handles all functionallity regarding tags.
@@ -29,17 +30,24 @@ class tags_manager
 	private $db;
 	private $config;
 	private $auth;
+
+	/**
+	 * @var db_helper
+	 */
+	private $db_helper;
 	private $table_prefix;
 
 	public function __construct(
 					\phpbb\db\driver\driver_interface $db,
 					\phpbb\config\config $config,
 					\phpbb\auth\auth $auth,
+					db_helper $db_helper,
 					$table_prefix)
 	{
 		$this->db			= $db;
 		$this->config		= $config;
 		$this->auth			= $auth;
+		$this->db_helper	= $db_helper;
 		$this->table_prefix	= $table_prefix;
 	}
 
@@ -85,14 +93,7 @@ class tags_manager
 				FROM ' . $this->table_prefix . tables::TOPICTAGS . ' tt
 					WHERE tt.tag_id = t.id
 			)';
-		$result = $this->db->sql_query($sql);
-		$ids = array();
-		while ($row = $this->db->sql_fetchrow($result))
-		{
-			$ids[] = $row['id'];
-		}
-		$this->db->sql_freeresult($result);
-		return $ids;
+		return $this->db_helper->get_ids($sql);
 	}
 
 	/**
@@ -158,14 +159,7 @@ class tags_manager
 				FROM ' . TOPICS_TABLE . ' topics
 					WHERE topics.topic_id = tt.topic_id
 			)';
-		$result = $this->db->sql_query($sql);
-		$ids = array();
-		while ($row = $this->db->sql_fetchrow($result))
-		{
-			$ids[] = $row['id'];
-		}
-		$this->db->sql_freeresult($result);
-		return $ids;
+		return $this->db_helper->get_ids($sql);
 	}
 
 	/**
@@ -224,13 +218,7 @@ class tags_manager
 					AND f.rh_topictags_enabled = 0
 					$forums_sql_where
 			)";
-		$result = $this->db->sql_query($sql);
-		$delete_ids = array();
-		while ($row = $this->db->sql_fetchrow($result))
-		{
-			$delete_ids[] = $row['id'];
-		}
-		$this->db->sql_freeresult($result);
+		$delete_ids = $this->db_helper->get_ids($sql);
 
 		if (empty($delete_ids))
 		{
@@ -264,14 +252,7 @@ class tags_manager
 				' . $this->table_prefix . tables::TOPICTAGS . " AS tt
 			WHERE tt.topic_id = $topic_id
 				AND t.id = tt.tag_id";
-		$result = $this->db->sql_query($sql);
-		$tags = array();
-		while ($row = $this->db->sql_fetchrow($result))
-		{
-			$tags[] = $row['tag'];
-		}
-		$this->db->sql_freeresult($result);
-		return $tags;
+		return $this->db_helper->get_array_by_fieldname($sql, 'tag');
 	}
 
 	/**
@@ -331,7 +312,7 @@ class tags_manager
 		// get ids of tags
 		$ids = $this->get_existing_tags($valid_tags, true);
 
-		// create topic_id <->tag_id link in TOPICTAGS_TABLE
+		// create topic_id <-> tag_id link in TOPICTAGS_TABLE
 		$sql_ary = array();
 		foreach ($ids as $id)
 		{
@@ -420,28 +401,14 @@ class tags_manager
 		$sql = 'SELECT id, tag
 			FROM ' . $this->table_prefix . tables::TAGS . "
 			$where";
-		$result = $this->db->sql_query($sql);
-
-		$existing_tags = array();
 		if ($only_ids)
 		{
-			while ($row = $this->db->sql_fetchrow($result))
-			{
-				$existing_tags[] = $row['id'];
-			}
+			return $this->db_helper->get_ids($sql);
 		}
-		else
-		{
-			while ($row = $this->db->sql_fetchrow($result))
-			{
-				$existing_tags[] = array(
-					'id'	=> $row['id'],
-					'tag'	=> $row['tag']
-				);
-			}
-		}
-		$this->db->sql_freeresult($result);
-		return $existing_tags;
+		return $this->db_helper->get_multiarray_by_fieldnames($sql, array(
+				'id',
+				'tag'
+			));
 	}
 
 	/**
@@ -457,18 +424,9 @@ class tags_manager
 	public function get_topics_by_tags(array $tags, $start, $limit, $mode = 'AND', $casesensitive = false)
 	{
 		$sql = $this->get_topics_build_query($tags, $mode, $casesensitive);
-
 		$order_by = ' ORDER BY topics.topic_last_post_time DESC';
 		$sql .= $order_by;
-
-		$result = $this->db->sql_query_limit($sql, $limit, $start);
-		$topics = array();
-		while ($row = $this->db->sql_fetchrow($result))
-		{
-			$topics[] = $row;
-		}
-		$this->db->sql_freeresult($result);
-		return $topics;
+		return $this->db_helper->get_array($sql, $limit, $start);
 	}
 
 	/**
@@ -488,10 +446,7 @@ class tags_manager
 		$sql = $this->get_topics_build_query($tags, $mode, $casesensitive);
 		$sql = "SELECT COUNT(*) as total_results
 			FROM ($sql) a";
-		$result = $this->db->sql_query($sql);
-		$count = (int) $this->db->sql_fetchfield('total_results');
-		$this->db->sql_freeresult($result);
-		return $count;
+		return (int) $this->db_helper->get_field($sql, 'total_results');
 	}
 
 	/**
@@ -738,10 +693,8 @@ class tags_manager
 		$sql = "SELECT $field
 			FROM " . FORUMS_TABLE . '
 			WHERE ' . $this->db->sql_build_array('SELECT', array('forum_id' => (int) $forum_id));
-		$result = $this->db->sql_query($sql);
-		$enabled = ((int) $this->db->sql_fetchfield($field)) > 0;
-		$this->db->sql_freeresult($result);
-		return $enabled;
+		$status = (int) $this->db_helper->get_field($sql, $field);
+		return $status > 0;
 	}
 
 	/**
@@ -803,10 +756,8 @@ class tags_manager
 				AND forum_type = ' . FORUM_POST,
 		);
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
-		$result = $this->db->sql_query($sql);
-		$is_all_in_status = ((int) $this->db->sql_fetchfield('all_not_in_status')) == 0;
-		$this->db->sql_freeresult($result);
-		return $is_all_in_status;
+		$all_not_in_status = (int) $this->db_helper->get_field($sql, 'all_not_in_status');
+		return $all_not_in_status == 0;
 	}
 
 	/**
@@ -880,14 +831,7 @@ class tags_manager
 			'WHERE'		=> 'tt.tag_id = ' . ((int) $tag_id),
 		);
 		$sql = $this->db->sql_build_query('SELECT_DISTINCT', $sql_array);
-		$result = $this->db->sql_query($sql);
-		$ids = array();
-		while ($row = $this->db->sql_fetchrow($result))
-		{
-			$ids[] = (int) $row['topic_id'];
-		}
-		$this->db->sql_freeresult($result);
-		return $ids;
+		return $this->db_helper->get_ids($sql, 'topic_id');
 	}
 
 	/**
@@ -979,10 +923,7 @@ class tags_manager
 			'WHERE'		=> 't.id = ' . ((int) $tag_id),
 		);
 		$sql = $this->db->sql_build_query('SELECT_DISTINCT', $sql_array);
-		$result = $this->db->sql_query_limit($sql, 1);
-		$tag = $this->db->sql_fetchfield('tag');
-		$this->db->sql_freeresult($result);
-		return $tag;
+		return $this->db_helper->get_field($sql, 'tag', 1);
 	}
 
 	/**
@@ -1009,19 +950,13 @@ class tags_manager
 		$direction = $asc ? 'ASC' : 'DESC';
 		$sql = 'SELECT * FROM ' . $this->table_prefix . tables::TAGS . '
 			ORDER BY ' . $sort_field . ' ' . $direction;
-		$result = $this->db->sql_query_limit($sql, $limit, $start);
-		$tags = array();
-		while ($row = $this->db->sql_fetchrow($result))
-		{
-			$tags[] = array(
-				'id'			=> (int) $row['id'],
-				'tag'			=> $row['tag'],
-				'tag_lowercase'	=> $row['tag_lowercase'],
-				'count'			=> (int) $row['count'],
-			);
-		}
-		$this->db->sql_freeresult($result);
-		return $tags;
+		$field_names = array(
+			'id',
+			'tag',
+			'tag_lowercase',
+			'count'
+		);
+		return $this->db_helper->get_multiarray_by_fieldnames($sql, $field_names, $limit, $start);
 	}
 
 	/**
@@ -1032,9 +967,6 @@ class tags_manager
 	public function count_tags()
 	{
 		$sql = 'SELECT COUNT(*) as count_tags FROM ' . $this->table_prefix . tables::TAGS;
-		$result = $this->db->sql_query($sql);
-		$count = (int) $this->db->sql_fetchfield('count_tags');
-		$this->db->sql_freeresult($result);
-		return $count;
+		return (int) $this->db_helper->get_field($sql, 'count_tags');
 	}
 }
