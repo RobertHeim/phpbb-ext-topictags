@@ -98,8 +98,6 @@ class main
 		$phpbb_container = $this->phpbb_container;
 		$user = $this->user;
 		$config = $this->config;
-		$auth = $this->auth;
-		$phpbb_dispatcher = $this->phpbb_dispatcher;
 
 		// validate mode
 		// default == AND
