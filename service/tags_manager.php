@@ -590,9 +590,9 @@ class tags_manager
 		$blacklist = json_decode($this->config_text->get(prefixes::CONFIG.'_blacklist'), true);
 		foreach ($blacklist as $entry)
 		{
-			if ($tag == $this->clean_tag($entry))
+			if ($tag === $this->clean_tag($entry))
 			{
-				return false;
+				return true;
 			}
 		}
 
@@ -609,7 +609,7 @@ class tags_manager
 		$whitelist = $this->get_whitelist_tags();
 		foreach ($whitelist as $entry)
 		{
-			if ($tag == $this->clean_tag($entry))
+			if ($tag === $this->clean_tag($entry))
 			{
 				return true;
 			}
