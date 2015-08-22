@@ -653,7 +653,8 @@ class tags_manager
 		// check blacklist
 		if ($this->config[prefixes::CONFIG.'_blacklist_enabled'])
 		{
-			if ($this->is_on_blacklist($tag)) {
+			if ($this->is_on_blacklist($tag))
+			{
 				// tag is regex-conform, but blacklisted => invalid
 				return false;
 			}
