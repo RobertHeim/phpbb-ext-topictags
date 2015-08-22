@@ -16,6 +16,11 @@ class tags_manager_test extends \phpbb_database_test_case
 
 	private $auth;
 
+	/**
+	 * @var \phpbb\config\db_text
+	 */
+	private $config_text;
+
 	protected function setUp()
 	{
 		parent::setUp();
@@ -25,9 +30,10 @@ class tags_manager_test extends \phpbb_database_test_case
 		$config = new \phpbb\config\config(array(
 			prefixes::CONFIG.'_allowed_tags_regex' => '/^[a-zäÄ]{3,30}$/i',
 		));
+		$this->config_text = new \phpbb\config\db_text($this->db, $table_prefix . 'config_text');
 		$db_helper = new \robertheim\topictags\service\db_helper($this->db);
-		$this->tags_manager = new \robertheim\topictags\service\tags_manager(
-			$this->db, $config, $this->auth, $db_helper, $table_prefix);
+		$this->tags_manager = new tags_manager(
+			$this->db, $config, $this->config_text, $this->auth, $db_helper, $table_prefix);
 	}
 
 	public function getDataSet()
@@ -585,6 +591,7 @@ class tags_manager_test extends \phpbb_database_test_case
 
 	public function test_is_valid_tag()
 	{
+		global $table_prefix;
 		$this->assertTrue($this->tags_manager->is_valid_tag("tag"));
 
 		// clean tags must be trimed (note the trailing space)
@@ -601,17 +608,23 @@ class tags_manager_test extends \phpbb_database_test_case
 			prefixes::CONFIG.'_allowed_tags_regex' => '/^[a-z]{3,30}$/i',
 			prefixes::CONFIG.'_whitelist_enabled' => true,
 			prefixes::CONFIG.'_blacklist_enabled' => true,
+		));
+		$this->config_text->set_array(array(
 			prefixes::CONFIG.'_blacklist' => json_encode(array("blacktag", "blackwhitetag")),
 			prefixes::CONFIG.'_whitelist' => json_encode(array("whitetag", "blackwhitetag")),
 		));
 		$db_helper = new \robertheim\topictags\service\db_helper($this->db);
-		$this->tags_manager = new \robertheim\topictags\service\tags_manager(
-			$this->db, $config, $this->auth, $db_helper, $table_prefix);
+		$this->tags_manager = new tags_manager(
+			$this->db, $config, $this->config_text, $this->auth, $db_helper, $table_prefix);
 
 		$this->assertFalse($this->tags_manager->is_valid_tag("blacktag", true), 'tag is on blacklist');
 		$this->assertFalse($this->tags_manager->is_valid_tag("notwhitetag", true), 'tag is not on whitelist');
 		$this->assertTrue($this->tags_manager->is_valid_tag("whitetag", true), 'tag is not blacklisted and on whitelist');
 		$this->assertFalse($this->tags_manager->is_valid_tag("blackwhitetag", true), 'blacklist must be given priority');
+		$this->config_text->delete_array(array(
+			prefixes::CONFIG.'_blacklist',
+			prefixes::CONFIG.'_whitelist',
+		));
 	}
 
 	public function test_split_valid_tags()
@@ -654,8 +667,8 @@ class tags_manager_test extends \phpbb_database_test_case
 			prefixes::CONFIG.'_convert_space_to_minus' => true,
 		));
 		$db_helper = new \robertheim\topictags\service\db_helper($this->db);
-		$this->tags_manager = new \robertheim\topictags\service\tags_manager(
-			$this->db, $config, $this->auth, $db_helper, $table_prefix);
+		$this->tags_manager = new tags_manager(
+			$this->db, $config, $this->config_text, $this->auth, $db_helper, $table_prefix);
 
 		$this->assertEquals("t-ag", $this->tags_manager->clean_tag("t ag"));
 	}

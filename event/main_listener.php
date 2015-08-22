@@ -279,7 +279,7 @@ class main_listener implements EventSubscriberInterface
 		if ($this->config[prefixes::CONFIG . '_whitelist_enabled'])
 		{
 			$page_data['S_RH_TOPICTAGS_WHITELIST_ENABLED'] = true;
-			$tags = json_decode($this->config[prefixes::CONFIG . '_whitelist'], true);
+			$tags = $this->tags_manager->get_whitelist_tags();
 			for ($i = 0, $size = sizeof($tags); $i < $size; $i++)
 			{
 				$this->template->assign_block_vars('rh_topictags_whitelist', array(

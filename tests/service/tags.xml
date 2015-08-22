@@ -120,4 +120,8 @@
             <value>0</value>
         </row>
     </table>
+    <table name="phpbb_config_text">
+        <column>config_name</column>
+        <column>config_value</column>
+    </table>
 </dataset>

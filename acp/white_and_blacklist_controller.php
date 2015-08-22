@@ -20,6 +20,11 @@ class white_and_blacklist_controller
 
 	private $config;
 
+	/**
+	 * @var \phpbb\config\db_text
+	 */
+	private $config_text;
+
 	private $request;
 
 	private $user;
@@ -30,12 +35,14 @@ class white_and_blacklist_controller
 
 	public function __construct(
 		\phpbb\config\config $config,
+		\phpbb\config\db_text $config_text,
 		\phpbb\request\request $request,
 		\phpbb\user $user,
 		\phpbb\template\template $template,
 		\robertheim\topictags\service\tags_manager $tags_manager)
 	{
 		$this->config = $config;
+		$this->config_text = $config_text;
 		$this->request = $request;
 		$this->user = $user;
 		$this->template = $template;
@@ -92,10 +99,13 @@ class white_and_blacklist_controller
 				}
 				$list = json_encode($tags);
 			}
-			$this->config->set(prefixes::CONFIG . '_' . $list_name, $list);
+			// store the list
+			$this->config_text->set(prefixes::CONFIG . '_' . $list_name, $list);
 			trigger_error($this->user->lang('TOPICTAGS_' . $list_name_upper . '_SAVED') . adm_back_link($u_action));
 		}
-		$list = $this->config[prefixes::CONFIG . '_' . $list_name];
+
+		// display
+		$list = $this->config_text->get(prefixes::CONFIG . '_' . $list_name);
 		$list = base64_encode(rawurlencode($list));
 		$this->template->assign_vars(
 			array(
@@ -104,7 +114,7 @@ class white_and_blacklist_controller
 				'TOPICTAGS_' . $list_name_upper					=> $list,
 				'S_RH_TOPICTAGS_INCLUDE_NG_TAGS_INPUT'			=> true,
 				'S_RH_TOPICTAGS_INCLUDE_CSS'					=> true,
-				'TOPICTAGS_CONVERT_SPACE_TO_MINUS'			=> $this->config[prefixes::CONFIG . '_convert_space_to_minus'] ? 'true' : 'false',
+				'TOPICTAGS_CONVERT_SPACE_TO_MINUS'				=> $this->config[prefixes::CONFIG . '_convert_space_to_minus'] ? 'true' : 'false',
 				'S_ERROR'										=> (sizeof($errors)) ? true : false,
 				'ERROR_MSG'										=> implode('<br />', $errors),
 				'U_ACTION'										=> $u_action

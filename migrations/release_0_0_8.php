@@ -74,7 +74,8 @@ class release_0_0_8 extends \phpbb\db\migration\container_aware_migration
 		/* @var $auth \phpbb\auth\auth */
 		$auth = $this->container->get('auth');
 		$db_helper = new db_helper($this->db);
-		$tags_manager = new tags_manager($this->db, $this->config, $auth, $db_helper, $this->table_prefix);
+		$config_text = $this->container->get('config_text');
+		$tags_manager = new tags_manager($this->db, $this->config, $config_text, $auth, $db_helper, $this->table_prefix);
 		$tags_manager->calc_count_tags();
 	}
 }

@@ -29,6 +29,10 @@ class tags_manager
 	 */
 	private $db;
 	private $config;
+	/**
+	 * @var \phpbb\config\db_text
+	 */
+	private $config_text;
 	private $auth;
 
 	/**
@@ -40,12 +44,14 @@ class tags_manager
 	public function __construct(
 					\phpbb\db\driver\driver_interface $db,
 					\phpbb\config\config $config,
+					\phpbb\config\db_text $config_text,
 					\phpbb\auth\auth $auth,
 					db_helper $db_helper,
 					$table_prefix)
 	{
 		$this->db			= $db;
 		$this->config		= $config;
+		$this->config_text	= $config_text;
 		$this->auth			= $auth;
 		$this->db_helper	= $db_helper;
 		$this->table_prefix	= $table_prefix;
@@ -574,6 +580,51 @@ class tags_manager
 	}
 
 	/**
+	 * Checks whether the given tag is blacklisted.
+	 *
+	 * @param string $tag
+	 * @return boolean true, if the tag is on the blacklist, false otherwise
+	 */
+	private function is_on_blacklist($tag)
+	{
+		$blacklist = json_decode($this->config_text->get(prefixes::CONFIG.'_blacklist'), true);
+		foreach ($blacklist as $entry)
+		{
+			if ($tag == $this->clean_tag($entry))
+			{
+				return false;
+			}
+		}
+
+	}
+
+	/**
+	 * Checks whether the given tag is whitelisted.
+	 *
+	 * @param string $tag
+	 * @return boolean true, if the tag is on the whitelist, false otherwise
+	 */
+	private function is_on_whitelist($tag)
+	{
+		$whitelist = $this->get_whitelist_tags();
+		foreach ($whitelist as $entry)
+		{
+			if ($tag == $this->clean_tag($entry))
+			{
+				return true;
+			}
+		}
+	}
+
+	/**
+	 * Gets all tags from the whitelist
+	 */
+	public function get_whitelist_tags()
+	{
+		return json_decode($this->config_text->get(prefixes::CONFIG . '_whitelist'), true);
+	}
+
+	/**
 	 * Checks if the given tag matches the configured regex for valid tags, Note that the tag is trimmed to 30 characters before the check!
 	 * This method also checks if the tag is whitelisted and/or blacklisted if the lists are enabled.
 	 *
@@ -602,14 +653,9 @@ class tags_manager
 		// check blacklist
 		if ($this->config[prefixes::CONFIG.'_blacklist_enabled'])
 		{
-			$blacklist = json_decode($this->config[prefixes::CONFIG.'_blacklist']);
-			foreach ($blacklist as $entry)
-			{
-				if ($tag == $this->clean_tag($entry))
-				{
-					// tag is regex-conform, but blacklisted => invalid
-					return false;
-				}
+			if ($this->is_on_blacklist($tag)) {
+				// tag is regex-conform, but blacklisted => invalid
+				return false;
 			}
 			// regex conform and not blacklisted. => do nothing here
 		}
@@ -619,14 +665,10 @@ class tags_manager
 		// check whitelist
 		if ($this->config[prefixes::CONFIG.'_whitelist_enabled'])
 		{
-			$whitelist = json_decode($this->config[prefixes::CONFIG.'_whitelist'], true);
-			foreach ($whitelist as $entry)
+			if ($this->is_on_whitelist($tag))
 			{
-				if ($tag == $this->clean_tag($entry))
-				{
-					// tag is regex-conform not blacklisted and in the whitelist => valid
-					return true;
-				}
+				// tag is regex-conform not blacklisted and in the whitelist => valid
+				return true;
 			}
 			// not on whitelist, but whitelist enabled => invalid
 			return false;
