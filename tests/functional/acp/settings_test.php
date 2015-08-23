@@ -75,8 +75,7 @@ class settings_test extends topictags_functional_test_base
 		$this->assertEquals('0', $field->getValue());
 		$field->setValue(1);
 		$crawler = $this->submit($form);
-		// TODO waiting for https://www.phpbb.com/community/viewtopic.php?f=461&t=2300126
-		//$this->assertContains(sprintf($this->lang['TOPICTAGS_DISABLE_IN_ALL_FORUMS_DONE'][1], 1), $crawler->text());
+		$this->assertContains(sprintf($this->lang['TOPICTAGS_DISABLE_IN_ALL_FORUMS_DONE'][1], 1), $crawler->text());
 		// must be disabled in all forums
 		$crawler = $this->goto_settings_page();
 		$this->assertContains($this->lang('TOPICTAGS_DISABLE_IN_ALL_FORUMS_ALREADY'), $crawler->text());
@@ -93,8 +92,7 @@ class settings_test extends topictags_functional_test_base
 		$this->assertEquals('0', $field->getValue());
 		$field->setValue(1);
 		$crawler = $this->submit($form);
-		// TODO waiting for https://www.phpbb.com/community/viewtopic.php?f=461&t=2300126
-		//$this->assertContains(sprintf($this->lang['TOPICTAGS_ENABLE_IN_ALL_FORUMS_DONE'][1], 1), $crawler->text());
+		$this->assertContains(sprintf($this->lang['TOPICTAGS_ENABLE_IN_ALL_FORUMS_DONE'][1], 1), $crawler->text());
 		// must be enabled in all forums
 		$crawler = $this->goto_settings_page();
 		$this->assertContains($this->lang('TOPICTAGS_ENABLE_IN_ALL_FORUMS_ALREADY'), $crawler->text());

@@ -768,7 +768,7 @@ class tags_manager
 		$this->db->sql_query($sql);
 		$affected_rows = $this->db->sql_affectedrows();
 		$this->calc_count_tags();
-		return $affected_rows;
+		return (int) $affected_rows;
 	}
 
 	/**
