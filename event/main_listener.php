@@ -169,7 +169,8 @@ class main_listener implements EventSubscriberInterface
 		{
 			$event_data = $event->get_data();
 			$data = $event_data['data'];
-			if ($this->is_edit_first_post($event_data['mode'], $data))
+			$mode = $event_data['mode'];
+			if ($this->is_new_topic($mode) || $this->is_edit_first_post($mode, $data))
 			{
 				$tags = $this->get_tags_from_post_request();
 				$all_tags = $this->tags_manager->split_valid_tags($tags);
@@ -212,15 +213,24 @@ class main_listener implements EventSubscriberInterface
 				$topic_id = $data['post_data']['topic_id'];
 			}
 
-			$is_new_topic = $mode == 'post';
 			$is_edit_first_post = $topic_id && $this->is_edit_first_post($mode, $data['post_data']);
-			if ($is_new_topic || $is_edit_first_post)
+			if ($this->is_new_topic($mode) || $is_edit_first_post)
 			{
 				$page_data = $this->get_template_data_for_topic($topic_id, $is_edit_first_post);
 				$data['page_data'] = array_merge($data['page_data'], $page_data);
 				$event->set_data($data);
 			}
 		}
+	}
+
+	/**
+	 * Checks whether the mode indicates a new topic or not.
+	 * @param string $mode the mode.
+	 * @return true if mode == post (indicating a new topic), false otherwise
+	 */
+	private function is_new_topic($mode)
+	{
+		return $is_new_topic = $mode == 'post';
 	}
 
 	/**
