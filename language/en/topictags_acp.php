@@ -26,7 +26,7 @@ $lang = array_merge($lang, array(
 $lang = array_merge($lang, array(
 	// forum settings page
 	'ACP_RH_TOPICTAGS_ENABLE'								=> 'Enable RH Topic Tags',
-	'ACP_RH_TOPICTAGS_ENABLE_EXP'							=> 'Whether or not to enable tagging of topics in this forum. (When disabling tagging, the tags are NOT REMOVED from the topics in this forum - so when you enable it again, they are still there; If you really want to delete the tags, then use the "Delete tags from this forum" option.)',
+	'ACP_RH_TOPICTAGS_ENABLE_EXP'							=> 'Whether or not to enable tagging of topics in this forum. (When disabling tagging, the tags are NOT REMOVED from the topics in this forum - so when you enable it again, they are still there; If you really want to delete the tags, then use the “Delete tags from this forum” option.)',
 	'ACP_FORUM_SETTINGS_RH_TOPICTAGS_PRUNE'					=> 'Delete tags from this forum',
 	'ACP_FORUM_SETTINGS_RH_TOPICTAGS_PRUNE_EXP'				=> 'This will DELETE all assignments of tags to the topics of this forum. NOTE: To prevent accidental deletion of tags, you need to disabled tagging for this forum.',
 	'ACP_FORUM_SETTINGS_RH_TOPICTAGS_PRUNE_CONFIRM'			=> 'This option will DELETE all assignments of tags to the topics of this forum and you need to disable tagging for this forum, to perform this action.',
@@ -114,10 +114,10 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_BLACKLIST_EXP'					=> 'List of forbidden tags.<br/>NOTE: All tags that are not conform with the regex are always rejected.',
 
 	'TOPICTAGS_ALLOWED_TAGS_REGEX'				=> 'Regular Expression for allowed tags',
-	'TOPICTAGS_ALLOWED_TAGS_REGEX_EXP'			=> 'WARNING: Do not change this, if you don\'t know what you are doing. <strong>Tags can be 30 characters at maximum and delimiter must be "/"</strong>, please consider this during regex design.<br/>Note that afterwards invalid tags are not searchable, but are still displayed in the topics.<br/>Consider pruning the invalid tags (see maintenance-section).<br/>default: ' . $lang['ACP_RH_TOPICTAGS_REGEX_DEFAULT'],
+	'TOPICTAGS_ALLOWED_TAGS_REGEX_EXP'			=> 'WARNING: Do not change this, if you don\'t know what you are doing. <strong>Tags can be 30 characters at maximum and delimiter must be “/”</strong>, please consider this during regex design.<br/>Note that afterwards invalid tags are not searchable, but are still displayed in the topics.<br/>Consider pruning the invalid tags (see maintenance-section).<br/>default: ' . $lang['ACP_RH_TOPICTAGS_REGEX_DEFAULT'],
 
-	'TOPICTAGS_CONVERT_SPACE_TO_MINUS'			=> 'Convert " " to "-"',
-	'TOPICTAGS_CONVERT_SPACE_TO_MINUS_EXP'		=> 'If set to yes, all spaces (" ") are automatically converted to minus ("-").<br/>NOTE 1: In the regex you must allow "-"; otherwise tags with whitespaces will be rejected.<br/>NOTE 2: Existing tags with spaces will NOT be converted automatically.',
+	'TOPICTAGS_CONVERT_SPACE_TO_MINUS'			=> 'Convert “ ” to “-”',
+	'TOPICTAGS_CONVERT_SPACE_TO_MINUS_EXP'		=> 'If set to yes, all spaces (“ ”) are automatically converted to minus (“-”).<br/>NOTE 1: In the regex you must allow “-”; otherwise tags with whitespaces will be rejected.<br/>NOTE 2: Existing tags with spaces will NOT be converted automatically.',
 
 	'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS'		=> 'Explanation for Users',
 	'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS_EXP'	=> 'This text is shown to the users and should explain which tags are allowed and which not.<br/>default: ' . $lang['ACP_RH_TOPICTAGS_REGEX_EXP_FOR_USERS_DEFAULT'],
@@ -128,14 +128,14 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_ASSIGNMENTS'						=> 'Assignments',
 	'TOPICTAGS_NEW_TAG_NAME'					=> 'New tag name',
 	'TOPICTAGS_NEW_TAG_NAME_EXP'				=> 'Please enter the new tag name.',
-	'TOPICTAGS_TAG_DELETE_CONFIRM'				=> "Are you sure that you want to delete the tag <em>%s</em>? This will delete the tag from <b>all topics</b> where it is assigned. This can not be reverted.",
+	'TOPICTAGS_TAG_DELETE_CONFIRM'				=> 'Are you sure that you want to delete the tag <em>%s</em>? This will delete the tag from <b>all topics</b> where it is assigned. This can not be reverted.',
 	'TOPICTAGS_TAG_DELETED'						=> 'The tag has been deleted.',
 	'TOPICTAGS_MISSING_TAG_ID'					=> 'Missing tag-id.',
 	'TOPICTAGS_TAG_CHANGED'						=> 'The tag has been changed.',
-	'TOPICTAGS_TAG_MERGED'						=> "The tag has been merged with tag '%s'.",
+	'TOPICTAGS_TAG_MERGED'						=> 'The tag has been merged with tag “%s”',
 	'TOPICTAGS_MISSING_TAG_NAMES'				=> 'Missing tag-names.',
-	'TOPICTAGS_TAG_INVALID'						=> 'The tag "%s" is invalid, please check your tag-settings.',
-	'TOPICTAGS_TAG_DOES_NOT_EXIST'				=> 'The tag "%s" does not exist.',
+	'TOPICTAGS_TAG_INVALID'						=> 'The tag “%s” is invalid, please check your tag-settings.',
+	'TOPICTAGS_TAG_DOES_NOT_EXIST'				=> 'The tag “%s” does not exist.',
 	'TOPICTAGS_NO_MODIFICATION'					=> 'The tag was not changed.',
 
 	'TOPICTAGS_SORT_NAME_ASC'					=> 'Tag name A&rArr;Z', // &rArr; is a right-arrow (=>)

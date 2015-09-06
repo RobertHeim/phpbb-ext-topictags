@@ -26,7 +26,7 @@ $lang = array_merge($lang, array(
 $lang = array_merge($lang, array(
 	// forum settings page
 	'ACP_RH_TOPICTAGS_ENABLE'								=> 'Habilitar RH Etiquetas de temas',
-	'ACP_RH_TOPICTAGS_ENABLE_EXP'							=> 'Sea o no habilitado el etiquetado de los temas en este foro. (Al desactivar el etiquetado, las etiquetas no serán eliminadas de los temas en este foro, por lo que cuando se habilite de nuevo, todavía estarán allí, si realmente desea eliminar las etiquetas, utilice la opción "Eliminar las etiquetas de este foro".)',
+	'ACP_RH_TOPICTAGS_ENABLE_EXP'							=> 'Sea o no habilitado el etiquetado de los temas en este foro. (Al desactivar el etiquetado, las etiquetas no serán eliminadas de los temas en este foro, por lo que cuando se habilite de nuevo, todavía estarán allí, si realmente desea eliminar las etiquetas, utilice la opción “Eliminar las etiquetas de este foro”.)',
 	'ACP_FORUM_SETTINGS_RH_TOPICTAGS_PRUNE'					=> 'Eliminar las etiquetas de este foro',
 	'ACP_FORUM_SETTINGS_RH_TOPICTAGS_PRUNE_EXP'				=> 'Esto ELIMINARÁ todas las asignaciones de las etiquetas de los temas de este foro. NOTA: Para evitar el borrado accidental de las etiquetas, es necesario deshabilitar el etiquetado para este foro.',
 	'ACP_FORUM_SETTINGS_RH_TOPICTAGS_PRUNE_CONFIRM'			=> 'Esta opción ELIMINARÁ todas las asignaciones de las etiquetas de los temas de este foro, hay que desactivar el etiquetado de este foro para realizar esta acción.',
@@ -116,8 +116,8 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_ALLOWED_TAGS_REGEX'				=> 'Expresión regular para etiquetas permitidas',
 	'TOPICTAGS_ALLOWED_TAGS_REGEX_EXP'			=> 'ADVERTENCIA: No cambie esto, si no sabe lo que está haciendo. <strong>Las etiquetas pueden ser de 30 caracteres como máximo</strong>, por favor considere esto durante el diseño de expresiones regulares.<br/>Tenga en cuenta que las etiquetas no válidas, no se pueden buscar después, pero todavía se muestran en los temas.<br/>Considere la limpieza de las etiquetas no válidas (ver sección de mantenimiento).<br/>Por defecto: ' . $lang['ACP_RH_TOPICTAGS_REGEX_DEFAULT'],
 
-	'TOPICTAGS_CONVERT_SPACE_TO_MINUS'			=> 'Convertir " " a "-"',
-	'TOPICTAGS_CONVERT_SPACE_TO_MINUS_EXP'		=> 'Si se establece en sí, todos los espacios (" ") se convierten automáticamente a menos ("-").<br/>NOTA 1: En la expresión regular se debe permitir "-"; de lo contrario se rechazarán las etiquetas con espacios en blanco.<br/>NOTA 2: Las etiquetas existentes con espacios NO se convertirán automáticamente.',
+	'TOPICTAGS_CONVERT_SPACE_TO_MINUS'			=> 'Convertir “ ” a “-”',
+	'TOPICTAGS_CONVERT_SPACE_TO_MINUS_EXP'		=> 'Si se establece en sí, todos los espacios (“ ”) se convierten automáticamente a menos (“-”).<br/>NOTA 1: En la expresión regular se debe permitir “-”; de lo contrario se rechazarán las etiquetas con espacios en blanco.<br/>NOTA 2: Las etiquetas existentes con espacios NO se convertirán automáticamente.',
 
 	'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS'		=> 'Explicación para los usuarios',
 	'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS_EXP'	=> 'Este texto se muestra a los usuarios y debe explicar qué etiquetas se permiten, y cuáles no.<br/>Por defecto: ' . $lang['ACP_RH_TOPICTAGS_REGEX_EXP_FOR_USERS_DEFAULT'],
@@ -128,14 +128,14 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_ASSIGNMENTS'						=> 'Asignaciones',
 	'TOPICTAGS_NEW_TAG_NAME'					=> 'Nuevo nombre de etiqueta',
 	'TOPICTAGS_NEW_TAG_NAME_EXP'				=> 'Por favor, introduzca un nuevo nombre de etiqueta.',
-	'TOPICTAGS_TAG_DELETE_CONFIRM'				=> "¿Seguro que quiere eliminar la etiqueta <em>%s</em>? Esto eliminará la etiqueta de <b>todos los temas</b> donde se le asignó. Esto no puede ser revertido.",
+	'TOPICTAGS_TAG_DELETE_CONFIRM'				=> '¿Seguro que quiere eliminar la etiqueta <em>%s</em>? Esto eliminará la etiqueta de <b>todos los temas</b> donde se le asignó. Esto no puede ser revertido.',
 	'TOPICTAGS_TAG_DELETED'						=> 'La etiqueta ha sido borrada.',
 	'TOPICTAGS_MISSING_TAG_ID'					=> 'Falta el ID de la etiqueta.',
 	'TOPICTAGS_TAG_CHANGED'						=> 'La etiqueta ha sido cambiada.',
-	'TOPICTAGS_TAG_MERGED'						=> "La etiqueta se ha fusionado con la etiqueta '%s'.",
+	'TOPICTAGS_TAG_MERGED'						=> 'La etiqueta se ha fusionado con la etiqueta “%s”.',
 	'TOPICTAGS_MISSING_TAG_NAMES'				=> 'Faltan nombres de etiquetas.',
-	'TOPICTAGS_TAG_INVALID'						=> 'La etiqueta "%s" no es válida, por favor verifique los ajustes de etiquetas.',
-	'TOPICTAGS_TAG_DOES_NOT_EXIST'				=> 'La etiqueta "%s" no existe.',
+	'TOPICTAGS_TAG_INVALID'						=> 'La etiqueta “%s” no es válida, por favor verifique los ajustes de etiquetas.',
+	'TOPICTAGS_TAG_DOES_NOT_EXIST'				=> 'La etiqueta “%s” no existe.',
 	'TOPICTAGS_NO_MODIFICATION'					=> 'La etiqueta no fue cambiada.',
 
 	'TOPICTAGS_SORT_NAME_ASC'					=> 'Nombre de etiqueta A&rArr;Z', // &rArr; is a right-arrow (=>)
