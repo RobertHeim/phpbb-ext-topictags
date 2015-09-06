@@ -32,8 +32,11 @@ class main
 	/** @var \phpbb\event\dispatcher */
 	protected $phpbb_dispatcher;
 
-	/** @var \Symfony\Component\DependencyInjection\ContainerInterface */
-	protected $phpbb_container;
+	/** @var \phpbb\pagination */
+	protected $pagination;
+
+	/** @var \phpbb\content_visibility */
+	protected $content_visibility;
 
 	protected $php_ext;
 
@@ -54,25 +57,27 @@ class main
 						\phpbb\user $user,
 						\phpbb\auth\auth $auth,
 						\phpbb\event\dispatcher $phpbb_dispatcher,
-						\Symfony\Component\DependencyInjection\ContainerInterface $phpbb_container,
+						\phpbb\pagination $pagination,
+						\phpbb\content_visibility $content_visibility,
 						$php_ext,
 						$phpbb_root_path,
 						\robertheim\topictags\service\tags_manager $tags_manager,
 						\robertheim\topictags\service\tagcloud_manager $tagcloud_manager
 	)
 	{
-		$this->config			= $config;
-		$this->template			= $template;
-		$this->helper			= $helper;
-		$this->request			= $request;
-		$this->user				= $user;
-		$this->auth				= $auth;
-		$this->phpbb_dispatcher	= $phpbb_dispatcher;
-		$this->phpbb_container	= $phpbb_container;
-		$this->php_ext			= $php_ext;
-		$this->phpbb_root_path	= $phpbb_root_path;
-		$this->tags_manager		= $tags_manager;
-		$this->tagcloud_manager	= $tagcloud_manager;
+		$this->config = $config;
+		$this->template = $template;
+		$this->helper = $helper;
+		$this->request = $request;
+		$this->user = $user;
+		$this->auth = $auth;
+		$this->phpbb_dispatcher = $phpbb_dispatcher;
+		$this->pagination = $pagination;
+		$this->content_visibility = $content_visibility;
+		$this->php_ext = $php_ext;
+		$this->phpbb_root_path = $phpbb_root_path;
+		$this->tags_manager = $tags_manager;
+		$this->tagcloud_manager = $tagcloud_manager;
 	}
 
 	/**
@@ -131,7 +136,7 @@ class main
 		}
 		else
 		{
-			$pagination		= $this->phpbb_container->get('pagination');
+			$pagination		= $this->pagination;
 
 			$start			= $this->request->variable('start', 0);
 			$limit			= $this->config['topics_per_page'];
@@ -172,14 +177,13 @@ class main
 	 */
 	private function display_topics($topics)
 	{
-		$phpbb_content_visibility = $this->phpbb_container->get('content.visibility');
 		include_once($this->phpbb_root_path . 'includes/functions_display.' . $this->php_ext);
 
-		$pagination = $this->phpbb_container->get('pagination');
+		$pagination = $this->pagination;
 
 		foreach ($topics as $t)
 		{
-			$topic = new topic($t, $this->user, $this->auth, $phpbb_content_visibility, $this->phpbb_root_path, $this->php_ext);
+			$topic = new topic($t, $this->user, $this->auth, $this->content_visibility, $this->phpbb_root_path, $this->php_ext);
 
 			// Send vars to template
 			$topic_row = array(

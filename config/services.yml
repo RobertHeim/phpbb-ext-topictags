@@ -30,7 +30,8 @@ services:
             - @user
             - @auth
             - @dispatcher
-            - @service_container
+            - @pagination
+            - @content.visibility
             - %core.php_ext%
             - %core.root_path%
             - @robertheim.topictags.tags_manager
