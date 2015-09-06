@@ -17,16 +17,22 @@ use phpbb\json_response;
 class main
 {
 
+	/** @var \phpbb\config\config */
 	protected $config;
 
+	/** @var \phpbb\template\template */
 	protected $template;
 
+	/** @var \phpbb\controller\helper */
 	protected $helper;
 
+	/** @var \phpbb\request\request */
 	protected $request;
 
+	/** @var \phpbb\user */
 	protected $user;
 
+	/** @var \phpbb\auth\auth */
 	protected $auth;
 
 	/** @var \phpbb\event\dispatcher */
@@ -38,12 +44,16 @@ class main
 	/** @var \phpbb\content_visibility */
 	protected $content_visibility;
 
+	/** @var string */
 	protected $php_ext;
 
+	/** @var string */
 	protected $phpbb_root_path;
 
+	/** @var \robertheim\topictags\service\tags_manager */
 	protected $tags_manager;
 
+	/** @var \robertheim\topictags\service\tagcloud_manager */
 	protected $tagcloud_manager;
 
 	/**

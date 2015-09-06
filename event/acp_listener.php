@@ -30,10 +30,13 @@ class acp_listener implements EventSubscriberInterface
 		);
 	}
 
+	/** @var \phpbb\request\request_interface */
 	private $request;
 
+	/** @var \phpbb\user */
 	private $user;
 
+	/** @var \robertheim\topictags\service\tags_manager */
 	private $tags_manager;
 
 	/**

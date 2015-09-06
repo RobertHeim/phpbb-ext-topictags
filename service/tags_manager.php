@@ -24,21 +24,22 @@ use robertheim\topictags\service\db_helper;
 class tags_manager
 {
 
-	/**
-	 * @var \phpbb\db\driver\driver_interface
-	 */
+	/** @var \phpbb\db\driver\driver_interface */
 	private $db;
+
+	/** @var \phpbb\config\config */
 	private $config;
-	/**
-	 * @var \phpbb\config\db_text
-	 */
+
+	/** @var \phpbb\config\db_text */
 	private $config_text;
+
+	/** @var \phpbb\auth\auth */
 	private $auth;
 
-	/**
-	 * @var db_helper
-	 */
+	/** @var db_helper */
 	private $db_helper;
+
+	/** @var string */
 	private $table_prefix;
 
 	public function __construct(

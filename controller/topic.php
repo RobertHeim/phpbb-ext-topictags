@@ -14,40 +14,69 @@ namespace robertheim\topictags\controller;
 */
 class topic
 {
+	/** @var array */
 	private $topic_row;
+
+	/** @var \phpbb\user */
 	private $user;
+
+	/** @var \phpbb\auth\auth */
 	private $auth;
+
+	/** @var string */
 	private $phpbb_root_path;
+
+	/** @var string */
 	private $php_ext;
 
+	/** @var int */
 	private $topic_id;
 
 	// unread_topic should be based on the users topic tracking info
 	// this wont be supported until phpbb code is less complex
+	/** @var boolean */
 	private $unread_topic = false;
 
+	/** @var string */
 	private $folder_img = '';
+	/** @var string */
 	private $folder_alt = '';
+	/** @var string */
 	private $topic_type = '';
 
+	/** @var int */
 	private $forum_id;
+
+	/** @var mixed */
 	private $replies;
 
+	/** @var string */
 	private $view_topic_url_params;
+	/** @var string */
 	private $view_topic_url;
 
+	/** @var string */
 	private $newest_post_url;
+	/** @var string */
 	private $last_post_url;
 
+	/** @var boolean */
 	private $topic_unapproved;
+	/** @var boolean */
 	private $posts_unapproved;
+	/** @var boolean */
 	private $topic_deleted;
 
 	/**
 	 *
 	 * @param array $topic_row a db topic row
 	 */
-	public function __construct(array $topic_row, $user, $auth, $phpbb_content_visibility, $phpbb_root_path, $php_ext)
+	public function __construct(array $topic_row,
+		\phpbb\user $user,
+		\phpbb\auth\auth $auth,
+		\phpbb\content_visibility $phpbb_content_visibility,
+		$phpbb_root_path,
+		$php_ext)
 	{
 		$this->user = $user;
 		$this->auth = $auth;

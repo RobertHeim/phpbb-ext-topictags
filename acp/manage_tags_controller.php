@@ -20,12 +20,22 @@ use \phpbb\json_response;
 class manage_tags_controller
 {
 
+	/** @var \phpbb\config\config */
 	private $config;
+
+	/** @var \phpbb\request\request */
 	private $request;
+
+	/** @var \phpbb\user */
 	private $user;
+
+	/** @var \phpbb\template\template */
 	private $template;
+
+	/** @var \phpbb\pagination */
 	private $pagination;
 
+	/** @var \robertheim\topictags\service\tags_manager */
 	private $tags_manager;
 
 	const SORT_ASC        = 0;

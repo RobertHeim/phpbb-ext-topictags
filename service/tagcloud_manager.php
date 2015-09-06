@@ -35,6 +35,7 @@ class tagcloud_manager
 	/** @var \phpbb\controller\helper */
 	private $helper;
 
+	/** @var string */
 	private $table_prefix;
 
 	public function __construct(

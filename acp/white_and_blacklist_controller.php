@@ -17,7 +17,7 @@ use robertheim\topictags\prefixes;
  */
 class white_and_blacklist_controller
 {
-
+	/** @var \phpbb\config\config */
 	private $config;
 
 	/**
@@ -25,12 +25,16 @@ class white_and_blacklist_controller
 	 */
 	private $config_text;
 
+	/** @var \phpbb\request\request */
 	private $request;
 
+	/** @var \phpbb\user */
 	private $user;
 
+	/** @var \phpbb\template\template */
 	private $template;
 
+	/** @var \robertheim\topictags\service\tags_manager */
 	private $tags_manager;
 
 	public function __construct(

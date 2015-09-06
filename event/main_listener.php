@@ -37,20 +37,28 @@ class main_listener implements EventSubscriberInterface
 		);
 	}
 
+	/** @var \phpbb\config\config */
 	protected $config;
 
+	/** @var \robertheim\topictags\service\tags_manager */
 	protected $tags_manager;
 
+	/** @var \phpbb\controller\helper */
 	protected $helper;
 
+	/** @var \phpbb\request\request */
 	protected $request;
 
+	/** @var \phpbb\user */
 	protected $user;
 
+	/** @var \phpbb\template\template */
 	protected $template;
 
+	/** @var \phpbb\auth\auth */
 	protected $auth;
 
+	/** @var \robertheim\topictags\service\tagcloud_manager */
 	protected $tagcloud_manager;
 
 	/**
