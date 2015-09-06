@@ -14,12 +14,17 @@ use robertheim\topictags\service\tags_manager;
 class tags_manager_test extends \phpbb_database_test_case
 {
 
+	/** @var \phpbb\auth\auth */
 	private $auth;
 
-	/**
-	 * @var \phpbb\config\db_text
-	 */
+	/** @var \phpbb\config\db_text */
 	private $config_text;
+
+	/** @var \phpbb\db\driver\driver_interface */
+	protected $db;
+
+	/** @var \robertheim\topictags\service\tags_manager */
+	protected $tags_manager;
 
 	protected function setUp()
 	{
@@ -47,18 +52,6 @@ class tags_manager_test extends \phpbb_database_test_case
 			'robertheim/topictags'
 		);
 	}
-
-	/**
-	 *
-	 * @var \phpbb\db\driver\driver_interface
-	 */
-	protected $db;
-
-	/**
-	 *
-	 * @var \robertheim\topictags\service\tags_manager
-	 */
-	protected $tags_manager;
 
 	public function test_remove_all_tags_from_topic()
 	{
