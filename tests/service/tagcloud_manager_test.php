@@ -13,18 +13,19 @@ use robertheim\topictags\service\tagcloud_manager;
 
 class tagcloud_manager_test extends \phpbb_database_test_case
 {
-	/**
-	 *
-	 * @var \robertheim\topictags\service\tagcloud_manager
-	 */
+	/** @var \robertheim\topictags\service\tagcloud_manager */
 	protected $tagcloud_manager;
 
+	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
+	/** @var \phpbb\controller\helper */
 	protected $helper;
 
+	/** @var \phpbb\template\template */
 	protected $template;
 
+	/** @var \phpbb\user */
 	protected $user;
 
 	protected function setUp()
