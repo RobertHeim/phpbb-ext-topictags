@@ -16,12 +16,12 @@
 	<fieldset>
 		<legend>{L_TOPICTAGS_CONFIG_TAGS}</legend>
 		<dl>
-			<dt><label for="robertheim_topictags_whitelist_enabled">{L_TOPICTAGS_ENABLE_WHITELIST}:</label><br /><span>{L_TOPICTAGS_ENABLE_WHITELIST_EXP}</span></dt>
+			<dt><label for="robertheim_topictags_whitelist_enabled">{L_TOPICTAGS_ENABLE_WHITELIST}{L_COLON}</label><br /><span>{L_TOPICTAGS_ENABLE_WHITELIST_EXP}</span></dt>
 			<dd><input type="radio" class="radio" name="robertheim_topictags_whitelist_enabled" value="1" <!-- IF TOPICTAGS_WHITELIST_ENABLED -->checked="checked"<!-- ENDIF -->/> {L_YES} &nbsp; 
 				<input type="radio" class="radio" name="robertheim_topictags_whitelist_enabled" value="0" <!-- IF not TOPICTAGS_WHITELIST_ENABLED -->checked="checked"<!-- ENDIF -->/> {L_NO}</dd>
 		</dl>
 		<dl>
-			<dt><label for="robertheim_topictags_whitelist">{L_TOPICTAGS_WHITELIST}:</label><br /><span>{L_TOPICTAGS_WHITELIST_EXP}</span></dt>
+			<dt><label for="robertheim_topictags_whitelist">{L_TOPICTAGS_WHITELIST}{L_COLON}</label><br /><span>{L_TOPICTAGS_WHITELIST_EXP}</span></dt>
 			<dd><!-- Cannot put tags here, because overflow:hidden of dl-tag --></dd>
 		</dl>
 		<div style="width:40%; margin-top:-45px;margin-left:46%" ng-app="rhTopicTagsInputApp" ng-controller="rhTopicTagsInputCtrl" data-ng-init="init('{TOPICTAGS_WHITELIST}')">
