@@ -125,7 +125,7 @@ class main
 		{
 			// no valid tags
 			$this->template->assign_var('NO_TOPICS_FOR_TAG', $this->user->lang('RH_TOPICTAGS_NO_TOPICS_FOR_NO_TAG'));
-			return $this->helper->render('show_tag.html', 'Tag-' . $this->user->lang('SEARCH'));
+			return $this->helper->render('show_tag.html', $this->user->lang('RH_TOPICTAGS_TAG_SEARCH'));
 		}
 
 		$topics_count	= $this->tags_manager->count_topics_by_tags($tags, $mode, $casesensitive);
@@ -167,7 +167,7 @@ class main
 
 			$this->display_topics($topics);
 		} // else
-		return $this->helper->render('show_tag.html', 'Tag-' . $this->user->lang('SEARCH'));
+		return $this->helper->render('show_tag.html', $this->user->lang('RH_TOPICTAGS_TAG_SEARCH'));
 	}
 
 	/**
@@ -270,7 +270,7 @@ class main
 	 */
 	public function suggest_tags()
 	{
-		if ($this->request->is_ajax())
+		if (false && $this->request->is_ajax())
 		{
 			$data = json_decode(file_get_contents('php://input'), true);
 			$query = $data['query'];
@@ -280,6 +280,6 @@ class main
 			$json_response->send($tags);
 		}
 		// fake a 404
-		return $this->helper->error('No route found for "' . $this->helper->get_current_url() . '"' , 404);
+		return $this->helper->error($this->user->lang('RH_TOPICTAGS_TAG_SUGGEST_TAG_ROUTE_ERROR', $this->helper->get_current_url()) , 404);
 	}
 }
