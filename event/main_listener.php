@@ -346,6 +346,7 @@ class main_listener implements EventSubscriberInterface
 					$this->template->assign_var('S_RH_TOPICTAGS_INCLUDE_CSS', true);
 					// we cannot just use 'small_tag.html' because in viewforum.php twig only searches in phpbb_root/styles/prosilver/template,
 					// but we need a template from our extension.
+					// Bug-Report: https://tracker.phpbb.com/browse/PHPBB3-14152
 					$rendered_tags = $this->template->assign_display('./../../../ext/robertheim/topictags/styles/all/template/small_tag.html');
 					// remove temporary data
 					$this->template->destroy_block_vars('rh_tags_tmp');
