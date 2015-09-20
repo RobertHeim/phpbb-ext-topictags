@@ -280,7 +280,7 @@ class main
 	 */
 	public function suggest_tags()
 	{
-		if (false && $this->request->is_ajax())
+		if ($this->request->is_ajax())
 		{
 			$data = json_decode(file_get_contents('php://input'), true);
 			$query = $data['query'];
