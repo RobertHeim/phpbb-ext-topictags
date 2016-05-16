@@ -3,10 +3,6 @@ sudo: required
 
 matrix:
   include:
-    - php: 5.3.3
-      env: DB=mysqli
-    - php: 5.3
-      env: DB=mysqli # MyISAM
     - php: 5.4
       env: DB=mysqli
     - php: 5.4
@@ -36,7 +32,7 @@ env:
     - IMAGE_ICC="1"        # Should we run icc profile sniffer on your images?
     - COVERAGE="1"         # Should we send coverage?
     - EPV="1"              # Should we run EPV (Extension Pre Validator) on your code?
-    - PHPBB_BRANCH="3.1.x"
+    - PHPBB_BRANCH="3.2.x"
 
 branches:
   only:
