@@ -25,7 +25,7 @@ services:
         arguments:
             - '@config'
             - '@template'
-            - '@controlle.helper'
+            - '@controller.helper'
             - '@request'
             - '@user'
             - '@auth'
