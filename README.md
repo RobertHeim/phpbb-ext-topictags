@@ -4,7 +4,7 @@
 phpbb-ext-topictags
 ===================
 
-phpBB 3.1 extension, that adds the ability to tag topics with key words.
+phpBB 3.2 extension, that adds the ability to tag topics with key words.
 
 ## Features
 
