@@ -1,10 +1,10 @@
-[![Build Status](https://travis-ci.org/RobertHeim/phpbb-ext-topictags.svg?branch=master)](https://travis-ci.org/RobertHeim/phpbb-ext-topictags)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/RobertHeim/phpbb-ext-topictags/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/RobertHeim/phpbb-ext-topictags/?branch=master)
+[![Build Status](https://travis-ci.org/RobertHeim/phpbb-ext-topictags.svg?branch=3.1.x)](https://travis-ci.org/RobertHeim/phpbb-ext-topictags)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/RobertHeim/phpbb-ext-topictags/badges/quality-score.png?b=3.1.x)](https://scrutinizer-ci.com/g/RobertHeim/phpbb-ext-topictags/?branch=3.1.x)
 
 phpbb-ext-topictags
 ===================
 
-phpBB 3.2 extension, that adds the ability to tag topics with key words.
+phpBB 3.1 extension, that adds the ability to tag topics with key words.
 
 ## Features
 
