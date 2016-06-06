@@ -1,0 +1,18 @@
+<!-- IF S_RH_TOPICTAGS_INCLUDE_NG_TAGS_INPUT -->
+	<!-- IF S_ALLOW_CDN -->
+		<!-- INCLUDEJS //ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.min.js -->
+	<!-- ELSE -->
+		<!-- INCLUDEJS @robertheim_topictags/../angular/angular.min.js -->
+	<!-- ENDIF -->
+
+	<!-- IF 0 -->
+		The ng-tags-input has an important bug regarding regex modifiers. We implemented a custom
+		workaround for version 2.1.1-1, shipped with the extension. There exists a PR on GitHub
+		which still is not merged https://github.com/mbenford/ngTagsInput/issues/278 .
+		When the PR is merged we should update the whole lib and provide CDN, e.g., for 2.1.1-1:
+		INCLUDEJS //cdnjs.cloudflare.com/ajax/libs/ng-tags-input/2.1.1-1/ng-tags-input.min.js
+	<!-- ENDIF -->
+	<!-- INCLUDEJS @robertheim_topictags/../angular/ng-tags-input.2.1.1-1.workaroundissue278.min.js -->
+
+	<!-- INCLUDEJS @robertheim_topictags/../angular/taginput.app.js -->
+<!-- ENDIF -->

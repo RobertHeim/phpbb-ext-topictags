@@ -117,7 +117,7 @@ class white_and_blacklist_controller
 				'TOPICTAGS_' . $list_name_upper . '_ENABLED'	=> $this->config[prefixes::CONFIG . '_' . $list_name . '_enabled'],
 				'TOPICTAGS_' . $list_name_upper					=> $list,
 				'S_RH_TOPICTAGS_INCLUDE_NG_TAGS_INPUT'			=> true,
-				'S_RH_TOPICTAGS_INCLUDE_CSS'					=> true,
+				'S_RH_TOPICTAGS_INCLUDE_CSS_FROM_ACP'			=> true,
 				'TOPICTAGS_CONVERT_SPACE_TO_MINUS'				=> $this->config[prefixes::CONFIG . '_convert_space_to_minus'] ? 'true' : 'false',
 				'S_ERROR'										=> (sizeof($errors)) ? true : false,
 				'ERROR_MSG'										=> implode('<br />', $errors),
