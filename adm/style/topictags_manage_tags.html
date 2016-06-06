@@ -1,6 +1,12 @@
 <!-- INCLUDE overall_header.html -->
 
 <!-- INCLUDEJS jquery.jeditable.mini.js -->
+<script>
+var rh_topictags_lang_error = '{LA_ACP_RH_TOPICTAGS_ERROR}';
+var rh_topictags_lang_unknown_error = '{LA_ACP_RH_TOPICTAGS_UNKNOWN_ERROR}';
+var rh_topictags_lang_ok = '{LA_OK}';
+var rh_topictags_lang_cancel = '{LA_CANCEL}';
+</script>
 <!-- INCLUDEJS manage_tags.js -->
 
 <a id="maincontent"></a>
@@ -66,7 +72,7 @@
 			<td><span class="topictags_editable_tag">{tags.NAME}</span></td>
 			<td><span class="tag_count">{tags.ASSIGNMENTS}</span></td>
 			<td>
-				<a href="{tags.U_EDIT_TAG}" class="topictags_edit_tags">{ICON_EDIT}</a> 
+				<a href="{tags.U_EDIT_TAG}" class="topictags_edit_tag">{ICON_EDIT}</a> 
 				<a href="{tags.U_DELETE_TAG}" data-ajax="topictags.delete_tag">{ICON_DELETE}</a>
 			</td>
 		</tr>

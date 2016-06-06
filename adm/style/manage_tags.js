@@ -12,11 +12,11 @@ $('.topictags_edit_tag').click(function(e) {
  * btoa() is not utf8 safe by default
  */
 function utf8_to_b64( str ) {
-    return window.btoa(encodeURIComponent(str));
+	return window.btoa(encodeURIComponent(str));
 }
 
 function b64_to_utf8( str ) {
-    return decodeURIComponent(window.atob(str));
+	return decodeURIComponent(window.atob(str));
 }
 
 $('.topictags_editable_tag').editable(function(value, settings) {
@@ -57,13 +57,13 @@ $('.topictags_editable_tag').editable(function(value, settings) {
 			}
 		} else {
 			if (undefined == data.error_msg) {
-				data.error_msg = utf8_to_b64('Unknown error. See javascript-console for server response.');
+				data.error_msg = utf8_to_b64(rh_topictags_lang_unknown_error);
 			}
 			phpbb.alert('', b64_to_utf8(data.error_msg));
 			tag.text(old_tag);
 		}
 	}).fail(function() {
-		phpbb.alert('Error', 'Unknown error. See javascript-console for server response.');
+		phpbb.alert(rh_topictags_lang_error, rh_topictags_lang_unknown_error);
 		tag.text(old_tag);
 	}).always(function() {
 		phpbb_indicator.hide();
@@ -71,6 +71,6 @@ $('.topictags_editable_tag').editable(function(value, settings) {
 	return (value);
 }, {
 	type : 'text',
-	submit : 'OK',
-	cancel : 'X',
+	submit : rh_topictags_lang_ok,
+	cancel : rh_topictags_lang_cancel,
 });
