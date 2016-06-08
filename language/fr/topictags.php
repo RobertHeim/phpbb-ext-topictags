@@ -43,4 +43,8 @@ $lang = array_merge($lang, array(
 		2 => 'Affichage des %d premières balises.',
 	),
 
+	'RH_TOPICTAGS_TAG_SEARCH' => 'Recherche de balises',
+
+	'RH_TOPICTAGS_TAG_SUGGEST_TAG_ROUTE_ERROR' => 'Pas de route trouvée pour “%s”',
+
 ));

@@ -31,6 +31,8 @@ $lang = array_merge($lang, array(
 	'ACP_FORUM_SETTINGS_RH_TOPICTAGS_PRUNE_EXP'				=> 'Cette option SUPPRIME toutes les balises attribuées aux sujets. NB : pour éviter une suppression accidentelle des balises, il est nécessaire d\'inhiber tout d\'abord la fonction pour ce forum.',
 	'ACP_FORUM_SETTINGS_RH_TOPICTAGS_PRUNE_CONFIRM'			=> 'Cette option SUPPRIME toutes les balises attribuées aux sujets de ce forum. Il est nécessaire d\'inhiber tout d\'abord la fonction pour ce forum.',
 	'ACP_RH_TOPICTAGS_PRUNING_REQUIRES_TAGGING_DISABLED'	=> 'Pour éviter une suppression accidentelle de balises, vous devez d\'abord inhiber la fonction, puis supprimer les balises.',
+	'ACP_RH_TOPICTAGS_ERROR'								=> 'Erreur',
+	'ACP_RH_TOPICTAGS_UNKNOWN_ERROR'						=> 'Erreur inconnue. Consultez la console javascript pour connaître la réponse du serveur.',
 
 	// config
 	'TOPICTAGS_INSTALLED'				=> 'Version installée : v%s',
@@ -123,7 +125,7 @@ $lang = array_merge($lang, array(
 	'TOPICTAGS_ALLOWED_TAGS_EXP_FOR_USERS_EXP'	=> 'Ce texte est affiché aux utilisateurs et devrait expliquer les balises autorisées et les balises interdites.<br/>Valeur par défaut : ' . $lang['ACP_RH_TOPICTAGS_REGEX_EXP_FOR_USERS_DEFAULT'],
 
 	'TOPICTAGS_MANAGE_TAGS_EXP'					=> 'Ce tableau affiche les balises existantes. Vous pouvez éditer chaque balise ou la supprimer (et avec elle toutes les attributions). Vous pouvez également fusionner des balises en éditant une balise et en lui donnant le même nom qu\'une autre - elles sont alors fusionnées automatiquement.',
-	'TOPICTAGS_NO_TAGS'							=> 'aucune balise n\'est définie',
+	'TOPICTAGS_NO_TAGS'							=> 'Aucune balise n\'est définie',
 	'TOPICTAGS_TAG'								=> 'Balise',
 	'TOPICTAGS_ASSIGNMENTS'						=> 'Attributions',
 	'TOPICTAGS_NEW_TAG_NAME'					=> 'Nouveau nom',
