@@ -147,7 +147,7 @@ class main_listener implements EventSubscriberInterface
 	 */
 	public function modify_posting_parameters($event)
 	{
-		if ($this->auth->acl_get(permissions::USE_TAGS, permissions::ADMIN_EDIT_TAGS, permissions::MOD_EDIT_TAGS))
+		if ($this->auth->acl_gets(permissions::USE_TAGS, permissions::ADMIN_EDIT_TAGS, permissions::MOD_EDIT_TAGS))
 		{
 
 			$data = $event->get_data();
@@ -173,7 +173,7 @@ class main_listener implements EventSubscriberInterface
 	 */
 	public function submit_post_end($event)
 	{
-		if ($this->auth->acl_get(permissions::USE_TAGS, permissions::ADMIN_EDIT_TAGS, permissions::MOD_EDIT_TAGS))
+		if ($this->auth->acl_gets(permissions::USE_TAGS, permissions::ADMIN_EDIT_TAGS, permissions::MOD_EDIT_TAGS))
 		{
 			$event_data = $event->get_data();
 			$data = $event_data['data'];
@@ -197,7 +197,7 @@ class main_listener implements EventSubscriberInterface
 	 */
 	public function posting_modify_template_vars($event)
 	{
-		if ($this->auth->acl_get(permissions::USE_TAGS, permissions::ADMIN_EDIT_TAGS, permissions::MOD_EDIT_TAGS))
+		if ($this->auth->acl_gets(permissions::USE_TAGS, permissions::ADMIN_EDIT_TAGS, permissions::MOD_EDIT_TAGS))
 		{
 			$data = $event->get_data();
 			$forum_id = $data['forum_id'];
