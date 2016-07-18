@@ -104,3 +104,11 @@ and (max-width : 480px)
 		display:	block;
 	}
 }
+
+dl.row-item {
+    background-position: 10px 50%;
+    background-repeat: no-repeat;
+}
+dl.row-item dt .list-inner {
+    padding-left: 45px;
+}
