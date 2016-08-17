@@ -99,6 +99,11 @@ class topic
 		$this->last_post_url	= append_sid("{$this->phpbb_root_path}viewtopic.{$this->php_ext}", $this->view_topic_url_params . '&amp;p=' . $topic_row['topic_last_post_id']) . '#p' . $topic_row['topic_last_post_id'];
 
 		$this->replies = $phpbb_content_visibility->get_count('topic_posts', $topic_row, $this->forum_id) - 1;
+
+		if (!function_exists('topic_status'))
+		{
+			include ($this->phpbb_root_path . 'includes/functions_display.' . $this->php_ext);
+		}
 		// Get folder img, topic status/type related information
 		topic_status($topic_row, $this->replies, $this->unread_topic(), $this->folder_img, $this->folder_alt, $this->topic_type);
 
