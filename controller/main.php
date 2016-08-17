@@ -98,7 +98,7 @@ class main
 	public function show()
 	{
 		$this->tagcloud_manager->assign_tagcloud_to_template(-1);
-		return $this->helper->render('tags.html', 'Tags');
+		return $this->helper->render('tags.html', $this->user->lang('RH_TOPICTAGS'));
 	}
 
 	/**
@@ -187,8 +187,6 @@ class main
 	 */
 	private function display_topics($topics)
 	{
-		include_once($this->phpbb_root_path . 'includes/functions_display.' . $this->php_ext);
-
 		$pagination = $this->pagination;
 
 		foreach ($topics as $t)
