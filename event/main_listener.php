@@ -31,6 +31,7 @@ class main_listener implements EventSubscriberInterface
 			'core.posting_modify_template_vars'              => 'posting_modify_template_vars',
 			'core.viewforum_modify_topicrow'                 => 'viewforum_modify_topicrow',
 			'robertheim.topictags.viewforum_modify_topicrow' => 'viewforum_modify_topicrow',
+			'core.search_modify_tpl_ary'			 => 'search_modify_tpl_ary',
 			'core.viewtopic_assign_template_vars_before'     => 'viewtopic_assign_template_vars_before',
 			'core.submit_post_end'                           => 'submit_post_end',
 			'core.delete_topics_before_query'                => 'delete_topics_before_query',
@@ -351,6 +352,37 @@ class main_listener implements EventSubscriberInterface
 					// assign the template data
 					$data['topic_row']['RH_TOPICTAGS_TAGS'] = $rendered_tags;
 
+					$event->set_data($data);
+				}
+			}
+		}
+	}
+	
+	public function search_modify_tpl_ary($event)
+	{
+		if ($this->config[prefixes::CONFIG.'_display_tags_in_viewforum'])
+		{
+			$data = $event->get_data();
+			
+			$topic_id = (int) $data['row']['topic_id'];
+			$forum_id = (int) $data['row']['forum_id'];
+
+			if ($this->tags_manager->is_tagging_enabled_in_forum($forum_id))
+			{
+				$tags = $this->tags_manager->get_assigned_tags($topic_id);
+				if (!empty($tags))
+				{
+					// we cannot use assign_block_vars('topicrow.tags', ...) here, because the block 'topicrow' is not yet assigned
+					// add links
+					$this->assign_tags_to_template('rh_tags_tmp', $tags);
+					// small_tag.html might want to use our extension's css.
+					$this->template->assign_var('S_RH_TOPICTAGS_INCLUDE_CSS', true);
+					$rendered_tags = $this->template->assign_display('@robertheim_topictags/small_tag.html');
+					// remove temporary data
+					$this->template->destroy_block_vars('rh_tags_tmp');
+
+					// assign the template data
+					$data['tpl_ary']['RH_TOPICTAGS_TAGS'] = $rendered_tags;
 					$event->set_data($data);
 				}
 			}
