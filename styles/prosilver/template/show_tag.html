@@ -47,9 +47,11 @@
 		<!-- EVENT viewforum_body_topic_row_before -->
 		<li class="row<!-- IF topicrow.S_ROW_COUNT is even --> bg1<!-- ELSE --> bg2<!-- ENDIF --><!-- IF topicrow.S_POST_GLOBAL --> global-announce<!-- ENDIF --><!-- IF topicrow.S_POST_ANNOUNCE --> announce<!-- ENDIF --><!-- IF topicrow.S_POST_STICKY --> sticky<!-- ENDIF --><!-- IF topicrow.S_TOPIC_REPORTED --> reported<!-- ENDIF -->">
 			<!-- EVENT viewforum_body_topic_row_prepend -->
-			<dl class="row-item {topicrow.TOPIC_IMG_STYLE}">
-				<dt<!-- IF topicrow.TOPIC_ICON_IMG and S_TOPIC_ICONS --> style="background-image: url({T_ICONS_PATH}{topicrow.TOPIC_ICON_IMG}); background-repeat: no-repeat;"<!-- ENDIF --> title="{topicrow.TOPIC_FOLDER_IMG_ALT}">
+			<dl title="{topicrow.TOPIC_FOLDER_IMG_ALT}">
+				<dt<!-- IF topicrow.TOPIC_ICON_IMG and S_TOPIC_ICONS --> style="background-image: url({T_ICONS_PATH}{topicrow.TOPIC_ICON_IMG}); background-repeat: no-repeat;"<!-- ENDIF --> class="row-item {topicrow.TOPIC_IMG_STYLE}">
 					<!-- IF topicrow.S_UNREAD_TOPIC and not S_IS_BOT --><a href="{topicrow.U_NEWEST_POST}" class="row-item-link"></a><!-- ENDIF -->
+				</dt>
+				<dd>
 					<div class="list-inner">
 						<!-- EVENT topiclist_row_prepend -->
 						<!-- IF topicrow.S_UNREAD_TOPIC and not S_IS_BOT -->
@@ -108,7 +110,7 @@
 
 						<!-- EVENT topiclist_row_append -->
 					</div>
-				</dt>
+				</dd>
 				<dd class="posts">{topicrow.REPLIES} <dfn>{L_REPLIES}</dfn></dd>
 				<dd class="views">{topicrow.VIEWS} <dfn>{L_VIEWS}</dfn></dd>
 				<dd class="lastpost">
