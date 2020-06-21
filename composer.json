@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "Enables tagging of topics",
 	"homepage": "https://github.com/RobertHeim/phpbb-ext-topictags",
-	"version": "2.0.0",
+	"version": "3.0.0",
 	"time": "2014-05-30",
 	"keywords": ["phpbb", "extension", "topic tags", "tags", "tag", "tagging", "rh"],
 	"license": "GPL-2.0",
@@ -24,7 +24,7 @@
 	"extra": {
 		"display-name": "RH Topic Tags",
 		"soft-require": {
-			"phpbb/phpbb": ">=3.2"
+			"phpbb/phpbb": ">=3.3"
 		}
 	}
 }

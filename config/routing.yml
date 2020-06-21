@@ -1,11 +1,11 @@
 robertheim_topictags_controller:
-    pattern: /tags
+    path: /tags
     defaults: { _controller: robertheim.topictags.controller:show }
 robertheim_topictags_show_tag_controller:
-    pattern: /tag/{tags}/{mode}/{casesensitive}
+    path: /tag/{tags}/{mode}/{casesensitive}
     defaults: { _controller: robertheim.topictags.controller:show_tag, mode: 'AND', casesensitive : false}
 robertheim_topictags_suggest_tags_controller:
-    pattern: /tags/suggest
+    path: /tags/suggest
     defaults: { _controller: robertheim.topictags.controller:suggest_tags }
     methods:  [POST]
 
