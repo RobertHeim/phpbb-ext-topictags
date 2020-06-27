@@ -27,7 +27,7 @@ class topictags_functional_test_base extends \phpbb_functional_test_case
 		return array('robertheim/topictags');
 	}
 
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
 		// Load all language files

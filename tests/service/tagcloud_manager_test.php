@@ -28,7 +28,7 @@ class tagcloud_manager_test extends \phpbb_database_test_case
 	/** @var \phpbb\user */
 	protected $user;
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 		global $table_prefix;

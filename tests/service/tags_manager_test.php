@@ -26,7 +26,7 @@ class tags_manager_test extends \phpbb_database_test_case
 	/** @var \robertheim\topictags\service\tags_manager */
 	protected $tags_manager;
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 		global $table_prefix;
