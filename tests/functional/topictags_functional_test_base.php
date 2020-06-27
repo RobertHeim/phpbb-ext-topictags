@@ -39,7 +39,9 @@ class topictags_functional_test_base extends \phpbb_functional_test_case
 		));
 
 		global $table_prefix;
-		$this->auth = $this->getMock('\phpbb\auth\auth');
+		$this->auth = $this->getMockBuilder('\phpbb\auth\auth')
+            ->disableOriginalConstructor()
+            ->getMock();
 		$config = new \phpbb\config\config(array(
 				prefixes::CONFIG.'_allowed_tags_regex' => '/^[a-z]{3,30}$/i',
 		));

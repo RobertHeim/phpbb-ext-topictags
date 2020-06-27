@@ -38,7 +38,9 @@ class tagcloud_manager_test extends \phpbb_database_test_case
 				prefixes::CONFIG . '_display_tagcount_in_tagcloud' => true,
 				prefixes::CONFIG . '_max_tags_in_tagcloud' => 1,
 			));
-		$this->template = $this->getMock('\phpbb\template\template');
+		$this->template = $this->getMockBuilder('\phpbb\template\template')
+            ->disableOriginalConstructor()
+            ->getMock();
 
 		$this->user = $this->getMockBuilder('\phpbb\user')
 			->disableOriginalConstructor()

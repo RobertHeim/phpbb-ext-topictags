@@ -31,7 +31,9 @@ class tags_manager_test extends \phpbb_database_test_case
 		parent::setUp();
 		global $table_prefix;
 		$this->db = $this->new_dbal();
-		$this->auth = $this->getMock('\phpbb\auth\auth');
+		$this->auth = $this->getMockBuilder('\phpbb\auth\auth')
+            ->disableOriginalConstructor()
+            ->getMock();
 		$config = new \phpbb\config\config(array(
 			prefixes::CONFIG.'_allowed_tags_regex' => '/^[a-zäÄ]{3,30}$/i',
 		));
