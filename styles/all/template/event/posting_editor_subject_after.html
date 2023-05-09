@@ -4,7 +4,7 @@
 	<dd>{L_RH_TOPICTAGS_ALLOWED_TAGS}
 		<!-- IF S_RH_TOPICTAGS_WHITELIST_ENABLED -->
 			<br/>
-			<!-- INCLUDEJS @robertheim_topictags/../whitelist.js -->
+			<!-- INCLUDEJS @robertheim_topictags/whitelist.js -->
 			<div class="rh_topictags_whitelist">
 				<!-- BEGIN rh_topictags_whitelist -->
 					{% include 'simple_tag.html' with {'NAME' : rh_topictags_whitelist.NAME, 'LINK' : rh_topictags_whitelist.LINK} only %}

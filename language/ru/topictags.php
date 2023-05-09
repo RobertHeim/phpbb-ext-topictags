@@ -29,6 +29,7 @@ $lang = array_merge($lang, array(
 	'RH_TOPICTAGS_SEARCH_HEADER_AND'	=> 'Поиск по темам с любым из этих тегов: %s',
 	'RH_TOPICTAGS_SEARCH_IGNORED_TAGS'	=> 'Следующие теги будут проигнорированы, поскольку они неправильные: %s',
 
+	'RH_TOPICTAGS_NO_TOPICS_FOR_NO_TAG'		=> 'Пожалуйста, найдите хотя бы один допустимый тег, чтобы отобразить темы.',
 	'RH_TOPICTAGS_NO_TOPICS_FOR_TAG_OR'		=> 'Нет тем ни с одним из этих тегов: %s',
 	'RH_TOPICTAGS_NO_TOPICS_FOR_TAG_AND'	=> 'Нет тем с этими тегами: %s',
 
@@ -41,5 +42,8 @@ $lang = array_merge($lang, array(
 		1 => 'Самый популярный тег: %d.',
 		2 => 'Самые популярные теги: %d.',
 	),
-
+	
+	'RH_TOPICTAGS_TAG_SEARCH' => 'Поиск по тегам',
+	
+	'RH_TOPICTAGS_TAG_SUGGEST_TAG_ROUTE_ERROR' => 'Маршрут не найден для “%s”',
 ));
